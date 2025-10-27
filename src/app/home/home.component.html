@@ -1,1 +1,53 @@
-<p>home works!</p>
+<!-- 搜尋欄 -->
+<div>
+  問卷名稱: <input [(ngModel)]="searchFormName">
+  <div>統計日期: <input type="date"
+    [attr.min]="toDayStr"
+    (change)="fromDate = $any($event.target).value; toDate = null"
+    >
+    <!-- attr可避免把非字串帶入造成出錯 -->
+        到
+        <input type="date"
+        [(ngModel)]="toDate"
+        [attr.min]="fromDate || toDayStr"
+        (change)="toDate">
+        <!-- 這邊的[(ngModel)]可以同步控制畫面的日期 -->
+  <button (click)="search()">搜尋</button>
+  </div>
+</div>
+
+<!-- 羅列表單 -->
+<table class="nice-table">
+  <thead>
+    <tr>
+      <th>#</th>                <!-- 流水號 -->
+      <th>表單ID</th>           <!-- formId -->
+      <th>問卷名稱</th>         <!-- formName -->
+      <th>狀態</th>             <!-- status -->
+      <th>起始日期</th>         <!-- formfromDate -->
+      <th>結束日期</th>         <!-- formToDate -->
+      <th>操作</th>             <!-- fillOut -->
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- 用 pagedData 跑目前頁的資料 -->
+    <tr *ngFor="let row of pagedData; let i = index">
+      <td>{{ (page-1)*pageSize + i + 1 }}</td>  <!-- 全域流水號 -->
+      <td>{{ row.formId }}</td>                 <!-- 表單ID -->
+      <td>{{ row.formName }}</td>               <!-- 問卷名稱 -->
+      <td>{{ row.status }}</td>                 <!-- 狀態 -->
+      <td>{{ row.formfromDate }}</td>           <!-- 起始日期 -->
+      <td>{{ row.formToDate }}</td>             <!-- 結束日期 -->
+      <td>
+        <!-- 操作：先用文字（之後可改成按鈕） -->
+        <button class="btn">{{ row.fillOut }}</button>
+      </td>
+    </tr>
+
+    <!-- 沒資料時顯示 -->
+    <tr *ngIf="pagedData.length === 0">
+      <td colspan="7" class="empty">目前沒有資料</td>
+    </tr>
+  </tbody>
+</table>
