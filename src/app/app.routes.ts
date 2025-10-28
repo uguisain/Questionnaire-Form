@@ -6,10 +6,10 @@ import { UserFormComponent } from "./user-form/user-form.component";
 
 
 export const routes: Routes = [
-  { path: "home", component: HomeComponent, children:[
-    { path: "UserForm", component: UserFormComponent}
-  ]},
+  { path: "home", component: HomeComponent},
   { path: "test", component: TestComponent},
   { path: "test2", component: Test2Component},
+  { path: "UserForm", component: UserFormComponent},
+  { path: 'form/:id', component: UserFormComponent } // 表單頁
 
 ];

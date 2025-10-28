@@ -1,6 +1,6 @@
 <!-- 搜尋欄 -->
 <div>
-  問卷名稱: <input [(ngModel)]="searchFormName">
+  問卷名稱: <input [(ngModel)]="searchname">
   <div>統計日期: <input type="date"
     [attr.min]="toDayStr"
     (change)="fromDate = $any($event.target).value; toDate = null">
@@ -32,12 +32,27 @@
   <tbody>
     <!-- 用 *ngFor 逐筆列出資料 -->
     <tr *ngFor="let f of filteredForms">
-      <td>{{ f.formId }}</td>
-      <td>{{ f.formName }}</td>
-      <td>{{ f.status }}</td>
-      <td>{{ f.formfromDate }}</td>
-      <td>{{ f.formToDate }}</td>
-      <td>{{ f.fillOut }}</td>
+      <td>{{ f.id }}</td>
+      <td>{{ f.name }}</td>
+      <td>{{ stateLabel(getState(f)) }}</td>
+      <td>{{ f.startDate }}</td>
+      <td>{{ f.endDate }}</td>
+      <td>
+        <!-- 進行中：顯示「填寫」按鈕（可點） -->
+      <button *ngIf="getState(f) === 'open'" (click)="goFill(f.id)">
+        填寫
+      </button>
+
+      <!-- 已結束：顯示「檢視結果」按鈕（可點；目前先 console，之後導頁） -->
+      <button *ngIf="getState(f) === 'closed'" (click)="viewResult(f.id)">
+        檢視結果
+      </button>
+
+      <!-- 未開始：顯示禁用按鈕，不能點 -->
+      <button *ngIf="getState(f) === 'notStarted'" disabled>
+        尚未開始
+      </button>
+      </td>
     </tr>
 
   <tr *ngIf="filteredForms.length === 0">
@@ -45,3 +60,6 @@
     </tr>
   </tbody>
 </table>
+
+
+<router-outlet></router-outlet>

@@ -1,0 +1,26 @@
+<!-- 如果 form 存在就顯示；否則顯示 notFound -->
+<div *ngIf="form; else notFound">
+  <!-- 標題：顯示表單名稱 -->
+  <h2>填寫表單：{{ form.name }}</h2>
+
+  <!-- 基本資訊（先讓你看得見資料有接對） -->
+  <p>表單 ID：{{ form.id }}</p>
+  <p>填寫期間：{{ form.startDate }} ～ {{ form.endDate }}</p>
+
+  <hr>
+
+  <!-- 之後在這裡放真正的問題與輸入欄位 -->
+  <p>（這裡之後放題目與答案欄位…）</p>
+
+  <!-- 返回按鈕 -->
+  <button (click)="back()">返回清單</button>
+
+  <!-- 可選：用 routerLink 返回 -->
+  <!-- <a [routerLink]="['/']">返回清單</a> -->
+</div>
+
+<!-- 找不到資料的替代畫面 -->
+<ng-template #notFound>
+  <p>找不到這份表單。</p>
+  <button (click)="back()">返回清單</button>
+</ng-template>
