@@ -17,37 +17,27 @@
 </div>
 
 <!-- 羅列表單 -->
-<table class="nice-table">
+<table border="1" cellspacing="0" cellpadding="6">
   <thead>
     <tr>
-      <th>#</th>                <!-- 流水號 -->
-      <th>表單ID</th>           <!-- formId -->
-      <th>問卷名稱</th>         <!-- formName -->
-      <th>狀態</th>             <!-- status -->
-      <th>起始日期</th>         <!-- formfromDate -->
-      <th>結束日期</th>         <!-- formToDate -->
-      <th>操作</th>             <!-- fillOut -->
+      <th>表單ID</th>
+      <th>問卷名稱</th>
+      <th>狀態</th>
+      <th>起始日期</th>
+      <th>結束日期</th>
+      <th>操作</th>
     </tr>
   </thead>
 
   <tbody>
-    <!-- 用 pagedData 跑目前頁的資料 -->
-    <tr *ngFor="let row of pagedData; let i = index">
-      <td>{{ (page-1)*pageSize + i + 1 }}</td>  <!-- 全域流水號 -->
-      <td>{{ row.formId }}</td>                 <!-- 表單ID -->
-      <td>{{ row.formName }}</td>               <!-- 問卷名稱 -->
-      <td>{{ row.status }}</td>                 <!-- 狀態 -->
-      <td>{{ row.formfromDate }}</td>           <!-- 起始日期 -->
-      <td>{{ row.formToDate }}</td>             <!-- 結束日期 -->
-      <td>
-        <!-- 操作：先用文字（之後可改成按鈕） -->
-        <button class="btn">{{ row.fillOut }}</button>
-      </td>
-    </tr>
-
-    <!-- 沒資料時顯示 -->
-    <tr *ngIf="pagedData.length === 0">
-      <td colspan="7" class="empty">目前沒有資料</td>
+    <!-- 用 *ngFor 逐筆列出資料 -->
+    <tr *ngFor="let f of forms">
+      <td>{{ f.formId }}</td>
+      <td>{{ f.formName }}</td>
+      <td>{{ f.status }}</td>
+      <td>{{ f.formfromDate }}</td>
+      <td>{{ f.formToDate }}</td>
+      <td>{{ f.fillOut }}</td>
     </tr>
   </tbody>
 </table>
