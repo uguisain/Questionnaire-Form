@@ -3,8 +3,7 @@
   問卷名稱: <input [(ngModel)]="searchFormName">
   <div>統計日期: <input type="date"
     [attr.min]="toDayStr"
-    (change)="fromDate = $any($event.target).value; toDate = null"
-    >
+    (change)="fromDate = $any($event.target).value; toDate = null">
     <!-- attr可避免把非字串帶入造成出錯 -->
         到
         <input type="date"
@@ -12,9 +11,10 @@
         [attr.min]="fromDate || toDayStr"
         (change)="toDate">
         <!-- 這邊的[(ngModel)]可以同步控制畫面的日期 -->
-  <button (click)="search()">搜尋</button>
+  <button (click)="search()">測試</button>
   </div>
 </div>
+
 
 <!-- 羅列表單 -->
 <table border="1" cellspacing="0" cellpadding="6">
@@ -31,13 +31,17 @@
 
   <tbody>
     <!-- 用 *ngFor 逐筆列出資料 -->
-    <tr *ngFor="let f of forms">
+    <tr *ngFor="let f of filteredForms">
       <td>{{ f.formId }}</td>
       <td>{{ f.formName }}</td>
       <td>{{ f.status }}</td>
       <td>{{ f.formfromDate }}</td>
       <td>{{ f.formToDate }}</td>
       <td>{{ f.fillOut }}</td>
+    </tr>
+
+  <tr *ngIf="filteredForms.length === 0">
+      <td colspan="6">目前沒有符合條件的資料。</td>
     </tr>
   </tbody>
 </table>
