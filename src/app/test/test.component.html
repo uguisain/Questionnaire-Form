@@ -1,0 +1,10 @@
+<h3>{{ josnData.title }}</h3>
+@for (question of josnData.questions; track $index) {
+  <h5>{{ question.questionName }}</h5>
+  @for (option of question.options; track $index) {
+    <input type="radio" name="{{ question.id }}" value="{{ option.code }}">{{ option.name }}
+  }
+}
+
+<br><br><br>
+<button (click)="res">送出答案</button>
