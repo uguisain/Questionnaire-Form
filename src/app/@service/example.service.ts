@@ -192,9 +192,101 @@ const ELEMENT_DATA: formElement[] = [
           { ans: "萬聖節", code: 4 }
         ]
       },
-      ]}
-
+      {
+        questionId: 2,
+        question: "節日期間您會？",
+        option: [
+          { ans: "與家人聚會", code: 1 },
+          { ans: "外出旅行", code: 2 },
+          { ans: "在家休息", code: 3 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: "手機使用狀況",
+    startDate: "2025-09-10",
+    endDate: "2025-11-10",
+    description: "瞭解使用者每天使用手機的習慣。",
+    options: [
+      {
+        questionId: 1,
+        question: "每日使用手機時間？",
+        option: [
+          { ans: "1小時以內", code: 1 },
+          { ans: "1-4小時", code: 2 },
+          { ans: "超過4小時", code: 3 }
+        ]
+      },
+      {
+        questionId: 2,
+        question: "主要使用手機用途？",
+        option: [
+          { ans: "社群媒體", code: 1 },
+          { ans: "工作/學習", code: 2 },
+          { ans: "遊戲娛樂", code: 3 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 9,
+    name: "閱讀習慣問卷",
+    startDate: "2025-05-15",
+    endDate: "2025-10-30",
+    description: "關於平時閱讀書籍的習慣調查。",
+    options: [
+      {
+        questionId: 1,
+        question: "您多久閱讀一次書籍？",
+        option: [
+          { ans: "每天", code: 1 },
+          { ans: "一週數次", code: 2 },
+          { ans: "偶爾", code: 3 }
+        ]
+      },
+      {
+        questionId: 2,
+        question: "偏好哪種類型的書？",
+        option: [
+          { ans: "小說", code: 1 },
+          { ans: "科學/知識類", code: 2 },
+          { ans: "勵志/心理學", code: 3 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 10,
+    name: "睡眠品質調查",
+    startDate: "2025-10-01",
+    endDate: "2025-11-30",
+    description: "希望了解大家的睡眠狀況。",
+    options: [
+      {
+        questionId: 1,
+        question: "平均每日睡眠時數？",
+        option: [
+          { ans: "少於5小時", code: 1 },
+          { ans: "6-7小時", code: 2 },
+          { ans: "8小時以上", code: 3 }
+        ]
+      },
+      {
+        iquestionId: 2,
+        question: "入睡是否容易？",
+        option: [
+          { ans: "很容易入睡", code: 1 },
+          { ans: "偶爾失眠", code: 2 },
+          { ans: "經常難以入睡", code: 3 }
+        ]
+      }
+    ]
+  }
 ]
+
+
 
 // === 回傳 ===
 @Injectable({ providedIn: 'root' })                         // 全域可用

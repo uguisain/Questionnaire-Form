@@ -17,13 +17,17 @@
   <hr>
 
  <!-- 問題欄位 -->
-<h3>{{ form.name }}</h3>
-@for (question of form.options; track $index) {
-  <h5>{{ question.question }}</h5>
-  @for (option of question.option; track $index) {
-    <input type="radio" name="{{ question.questionId }}" value="{{ option.code }}">{{ option.ans }}
+  <h3>{{ form.name }}</h3>
+  @for (question of form.options; track $index; let i = $index) {
+    <h5>{{ question.question }}</h5>
+    @for (option of question.option; track $index) {
+      <input type="radio"
+      name="{{ question.questionId }}"
+      [value]="option.code"
+      [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList">
+      {{ option.ans }}
+    }
   }
-}
 
 
   <br><br><br>

@@ -70,8 +70,6 @@ export class Test2Component {
       data: data,
       });
     }
-
-
   }
 
 
