@@ -1,56 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { HomeComponent } from "../home/home.component";
 import { FormsModule } from "@angular/forms";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-test',
-  imports: [RouterOutlet, RouterLink, HomeComponent, FormsModule],
+  imports: [RouterOutlet, RouterLink, HomeComponent, FormsModule,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
 export class TestComponent {
 
-  josnData = {
-    title: '練習',
-    questions: [
-      {
-        id: 1,
-        questionName: '問題1',
-        options: [
-          { name: '選項A', code: 'A'},
-          { name: '選項B', code: 'B'},
-          { name: '選項C', code: 'C'},
-        ]
-      },
-      {
-        id: 2,
-        questionName: '問題2',
-        options: [
-          { name: '選項a', code: 'a'},
-          { name: '選項b', code: 'b'},
-          { name: '選項c', code: 'c'},
-        ]
-      }
-    ]
-  }
+readonly dialogRef = inject(MatDialogRef<TestComponent>);
+readonly data = inject<any>(MAT_DIALOG_DATA)
 
-  test = '';
-  resAns = [];
+end() {
+  this.dialogRef.close();
+}
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-
-
-  }
-
-  res() {
-    console.log(this.resAns)
-    console.log(this.test)
-  }
-
-
+save() {
+  let data = '安安';
+  this.dialogRef.close(data);
+}
 
 
 

@@ -29,60 +29,57 @@ export class UserFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1) 從路由參數拿 id（字串）→ 轉數字
+    // 從路由參數拿 id（字串）→ 轉數字
     const id = +(this.route.snapshot.paramMap.get('id') || 0);
 
-    // 2) 依 id 取得單筆表單
+    // 依 id 取得單筆表單
     this.form = this.example.getFormById(id);
 
-    // 3) 找不到就導回首頁
+    // 找不到就導回首頁
     if (!this.form) {
       alert('找不到這份表單');
       this.router.navigate(['/home']);
       return;                                                         // 結束函式
     }
 
-    // 4) 把 this.form 統一成「陣列」來處理
-    const formsArray = Array.isArray(this.form) ? this.form : [this.form];
+    // 把 this.form 統一成「陣列」來處理 (這個不知道到底需不需要)
+    // const formsArray = Array.isArray(this.form) ? this.form : [this.form];
 
-    // 5) 重組資料 → 放進 FillinReq
-    //    - questionAnswerList：把每一題展開，預留 answerList 給使用者之後填
-
+    // 重組資料 → 放進 FillinReq-----------------------------------------------
     let Req = {                            // 建立要送後端的請求物件
     quizId: this.form.id,                  // 問卷ID
     email: this.email,                     // 使用者 Email
-    questionAnswerList: []                 // 先放空陣列，等下把每一題塞進來
+    questionAnswerList: [] as any[],       // 先放空陣列，等下把每一題塞進來
     };
 
-
     for (let ans of this.form.options) {
-    Req.questionAnswerList.push()
+      Req.questionAnswerList.push({
+      questionId: ans.questionId,            // 題目ID
+      answerList: '',
+      });
     }
 
+    console.log('Req：', Req); // 確認Req重組完的樣子
 
+    this.FillinReq.push(Req); // 把Req丟進去FillinReq
 
-
-
-
-
-    // 6) 檢查重組結果
+    // 檢查FillinReq
     console.log('FillinReq 重組完成：', this.FillinReq);
   }
 
-  // 送出答案（先把 payload 印出確認，之後再串 API）
+  // 送出答案（之後串 API）-------------------------------------
   send() {
-  // 把輸入的 email 寫回 FillinReq（假設只有一份表單）
+  // 把輸入的 email 寫回 FillinReq
   if (this.FillinReq.length > 0) {
     this.FillinReq[0].email = this.email || '';
   }
-
-  // 小檢查：看看每題答案長怎樣
+  // 檢查
   console.log('email:', this.email);
-  console.log('準備送出的 payload：', this.FillinReq);
+  console.log('準備送出的資料：', this.FillinReq);
 
   // TODO: 之後改成呼叫 service API
   // this.example.submitAnswers(this.FillinReq).subscribe(...)
-}
+  }
 
   // 返回清單
   back() {
