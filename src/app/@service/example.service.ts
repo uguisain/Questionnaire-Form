@@ -45,7 +45,7 @@ const ELEMENT_DATA: formElement[] = [
         questionId: 3,
         question: "你的寵物叫什麼名字?",
         type: 'text',
-        required: true,
+        required: false,
         option: [
           { ans: "", code: 1 },
         ]

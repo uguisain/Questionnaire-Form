@@ -47,7 +47,6 @@ export class StatisticalReportComponent {
   }
 
   ngAfterViewInit(): void {
-    // FIXME:
     for (let Re of this.Report.statisticsVoList) {
       // 獲取 canvas 元素
       let ctx = document.getElementById(Re.questionId) as HTMLCanvasElement;

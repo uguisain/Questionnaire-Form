@@ -12,18 +12,20 @@
   <hr>
 
   <p style="display: inline;">姓名 : </p><input [(ngModel)]="userName"><br>
-  <p style="display: inline;">電話 : </p><input [(ngModel)]="userPhoneNumber"><br>
-  <p style="display: inline;">信箱 : </p><input [(ngModel)]="email"><br>
-  <p style="display: inline;">年齡 : </p><input [(ngModel)]="userAge"><br>
+  <p style="display: inline;">電話 : </p><input type="number" [(ngModel)]="userPhoneNumber"><br>
+  <p style="display: inline;">信箱 : </p><input type="email" [(ngModel)]="email"><br>
+  <p style="display: inline;">年齡 : </p><input type="number" [(ngModel)]="userAge"><br>
 
   <hr>
 
  <!-- 問題欄位 -->
   <h2>{{ form.name }}</h2>
-  <ol>
+  <div><ol>
   @for (question of form.options; track $index; let i = $index) {
-    <li><h3>{{ question.question }}</h3></li>
-    @if (question.type === 'single') {
+    <li>@if (question.required) {
+      <h5 style="color: red; line-height: 0; display: inline;">必填  </h5>
+      }<h3 style="display: inline;">{{ question.question }}</h3></li>
+      @if (question.type === 'single') {
       @for (option of question.option; track $index) {
       <input type="radio"
       name="{{ question.questionId }}"
@@ -46,12 +48,11 @@
       <textarea type="text"
       name="{{ question.questionId }}"
       [value]="option.code"
-      style="width: 300px; height: 100px;"
       [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList"></textarea>
       }
     }
   }
-  </ol>
+  </ol></div>
 
   <br><br><br>
   <!-- 送出按鈕 -->

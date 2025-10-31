@@ -184,15 +184,42 @@ export class UserFormComponent implements OnInit {
 
   // 送出答案（之後串 API）-------------------------------------
   send() {
-  // 把輸入的 email 寫回 FillinReq
-  if (this.FillinReq.length > 0) {
-    this.FillinReq[0].email = this.email || '';
-    this.FillinReq[0].userName = this.userName || '';
-    this.FillinReq[0].userPhoneNumber = this.userPhoneNumber || '';
-    this.FillinReq[0].userAge = this.userAge || '';
+    // 防呆，必填通知
+    // if() {}
+
+    // 把輸入的用戶資料寫回 FillinReq
+    if (this.FillinReq.length > 0) {
+      this.FillinReq[0].email = this.email || '';
+      this.FillinReq[0].userName = this.userName || '';
+      this.FillinReq[0].userPhoneNumber = this.userPhoneNumber || '';
+      this.FillinReq[0].userAge = this.userAge || '';
+    }
+
+    // 檢查是否有必填但沒填的題目
+  for (let i = 0; i < this.form.options.length; i++) {
+    const q = this.form.options[i]; // 這一題的設定 (包含 required, type)
+    const ans = this.FillinReq[0].questionAnswerList[i].answerList; // 使用者填的內容
+
+    if (q.required) { // 只檢查必填題
+      // 判斷「有沒有填」
+      // 規則：
+      // - 多選: ans 是陣列，要至少有一個值
+      // - 其他: ans 不能是空字串/undefined/null
+
+      const notFilledMultiple =
+        Array.isArray(ans) && ans.length === 0;
+
+      const notFilledOther =
+        !Array.isArray(ans) && (ans === '' || ans === undefined || ans === null);
+
+      if (notFilledMultiple || notFilledOther) {
+        alert('有必填題尚未填寫，請先完成再繼續');
+        return;
+      }
+    }
   }
 
-  this.pageMode = 'confirm'; // 切換為確認模式
+    this.pageMode = 'confirm'; // 切換為確認模式
   }
 
   // 返回清單
