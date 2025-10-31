@@ -10,6 +10,9 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Test3Component {
 
+  constructor(private loadingService: LoadingService) {}
 
-
+  logIn() {
+    this.loadingService.show();
+  }
 }

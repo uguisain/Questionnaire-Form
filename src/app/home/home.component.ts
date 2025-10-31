@@ -51,7 +51,6 @@ export class HomeComponent {
     // 之後你可以做 '/result/:id' 的頁面；現在先印 log 代表「會被觸發」
     console.log('前往檢視結果，id =', id);
     this.router.navigate(['/Report', id]);
-    // TODO：this.router.navigate(['/result', id]);
   }
 
   // 存使用者選的開始日期

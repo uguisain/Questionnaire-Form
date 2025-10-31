@@ -9,6 +9,13 @@ import { TestComponent } from "./test/test.component";
 import { MatTabsModule } from '@angular/material/tabs';
 import { Test2Component } from './test2/test2.component';
 import { MatDialog } from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
+
 
 @Component({
   selector: 'app-root',
@@ -20,7 +27,10 @@ import { MatDialog } from '@angular/material/dialog';
     MatTabsModule,
     RouterLink,
     RouterLinkActive,
-    Test2Component,],
+    Test2Component,
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    MatButtonModule, MatListModule, MatToolbarModule, MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -39,11 +49,13 @@ export class AppComponent {
   //   })
   // }
 
+  showLoading!: boolean;
+
   constructor(private loadingService: LoadingService) {}
 
   ngOnInit(): void {
     this.loadingService.loading$.subscribe((res) => {
-      console.log(res);
+      this.showLoading = res;
     })
   }
 

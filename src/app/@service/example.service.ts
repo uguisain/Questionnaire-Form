@@ -15,12 +15,14 @@ const ELEMENT_DATA: formElement[] = [
     id: 1,
     name: "喜歡的動物",
     startDate: "2025-10-01",
-    endDate: "2025-10-31",
+    endDate: "2025-11-31",
     description: "表單說明",
     options: [
       {
         questionId: 1,
         question: "你是甚麼派?",
+        type: 'single',
+        required: true,
         option: [
           { ans: "貓派", code: 1 },
           { ans: "狗派", code: 2 },
@@ -31,10 +33,21 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "你有養寵物嗎?",
+        type: 'multiple',
+        required: true,
         option: [
           { ans: "有", code: 1 },
           { ans: "從來沒有", code: 2 },
           { ans: "曾經有，現在沒有", code: 3 }
+        ]
+      },
+      {
+        questionId: 3,
+        question: "你的寵物叫什麼名字?",
+        type: 'text',
+        required: true,
+        option: [
+          { ans: "", code: 1 },
         ]
       }
     ]
@@ -49,6 +62,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "您每天吃幾餐？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "兩餐", code: 1 },
           { ans: "三餐", code: 2 },
@@ -58,6 +73,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "您是否避免特定食物？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "是，避免肉類", code: 1 },
           { ans: "是，避免乳製品", code: 2 },
@@ -76,6 +93,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "你最想去哪種類型的地點？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "海邊", code: 1 },
           { ans: "山區", code: 2 },
@@ -86,6 +105,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "旅行時你偏好？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "自由行", code: 1 },
           { ans: "跟團旅遊", code: 2 },
@@ -104,6 +125,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "您對辦公空間舒適度的滿意程度？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "非常滿意", code: 1 },
           { ans: "普通", code: 2 },
@@ -113,6 +136,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "同事之間的氛圍如何？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "融洽", code: 1 },
           { ans: "一般", code: 2 },
@@ -131,6 +156,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "系統操作是否容易理解？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "非常容易", code: 1 },
           { ans: "尚可", code: 2 },
@@ -140,6 +167,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "版面設計是否清晰？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "清晰", code: 1 },
           { ans: "普通", code: 2 },
@@ -158,6 +187,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "起床後第一件事是？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "滑手機", code: 1 },
           { ans: "喝水或吃早餐", code: 2 },
@@ -167,6 +198,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "您幾點起床？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "5-6點", code: 1 },
           { ans: "7-8點", code: 2 },
@@ -185,6 +218,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "您最喜歡的節日是？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "聖誕節", code: 1 },
           { ans: "中秋節", code: 2 },
@@ -195,6 +230,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "節日期間您會？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "與家人聚會", code: 1 },
           { ans: "外出旅行", code: 2 },
@@ -213,6 +250,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "每日使用手機時間？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "1小時以內", code: 1 },
           { ans: "1-4小時", code: 2 },
@@ -222,6 +261,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "主要使用手機用途？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "社群媒體", code: 1 },
           { ans: "工作/學習", code: 2 },
@@ -240,6 +281,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "您多久閱讀一次書籍？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "每天", code: 1 },
           { ans: "一週數次", code: 2 },
@@ -249,6 +292,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 2,
         question: "偏好哪種類型的書？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "小說", code: 1 },
           { ans: "科學/知識類", code: 2 },
@@ -267,6 +312,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         questionId: 1,
         question: "平均每日睡眠時數？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "少於5小時", code: 1 },
           { ans: "6-7小時", code: 2 },
@@ -276,6 +323,8 @@ const ELEMENT_DATA: formElement[] = [
       {
         iquestionId: 2,
         question: "入睡是否容易？",
+        type: 'single',
+        required: true,
         option: [
           { ans: "很容易入睡", code: 1 },
           { ans: "偶爾失眠", code: 2 },

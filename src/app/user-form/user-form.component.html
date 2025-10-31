@@ -9,26 +9,47 @@
 
   <hr>
 
-  <p style="display: inline;">姓名 : </p><input><br>
-  <p style="display: inline;">電話 : </p><input><br>
+  <p style="display: inline;">姓名 : </p><input [(ngModel)]="userName"><br>
+  <p style="display: inline;">電話 : </p><input [(ngModel)]="userPhoneNumber"><br>
   <p style="display: inline;">信箱 : </p><input [(ngModel)]="email"><br>
-  <p style="display: inline;">年齡 : </p><input><br>
+  <p style="display: inline;">年齡 : </p><input [(ngModel)]="userAge"><br>
 
   <hr>
 
  <!-- 問題欄位 -->
-  <h3>{{ form.name }}</h3>
+  <h2>{{ form.name }}</h2>
+  <ol>
   @for (question of form.options; track $index; let i = $index) {
-    <h5>{{ question.question }}</h5>
-    @for (option of question.option; track $index) {
+    <li><h3>{{ question.question }}</h3></li>
+    @if (question.type === 'single') {
+      @for (option of question.option; track $index) {
       <input type="radio"
       name="{{ question.questionId }}"
       [value]="option.code"
       [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList">
       {{ option.ans }}
+      }
+    }
+    @if (question.type === 'multiple') {
+      @for (option of question.option; track $index) {
+        <input
+          type="checkbox"
+          [checked]="FillinReq[0].questionAnswerList[i].answerList.includes(option.code)"
+          (change)="toggleMulti(i, option.code, $event)">
+        {{ option.ans }}
+      }
+    }
+    @if (question.type === 'text') {
+      @for (option of question.option; track $index) {
+      <textarea type="text"
+      name="{{ question.questionId }}"
+      [value]="option.code"
+      style="width: 300px; height: 100px;"
+      [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList"></textarea>
+      }
     }
   }
-
+  </ol>
 
   <br><br><br>
   <!-- 送出按鈕 -->

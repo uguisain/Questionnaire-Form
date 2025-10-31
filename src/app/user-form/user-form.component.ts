@@ -14,10 +14,14 @@ import { FormsModule } from "@angular/forms";
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
+
  // 單筆表單資料（從服務抓回來）
   form: any;                                                         // 後端原始格式（維持 any，先求能動）
-  // 使用者信箱
+  // 使用者資訊
+  userName: string = '';
+  userPhoneNumber: string = '';
   email: string = '';
+  userAge!: number;
 
   // 最終要送後端的「重組後」請求陣列
   FillinReq: any[] = [];
@@ -48,14 +52,19 @@ export class UserFormComponent implements OnInit {
     // 重組資料 → 放進 FillinReq-----------------------------------------------
     let Req = {                            // 建立要送後端的請求物件
     quizId: this.form.id,                  // 問卷ID
-    email: this.email,                     // 使用者 Email
+    userName: this.userName,
+    userPhoneNumber: this.userPhoneNumber,
+    email: this.email,
+    userAge: this.userAge,
     questionAnswerList: [] as any[],       // 先放空陣列，等下把每一題塞進來
     };
 
     for (let ans of this.form.options) {
       Req.questionAnswerList.push({
-      questionId: ans.questionId,            // 題目ID
-      answerList: '',
+      questionId: ans.questionId,
+      answerList: ans.type === 'multiple' ? [] : '' ,
+      // multiple 題：準備一個空陣列 []
+      // 其他題：維持成 '' 就好
       });
     }
 
@@ -67,11 +76,43 @@ export class UserFormComponent implements OnInit {
     console.log('FillinReq 重組完成：', this.FillinReq);
   }
 
+  // 切換多選答案，把 optionCode 放進或拿出陣列
+  toggleMulti(i: number, optionCode: number, event: any) {
+  // event.target.checked = 是否勾選(true/false)
+
+  // 先拿到這一題目前的答案陣列
+  let list = this.FillinReq[0].questionAnswerList[i].answerList;
+
+  // 如果目前不是陣列（保險一下），就變成陣列
+  if (!Array.isArray(list)) {
+    list = [];
+    this.FillinReq[0].questionAnswerList[i].answerList = list;
+  }
+
+  if (event.target.checked) {
+    // 勾選 -> 把這個 code 放進陣列（如果還沒在裡面）
+    if (!list.includes(optionCode)) {
+      list.push(optionCode);
+    }
+  } else {
+    // 取消勾選 -> 從陣列移除這個 code
+    const index = list.indexOf(optionCode);
+    if (index !== -1) {
+      list.splice(index, 1);
+    }
+  }
+  // 多選即時結果
+  console.log('多選第', i, '題現在的答案 = ', this.FillinReq[0].questionAnswerList[i].answerList);
+}
+
   // 送出答案（之後串 API）-------------------------------------
   send() {
   // 把輸入的 email 寫回 FillinReq
   if (this.FillinReq.length > 0) {
     this.FillinReq[0].email = this.email || '';
+    this.FillinReq[0].userName = this.userName || '';
+    this.FillinReq[0].userPhoneNumber = this.userPhoneNumber || '';
+    this.FillinReq[0].userAge = this.userAge || '';
   }
   // 檢查
   console.log('email:', this.email);

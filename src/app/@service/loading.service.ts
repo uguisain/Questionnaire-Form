@@ -6,17 +6,20 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class LoadingService {
 
-  loading$ = new BehaviorSubject<string>('遊客');
+  loading$ = new BehaviorSubject<boolean>(false);
 
 
   constructor() { }
 
   show() {
-    this.loading$.next("loading");
+    this.loading$.next(true);
+    setTimeout(() => {
+      this.hide();
+    }, 5000)
   }
 
   hide() {
-    this.loading$.next("loading");
+    this.loading$.next(false);
   }
 
 
