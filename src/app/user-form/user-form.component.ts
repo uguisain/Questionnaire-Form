@@ -15,6 +15,24 @@ import { FormsModule } from "@angular/forms";
 })
 export class UserFormComponent implements OnInit {
 
+  pageMode = 'edit';
+  // 'edit' = 填寫中
+  // 'confirm' = 預覽確認中
+
+  //時間計算(看有沒有過期)
+  toDay = new Date();
+  // 把今天轉成 YYYY-MM-DD 格式的字串（用來給 date 輸入框）
+  toDayStr = this.buildTodayStrLocal();   // 今天（用本地時間轉 'YYYY-MM-DD'）
+
+  // 取得今天的本地字串（避免 UTC 提早一天的小坑）
+  private buildTodayStrLocal(): string {
+    const d = new Date();                         // 取本地時間
+    const yyyy = d.getFullYear();                 // 年
+    const mm = String(d.getMonth() + 1).padStart(2, '0'); // 月（補兩位）
+    const dd = String(d.getDate()).padStart(2, '0');      // 日（補兩位）
+    return `${yyyy}-${mm}-${dd}`;                 // 'YYYY-MM-DD'
+  }
+
  // 單筆表單資料（從服務抓回來）
   form: any;                                                         // 後端原始格式（維持 any，先求能動）
   // 使用者資訊
@@ -46,6 +64,14 @@ export class UserFormComponent implements OnInit {
       return;                                                         // 結束函式
     }
 
+    // 如果表單已超過填寫時間，就返回首頁
+    const today = this.toDayStr;
+    if (today > this.form.endDate) {
+      alert('表單已過期，將回到首頁');
+      this.router.navigate(['/home']);
+      return;                                                         // 結束函式
+    }
+
     // 把 this.form 統一成「陣列」來處理 (這個不知道到底需不需要)
     // const formsArray = Array.isArray(this.form) ? this.form : [this.form];
 
@@ -62,6 +88,8 @@ export class UserFormComponent implements OnInit {
     for (let ans of this.form.options) {
       Req.questionAnswerList.push({
       questionId: ans.questionId,
+      question: ans.question,
+      type: ans.type,
       answerList: ans.type === 'multiple' ? [] : '' ,
       // multiple 題：準備一個空陣列 []
       // 其他題：維持成 '' 就好
@@ -105,6 +133,55 @@ export class UserFormComponent implements OnInit {
   console.log('多選第', i, '題現在的答案 = ', this.FillinReq[0].questionAnswerList[i].answerList);
 }
 
+  // 把某一題的答案，轉成可以看得懂的文字
+  getAnswerDisplay(i: number) {
+  // i = 第幾題 ($index)
+  const question = this.form.options[i];
+  // 例如 {
+  //   questionId: 1,
+  //   question: "你是甚麼派?",
+  //   type: 'single',
+  //   option: [ { ans: '貓派', code: 1 }, ... ]
+  // }
+
+  const answer = this.FillinReq[0].questionAnswerList[i].answerList;
+  // 可能是數字 (single)
+  // 可能是陣列 (multiple)
+  // 可能是字串 (text)
+
+  // 單選題：answer 是一個 code (比如 2)
+  if (question.type === 'single') {
+    // 去 options 裡找 code 相同的那一個
+    const found = question.option.find((o: { code: any; }) => o.code === answer);
+    return found ? found.ans : answer;
+    // 如果找到就回中文(貓派)，找不到就先回原本值
+  }
+
+  // 多選題：answer 是一個陣列 (比如 [1,3])
+  if (question.type === 'multiple') {
+    if (Array.isArray(answer)) {
+      // 把每一個 code 轉成文字，再用逗號串起來
+      const labels = answer.map(code => {
+        const found = question.option.find((o: { code: any; }) => o.code === code);
+        return found ? found.ans : code;
+      });
+      return labels.join(', ');
+    } else {
+      // 保險：如果還不是陣列
+      return '';
+    }
+  }
+
+  // 文字題：answer 已經是使用者打的字串
+  if (question.type === 'text') {
+    return answer;
+  }
+
+  // 意外情況就回空字串
+  return '';
+}
+
+
   // 送出答案（之後串 API）-------------------------------------
   send() {
   // 把輸入的 email 寫回 FillinReq
@@ -114,16 +191,27 @@ export class UserFormComponent implements OnInit {
     this.FillinReq[0].userPhoneNumber = this.userPhoneNumber || '';
     this.FillinReq[0].userAge = this.userAge || '';
   }
-  // 檢查
-  console.log('email:', this.email);
-  console.log('準備送出的資料：', this.FillinReq);
 
-  // TODO: 之後改成呼叫 service API
-  // this.example.submitAnswers(this.FillinReq).subscribe(...)
+  this.pageMode = 'confirm'; // 切換為確認模式
   }
 
   // 返回清單
   back() {
     this.router.navigate(['/home']);
   }
+
+
+  // 以下是確認畫面用
+
+  backToEdit() {
+  // 用戶覺得哪題打錯了 -> 回去繼續改
+  this.pageMode = 'edit';
+  }
+
+  finalSubmit() {
+    console.log('送出最終資料：', this.FillinReq);
+    // TODO: 之後改成呼叫 service API
+    // this.example.submitAnswers(this.FillinReq).subscribe(...)
+  }
+
 }

@@ -1,5 +1,8 @@
-<p>statistical-report works!</p>
-
 @for (Da of Report.statisticsVoList; track $index) {
-  <canvas id="{{ Da.id }}"></canvas>
+  <h1>{{ Da.question }}</h1>
+  <canvas id="{{ Da.questionId }}"></canvas>
 }
+
+<br><br>
+  <!-- 返回按鈕 -->
+  <button (click)="back()">返回清單</button>

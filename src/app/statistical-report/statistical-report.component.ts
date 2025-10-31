@@ -17,7 +17,14 @@ export class StatisticalReportComponent {
     private reportService: ReportService                              // 從服務抓資料                                   // 從服務抓資料
   ) {}
 
-  Report: any;                                                        // 裝後端原始格式陣列
+  Report: any = {
+  statisticsVoList: []
+  };                                                                 // 裝後端格式陣列
+
+  // 返回清單
+  back() {
+    this.router.navigate(['/home']);
+  }
 
   ngOnInit(): void {
     // 從路由參數拿 id（字串）→ 轉數字
@@ -41,21 +48,24 @@ export class StatisticalReportComponent {
 
   ngAfterViewInit(): void {
     // FIXME:
-    for (let Re of this.Report) {
+    for (let Re of this.Report.statisticsVoList) {
       // 獲取 canvas 元素
-      let ctx = document.getElementById(Re.id) as HTMLCanvasElement;
-        for (let Re2 of Re.statisticsVoList) {
-          for (let Re3 of Re.optionCountVoList) {
-
+      let ctx = document.getElementById(Re.questionId) as HTMLCanvasElement;
+      let labelsData = [];
+      let optionData = [];
+          for (let Re2 of Re.optionCountVoList) {
+            labelsData.push(Re2.option);
+            optionData.push(Re2.count);
+          }
             // 設定數據
             let data = {
             // x 軸文字
-            labels: Re3.option,
+            labels: labelsData,
             datasets: [{
             // 上方分類文字
-            label: Re2.type,
+            label: Re.type,
             // 數據
-            data: Re3.count,
+            data: optionData,
             // 線與邊框顏色
             backgroundColor: [
             '#a62727',
@@ -74,8 +84,6 @@ export class StatisticalReportComponent {
               type: 'pie',
               data: data,
             });
-          }
-        }
     }
 
 

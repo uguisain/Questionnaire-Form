@@ -1,5 +1,7 @@
+<!-- 填寫模式 -->
+@if (pageMode === 'edit') {
 <!-- 如果 form 存在就顯示；否則顯示 notFound -->
-<div *ngIf="form; else notFound">
+<div *ngIf="form">
   <!-- 表單名稱 -->
   <h2>{{ form.name }}</h2>
 
@@ -53,16 +55,47 @@
 
   <br><br><br>
   <!-- 送出按鈕 -->
-  <button (click)="send()">送出答案</button>
+  <button (click)="send()">下一步</button>
 
   <br><br><br>
   <!-- 返回按鈕 -->
   <button (click)="back()">返回清單</button>
 
 </div>
+}
 
-<!-- 找不到資料的替代畫面 -->
-<ng-template #notFound>
-  <p>找不到這份表單。</p>
-  <button (click)="back()">返回清單</button>
-</ng-template>
+
+<!-- 確認模式 -->
+@if (pageMode === 'confirm') {
+  <h3>請確認以下內容是否正確</h3>
+
+  <p>姓名：{{ FillinReq[0].userName || userName }}</p>
+  <p>電話：{{ FillinReq[0].userPhoneNumber || userPhoneNumber }}</p>
+  <p>信箱：{{ FillinReq[0].email || email }}</p>
+  <p>年齡：{{ FillinReq[0].userAge || userAge }}</p>
+  <hr>
+  <ol>
+  @for (ans of FillinReq[0].questionAnswerList; track $index; let i = $index) {
+    <div style="margin-bottom: 12px;">
+      <li><div>{{ ans.question }}</div></li>
+
+      <div>你的答案：
+        <!-- 單選: number -->
+        @if (form.options[i].type === 'single') {
+          {{ getAnswerDisplay(i) }}
+        }
+        <!-- 多選: array -->
+        @if (form.options[i].type === 'multiple') {
+          {{ getAnswerDisplay(i) }}
+        }
+        <!-- 文字: string -->
+        @if (form.options[i].type === 'text') {
+          {{ ans.answerList }}
+        }
+      </div>
+    </div>
+  }</ol>
+  <hr>
+  <button (click)="backToEdit()">返回修改</button>
+  <button (click)="finalSubmit()">送出</button>
+}
