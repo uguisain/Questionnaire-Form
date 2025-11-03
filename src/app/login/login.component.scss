@@ -1,0 +1,118 @@
+/* 登入框 */
+.loginBox {
+  width: 320px;                           /* 固定寬度讓畫面更穩定 */
+  padding: 20px 30px;
+  border-radius: 20px;
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.25);  /* 半透明白底 */
+  backdrop-filter: blur(10px);            /* 模糊背景，霧玻璃效果 */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* 柔和邊框 */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2); /* 柔光陰影 */
+
+  color: #fff;                            /* 標題文字白色 */
+  margin: auto;                           /* 水平置中 */
+
+  /* ✨ 新增動畫效果 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* 標題 */
+.loginBox h1 {
+  margin-bottom: 30px;
+  font-size: 28px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 輸入框 */
+.loginBox input {
+  width: 85%;
+  height: 40px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0 15px;
+  font-size: 15px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+/* 輸入框聚焦時 */
+.loginBox input:focus {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 10px rgba(180, 132, 255, 0.6);
+}
+
+/* 按鈕 */
+.loginBox button {
+  width: 85%;
+  height: 40px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #d7aefb, #b388ff); /* 淡紫漸層 */
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+/* 按鈕滑過時 */
+.loginBox button:hover {
+  background: linear-gradient(135deg, #b388ff, #9575cd);
+  transform: scale(1.03);
+}
+
+.loginBox button:active {
+  transform: scale(1.00);
+}
+
+
+/* 動畫相關 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px); /* 一開始往下 30px */
+    filter: blur(6px);          /* 微微模糊 */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.bg {
+  animation: fadeInBg 1.5s ease forwards;
+}
+
+@keyframes fadeInBg {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.forget {
+  color: white;
+}
+
+.forget:hover {
+  cursor: pointer;
+  color: rgb(226, 151, 245);
+}
+
+.forget:active {
+  transform: scale(0.95);
+  color: rgb(174, 80, 195);
+}
+
+
+
+

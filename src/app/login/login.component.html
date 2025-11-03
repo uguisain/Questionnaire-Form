@@ -1,0 +1,51 @@
+<div style="background-image: url('pexels-j-knappitsch-433287109-15280106.jpg');
+background-size: cover; background-position: center; background-repeat: no-repeat;
+width: 100%; height: 100%; display: flex; align-items: center;"
+class="bg">
+  <div class="loginBox">
+    @if (pageMode === 'login') {
+      <h1>登入</h1>
+    <input placeholder="帳號" [(ngModel)]="username">
+    <br>
+    <input placeholder="密碼" type="password" [(ngModel)]="password">
+    <br>
+    <button style="margin: 5px 0px;" (click)="login()">登入</button>
+    <br>
+    <button style="margin: 5px 0px;" (click)="goRegister()">註冊</button>
+    <br>
+    <h4 class="forget" style="width: 70px; margin-left: 38%;"
+    (click)="goForgot()">忘記密碼</h4>
+    }
+
+    <!-- 註冊畫面 -->
+  @if (pageMode === 'register') {
+    <h1>註冊</h1>
+    <input placeholder="帳號" [(ngModel)]="regUsername">       <!-- 新帳號 -->
+    <br>
+    <input placeholder="Email" [(ngModel)]="regEmail">         <!-- Email -->
+    <br>
+    <input placeholder="密碼" type="password" [(ngModel)]="regPassword">     <!-- 新密碼 -->
+    <br>
+    <input placeholder="確認密碼" type="password" [(ngModel)]="regConfirm">   <!-- 確認密碼 -->
+    <br>
+    <button style="margin: 5px 0px;" (click)="register()">建立帳號</button>   <!-- 送出註冊 -->
+    <br>
+    <h4 style="cursor: pointer;" (click)="goLogin()">返回登入</h4>            <!-- 回登入 -->
+  }
+
+  <!-- 忘記密碼畫面 -->
+  @if (pageMode === 'forgot') {
+    <h1>忘記密碼</h1>
+    <input placeholder="請輸入註冊 Email" [(ngModel)]="forgotEmail">          <!-- 輸入Email -->
+    <br>
+    <button style="margin: 5px 0px;" (click)="sendReset()">寄送重設連結</button> <!-- 模擬寄信 -->
+    <br>
+    <h4 style="cursor: pointer;" (click)="goLogin()">返回登入</h4>             <!-- 回登入 -->
+  }
+  </div>
+</div>
+
+
+
+
+

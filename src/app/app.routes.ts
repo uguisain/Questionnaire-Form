@@ -6,6 +6,7 @@ import { UserFormComponent } from "./user-form/user-form.component";
 import { Test3Component } from './test3/test3.component';
 import { Test4Component } from './test4/test4.component';
 import { StatisticalReportComponent } from './statistical-report/statistical-report.component';
+import { LoginComponent } from './login/login.component';
 
 
 export const routes: Routes = [
@@ -18,5 +19,7 @@ export const routes: Routes = [
   { path: 'Report/:id', component: StatisticalReportComponent }, // 統計頁
   { path: "test3", component: Test3Component},
   { path: "test4", component: Test4Component},
+  { path: "Login", component: LoginComponent},
+  { path: "**", component: HomeComponent},
 
 ];
