@@ -11,10 +11,13 @@
         [attr.min]="fromDate || toDayStr"
         (change)="toDate">
         <!-- 這邊的[(ngModel)]可以同步控制畫面的日期 -->
-  <button (click)="search()">測試</button>
   </div>
 </div>
 
+<!-- 清單資訊（總筆數 / 目前頁 / 總頁） -->
+<div class="list-header" style="margin-bottom: 8px;">
+  共 {{ totalItems }} 筆．第 {{ currentPage }} / {{ totalPages }} 頁
+</div>
 
 <!-- 羅列表單 -->
 <table border="1" cellspacing="0" cellpadding="6">
@@ -31,7 +34,7 @@
 
   <tbody>
     <!-- 用 *ngFor 逐筆列出資料 -->
-    <tr *ngFor="let f of filteredForms">
+    <tr *ngFor="let f of pagedList">
       <td>{{ f.id }}</td>
       <td>{{ f.name }}</td>
       <td>{{ stateLabel(getState(f)) }}</td>
@@ -55,11 +58,34 @@
       </td>
     </tr>
 
-  <tr *ngIf="filteredForms.length === 0">
+    <tr *ngIf="pagedList.length === 0">
       <td colspan="6">目前沒有符合條件的資料。</td>
     </tr>
   </tbody>
 </table>
 
+<!-- 簡易分頁列（第一頁 / 上一頁 / 數字頁碼 / 下一頁 / 最後一頁） -->
+<div style="display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap;">
+  <button (click)="goToPage(1)" [disabled]="currentPage === 1">« 第一頁</button>          <!-- 直接跳到第一頁 -->
+  <button (click)="prev()"      [disabled]="currentPage === 1">‹ 上一頁</button>           <!-- 往前一頁 -->
+
+  <!-- 若開頭不是第1頁，顯示「...」提示 -->
+  <span *ngIf="pageNumbers[0] > 1">...</span>
+
+  <!-- 這裡畫出 1 ~ totalPages 的按鈕 -->
+  <ng-container *ngFor="let n of pageNumbers">
+    <button
+      (click)="goToPage(n)"
+      [disabled]="n === currentPage">
+      {{ n }}
+    </button>
+  </ng-container>
+
+  <!-- 若結尾不是最後一頁，也顯示「...」提示 -->
+  <span *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages">...</span>
+
+  <button (click)="next()" [disabled]="currentPage === totalPages">下一頁 ›</button>   <!-- 往後一頁 -->
+  <button (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">最後一頁 »</button> <!-- 直接跳最後頁 -->
+</div>
 
 <router-outlet></router-outlet>

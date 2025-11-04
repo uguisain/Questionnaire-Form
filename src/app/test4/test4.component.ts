@@ -10,6 +10,4 @@ import { FormsModule } from "@angular/forms";
 export class Test4Component {
 
 
-
-
 }
