@@ -12,8 +12,7 @@ class="bg">
   <br><br>
   <div>統計日期: <input type="date"
     (change)="fromDate = $any($event.target).value; toDate = null">
-    <!-- attr可避免把非字串帶入造成出錯 -->
-        到
+        <span style="margin-right: 10px;">到</span>
         <input type="date"
         [(ngModel)]="toDate"
         [attr.min]="fromDate || toDayStr"
@@ -80,7 +79,7 @@ class="bg">
   <button style="color: rgb(10, 68, 87);" (click)="prev()"      [disabled]="currentPage === 1">‹ 上一頁</button>           <!-- 往前一頁 -->
 
   <!-- 若開頭不是第1頁，顯示「...」提示 -->
-  <span class="dots" *ngIf="pageNumbers[0] > 1">...</span>
+  <span style="color: white;" *ngIf="pageNumbers[0] > 1">...</span>
 
   <!-- 這裡畫出 1 ~ totalPages 的按鈕 -->
   <ng-container *ngFor="let n of pageNumbers">
