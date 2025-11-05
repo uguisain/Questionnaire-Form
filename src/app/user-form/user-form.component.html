@@ -1,102 +1,147 @@
+<div class="page-root">
+  <div class="page-center">
+
 <!-- 填寫模式 -->
 @if (pageMode === 'edit') {
 <!-- 如果 form 存在就顯示；否則顯示 notFound -->
-<div *ngIf="form">
+<div *ngIf="form" class="form-card">
   <!-- 表單名稱 -->
-  <h2>{{ form.name }}</h2>
+  <h2 class="form-title">{{ form.name }}</h2>
 
   <!-- 基本資訊 -->
-  <p>表單 ID：{{ form.id }}</p>
-  <p>填寫期間：{{ form.startDate }} ～ {{ form.endDate }}</p>
+   <div class="meta-card">
+  <p class="meta-item">表單 ID：{{ form.id }}</p>
+  <p class="meta-item">填寫期間：{{ form.startDate }} ～ {{ form.endDate }}</p>
+  </div>
 
-  <hr>
+  <!-- 使用者基本欄位 -->
+  <div class="section">
+    <div class="field-row">
+      <label class="field-label">姓名</label>
+      <input class="text-input" [(ngModel)]="userName">
+    </div>
 
-  <p style="display: inline;">姓名 : </p><input [(ngModel)]="userName"><br>
-  <p style="display: inline;">電話 : </p><input type="number" [(ngModel)]="userPhoneNumber"><br>
-  <p style="display: inline;">信箱 : </p><input type="email" [(ngModel)]="email"><br>
-  <p style="display: inline;">年齡 : </p><input type="number" [(ngModel)]="userAge"><br>
+    <div class="field-row">
+      <label class="field-label">電話</label>
+      <input class="text-input" type="number" [(ngModel)]="userPhoneNumber">
+    </div>
 
-  <hr>
+    <div class="field-row">
+      <label class="field-label">信箱</label>
+      <input class="text-input" type="email" [(ngModel)]="email">
+    </div>
+
+    <div class="field-row">
+      <label class="field-label">年齡</label>
+      <input class="text-input" type="number" [(ngModel)]="userAge">
+    </div>
+  </div>
+
 
  <!-- 問題欄位 -->
-  <h2>{{ form.name }}</h2>
-  <div><ol>
-  @for (question of form.options; track $index; let i = $index) {
-    <li>@if (question.required) {
-      <h5 style="color: red; line-height: 0; display: inline;">必填  </h5>
-      }<h3 style="display: inline;">{{ question.question }}</h3></li>
-      @if (question.type === 'single') {
-      @for (option of question.option; track $index) {
-      <input type="radio"
-      name="{{ question.questionId }}"
-      [value]="option.code"
-      [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList">
-      {{ option.ans }}
-      }
-    }
-    @if (question.type === 'multiple') {
-      @for (option of question.option; track $index) {
-        <input
-          type="checkbox"
-          [checked]="FillinReq[0].questionAnswerList[i].answerList.includes(option.code)"
-          (change)="toggleMulti(i, option.code, $event)">
-        {{ option.ans }}
-      }
-    }
-    @if (question.type === 'text') {
-      @for (option of question.option; track $index) {
-      <textarea type="text"
-      name="{{ question.questionId }}"
-      [value]="option.code"
-      [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList"></textarea>
-      }
-    }
-  }
-  </ol></div>
+      <div class="section">
+        <h3 class="section-title">{{ form.name }}</h3>
 
-  <br><br><br>
-  <!-- 送出按鈕 -->
-  <button (click)="send()">下一步</button>
+        <ol class="question-list">
+          @for (question of form.options; track $index; let i = $index) {
 
-  <br><br><br>
-  <!-- 返回按鈕 -->
-  <button (click)="back()">返回清單</button>
+            <li class="question-item">
+              @if (question.required) {
+                <span class="badge-required">必填</span>
+              }
+              <span class="question-text">{{ question.question }}</span>
 
-</div>
+              @if (question.type === 'single') {
+                <div class="option-list">
+                  @for (option of question.option; track $index) {
+                    <label class="option-item">
+                      <input class="opt-radio"
+                             type="radio"
+                             name="{{ question.questionId }}"
+                             [value]="option.code"
+                             [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList">
+                      <span>{{ option.ans }}</span>
+                    </label>
+                  }
+                </div>
+              }
+
+              @if (question.type === 'multiple') {
+                <div class="option-list">
+                  @for (option of question.option; track $index) {
+                    <label class="option-item">
+                      <input class="opt-checkbox"
+                             type="checkbox"
+                             [checked]="FillinReq[0].questionAnswerList[i].answerList.includes(option.code)"
+                             (change)="toggleMulti(i, option.code, $event)">
+                      <span>{{ option.ans }}</span>
+                    </label>
+                  }
+                </div>
+              }
+
+              @if (question.type === 'text') {
+                <div class="option-list">
+                  @for (option of question.option; track $index) {
+                    <textarea class="text-area"
+                              name="{{ question.questionId }}"
+                              [value]="option.code"
+                              [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList"></textarea>
+                  }
+                </div>
+              }
+            </li>
+          }
+  </ol>
+
+  <!-- 操作列 -->
+      <div class="actions">
+        <button class="btn-primary" (click)="send()">下一步</button>
+        <button class="btn-ghost" (click)="back()">返回清單</button>
+      </div>
+
+    </div><!-- /.form-card -->
+  </div><!-- /.form-shell -->
 }
 
 
 <!-- 確認模式 -->
 @if (pageMode === 'confirm') {
-  <h3>請確認以下內容是否正確</h3>
+  <div class="form-shell">
+    <div class="confirm-card">
 
-  <p>姓名：{{ FillinReq[0].userName || userName }}</p>
-  <p>電話：{{ FillinReq[0].userPhoneNumber || userPhoneNumber }}</p>
-  <p>信箱：{{ FillinReq[0].email || email }}</p>
-  <p>年齡：{{ FillinReq[0].userAge || userAge }}</p>
-  <hr>
-  <ol>
-  @for (ans of FillinReq[0].questionAnswerList; track $index; let i = $index) {
-    <div style="margin-bottom: 12px;">
-      <li><div>{{ ans.question }}</div></li>
+      <h3 class="confirm-title">請確認以下內容是否正確</h3>
 
-      <div>你的答案：
-        <!-- 單選: number -->
-        @if (form.options[i].type === 'single') {
-          {{ getAnswerDisplay(i) }}
-        }
-        <!-- 多選: array -->
-        @if (form.options[i].type === 'multiple') {
-          {{ getAnswerDisplay(i) }}
-        }
-        <!-- 文字: string -->
-        @if (form.options[i].type === 'text') {
-          {{ ans.answerList }}
-        }
+      <!-- 基本資料小卡片 -->
+      <div class="kv-card">
+        <p class="kv-item">姓名：<b>{{ FillinReq[0].userName || userName }}</b></p>
+        <p class="kv-item">電話：<b>{{ FillinReq[0].userPhoneNumber || userPhoneNumber }}</b></p>
+        <p class="kv-item">信箱：<b>{{ FillinReq[0].email || email }}</b></p>
+        <p class="kv-item">年齡：<b>{{ FillinReq[0].userAge || userAge }}</b></p>
       </div>
-    </div>
-  }</ol>
-  <hr>
-  <button (click)="backToEdit()">返回修改</button>
-  <button (click)="finalSubmit()">送出</button>
+
+      <ol class="answer-list">
+        @for (ans of FillinReq[0].questionAnswerList; track $index; let i = $index) {
+          <li class="answer-item">
+            <div class="answer-q">{{ ans.question }}</div>
+
+            <div class="answer-a">
+              <span class="badge-you">你的答案</span>
+              <!-- 單選 / 多選 → 用同一個顯示函式 -->
+              @if (form.options[i].type === 'single') { {{ getAnswerDisplay(i) }} }
+              @if (form.options[i].type === 'multiple') { {{ getAnswerDisplay(i) }} }
+              @if (form.options[i].type === 'text') { {{ ans.answerList }} }
+            </div>
+          </li>
+        }
+      </ol>
+
+      <div class="actions">
+        <button class="btn-ghost" (click)="backToEdit()">返回修改</button>
+        <button class="btn-primary" (click)="finalSubmit()">送出</button>
+      </div>
+
+    </div><!-- /.confirm-card -->
+  </div><!-- /.form-shell -->
 }
+</div></div>

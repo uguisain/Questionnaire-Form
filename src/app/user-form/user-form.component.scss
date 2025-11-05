@@ -1,3 +1,353 @@
-li {
+/* 背景層：只鋪圖，完全不影響排版 */
+.page-root {
+  background-image: url('/depositphotos_24140635-stock-photo-seamless-starfield.jpg');
+  background-repeat: repeat;         /* 平舖 */
+  background-size: 220px auto;       /* 圖樣大小（可調 160~320） */
+  background-position: top left;     /* 對齊左上 */
+  background-color: rgba(19, 13, 36, 0.4);
+  background-blend-mode: hard-light;
+}
+
+/* 置中容器：控制高度與置中，不讓內容被 flex 擠壓 */
+.page-center {
+  min-height: 100svh;                /* 視窗滿高（svh 行動裝置友善） */
+  display: flex;
+  justify-content: center;           /* 水平置中 */
+  align-items: flex-start;           /* 垂直從上開始（不壓縮內容高度） */
+  padding: 24px 0;                   /* 與視窗上下留白 */
+}
+
+/* 直接包住的第一層內容（你的 home-shell / form-shell） */
+/* ✅ 關鍵：避免 flex 讓它縮得太細 */
+.page-center > * {
+  flex: 0 1 960px;                   /* 不放大、允許微縮、理想寬度 960px */
+  max-width: 960px;                  /* 上限寬度（可調 880~1080） */
+  width: 100%;                       /* 小螢幕撐滿 */
+  margin: 0 16px;                    /* 小螢幕左右留白 */
+  box-sizing: border-box;            /* 計算寬度含內距/邊框，避免溢出 */
+}
+
+/* 版面：置中、非滿版 */
+.form-shell {
+  max-width: 920px;             /* 中等寬度，避免滿版 */
+  margin: 10px auto;
+  padding: 0 16px;
+
+}
+
+/* 背景層（這裡提供柔和漸層底，避免太白） */
+:host {
+  display: block;
+  min-height: 100svh;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #eef2ff 0%, transparent 60%),
+    radial-gradient(800px 500px at 110% 0%, #f6f0ff 0%, transparent 60%),
+    #b6c5f3; /* 整體淡藍 */
+}
+
+/* 主要卡片（整頁容器） */
+.form-card {
+  background: #f7f4ff;                 /* 淡紫底，避免白牆感 */
+  border: 1px solid #e7defb;           /* 柔邊框 */
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 28px rgba(122, 150, 255, 0.12),
+              0 6px  16px rgba(160, 140, 255, 0.12);
+  color: #2a2f3a;                       /* 主字色 */
+  /* 動畫 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* 標題 */
+.form-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #3e4b9a;                       /* 暗藍紫 */
+  margin: 4px 0 12px;
+  text-align: center;
+}
+
+/* 基本資訊卡片（再一層卡片，層次更豐富） */
+.meta-card {
+  background: #eef0ff;                  /* 淺藍塊 */
+  border: 1px solid #dfe5ff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #3b4261;
+  margin-bottom: 16px;
+}
+
+.meta-item { margin: 4px 0; }
+
+/* 區塊間距 */
+.section {
+  margin-top: 16px;
+  background: #ffffff;                  /* 內容區域使用白底提高對比 */
+  border: 1px solid #e9ecf8;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+/* 區塊副標題 */
+.section-title {
+  font-size: 18px;
+  color: #4b4fa8;
+  margin: 4px 2px 12px;
+}
+
+/* 欄位列（label + input） */
+.field-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;     /* 標籤固定寬，欄位撐開 */
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* 標籤 */
+.field-label {
+  color: #49506b;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* 單行輸入框（text/number/email） */
+.text-input {
+  background: #fafbff;                  /* 很淺的藍底 */
+  border: 1px solid #dee5ff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: #2a2f3a;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+}
+.text-input:focus {
+  border-color: #7aa6ff;
+  box-shadow: 0 0 0 3px rgba(122,166,255,0.18);
+  background: #ffffff;
+}
+
+/* 問題清單 */
+.question-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.question-item {
+  margin: 12px 0 16px;
+  padding: 10px 12px;
+  background: #f9fbff;                  /* 極淺藍塊 */
+  border: 1px solid #e6ecff;
+  border-radius: 10px;
+}
+
+/* 必填標章 */
+.badge-required {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #a3001b;
+  background: #ffe9ee;                  /* 淡粉底 */
+  border: 1px solid #ffd0d9;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+/* 題目文字 */
+.question-text {
+  font-size: 16px;
+  color: #2f3352;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* 選項群組（radio/checkbox/textarea 放在同一組） */
+.option-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px 14px;
+}
+
+/* 單個選項（label 包 input + 文字，對齊更好） */
+.option-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #343a55;
+}
+
+/* radio/checkbox 保持原生但微調距離（不覆蓋全站） */
+.opt-radio,
+.opt-checkbox {
+  width: 16px; height: 16px;
+  accent-color: #7a9bff;                /* 支援的瀏覽器會用此色 */
+}
+
+/* 多行文字輸入 */
+.text-area {
+  width: 97%;
+  min-height: 96px;
+  resize: vertical;
+  background: #fafbff;
+  border: 1px solid #dee5ff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #2a2f3a;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+}
+.text-area:focus {
+  border-color: #7aa6ff;
+  box-shadow: 0 0 0 3px rgba(122,166,255,0.18);
+  background: #ffffff;
+}
+
+/* 操作列（下一步 / 返回） */
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+/* 主按鈕（下一步） */
+.btn-primary {
+  background: #7a9bff;                  /* 柔藍 */
+  color: #fff;
+  border: 1px solid #6f90f2;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(122,155,255,0.28);
+  transition: transform .05s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+.btn-primary:hover { background: #6f90f2; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+/* 次要按鈕（返回清單） */
+.btn-ghost {
+  background: #f2f4ff;                  /* 淡淡藍底 */
+  color: #35406a;
+  border: 1px solid #dfe5ff;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: transform .05s ease, background .2s ease, border-color .2s ease;
+}
+.btn-ghost:hover { background: #e9edff; transform: translateY(-1px); }
+.btn-ghost:active { transform: translateY(0); }
+
+
+/* 動畫相關 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px); /* 一開始往下 30px */
+    filter: blur(6px);          /* 微微模糊 */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.bg {
+  animation: fadeInBg 1.5s ease forwards;
+}
+
+
+/* ===== 確認模式：卡片基調（與 .form-card 同系，但更清爽偏藍） ===== */
+.confirm-card {
+  background: #eef3ff;                 /* 比填寫頁更偏「淡藍」的底 */
+  border: 1px solid #dfe6ff;           /* 邊框偏藍 */
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 28px rgba(122, 166, 255, 0.12),
+              0 6px  16px rgba(160, 140, 255, 0.10);
+  color: #283046;
+}
+
+/* 標題（與填寫頁不同色系） */
+.confirm-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3b4aa8;                      /* 偏藍的標題色 */
+  margin: 2px 0 12px;
+}
+
+/* 基本資料卡片（比 meta-card 再清淡一點） */
+.kv-card {
+  background: #f7f9ff;                 /* 很淡的藍底 */
+  border: 1px solid #e7ecff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #3a4260;
+  margin-bottom: 16px;
+}
+.kv-item { margin: 4px 0; }
+
+/* 答案列表（有序清單） */
+.answer-list {
+  margin: 0;
+  padding-left: 22px;                  /* 列號縮排 */
+}
+
+/* 單題容器：讓每題有卡片感，但比填寫頁更薄一點 */
+.answer-item {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  background: #ffffff;                 /* 白底提高可讀性 */
+  border: 1px solid #e9edff;           /* 細邊框 */
+  border-radius: 10px;
+}
+
+/* 題目文字 */
+.answer-q {
   font-size: 15px;
+  font-weight: 600;
+  color: #2f3352;
+  margin-bottom: 8px;
+}
+
+/* 答案列：左邊一個「你的答案」徽章，右邊是答案內容 */
+.answer-a {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  color: #2c3555;
+}
+
+/* 徽章（淡藍） */
+.badge-you {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #1f3c88;
+  background: #e8efff;
+  border: 1px solid #d6e1ff;
+  border-radius: 999px;
+}
+
+/* 操作列：沿用上一頁的按鈕樣式，這裡只調整間距 */
+.confirm-card .actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* 隱藏所有數字輸入框的上下箭頭（Chrome、Edge、Safari） */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;  /* 隱藏控制鈕 */
+  margin: 0;                 /* 避免佔位 */
+}
+
+/* 隱藏 Firefox 的數值箭頭 */
+input[type="number"] {
+  -moz-appearance: textfield; /* 改成普通文字輸入框外觀 */
 }

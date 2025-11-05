@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 const ReporData = [
   {
     id: 1,
+    name: "喜歡的動物",
     status: "success",
     message: "統計成功",
     timestamp: "2025-10-30",
@@ -34,6 +35,7 @@ const ReporData = [
 },
 {
     id: 2,
+    name: "飲食習慣調查",
     status: "success",
     message: "統計成功",
     timestamp: "2025-10-30",
@@ -64,6 +66,7 @@ const ReporData = [
 },
 {
     id: 10,
+    name: "睡眠品質調查",
     status: "success",
     message: "統計成功",
     timestamp: "2025-10-30",
@@ -94,6 +97,7 @@ const ReporData = [
 },
 {
     id: 5,
+    name: "使用者介面回饋",
     status: "success",
     message: "統計成功",
     timestamp: "2025-10-30",
@@ -124,6 +128,7 @@ const ReporData = [
 },
 {
     id: 8,
+    name: "手機使用狀況",
     status: "success",
     message: "統計成功",
     timestamp: "2025-10-30",
@@ -154,6 +159,7 @@ const ReporData = [
 },
 {
     id: 7,
+    name: "節日活動偏好",
     status: "success",
     message: "統計成功",
     timestamp: "2025-10-30",

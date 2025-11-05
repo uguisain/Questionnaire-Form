@@ -72,6 +72,9 @@ export class HomeComponent {
 
   // 當畫面載入時執行
   ngOnInit(): void {
+    // 進入時回到最上方
+    window.scrollTo(0, 0);
+
     this.forms = this.example.getForms(); // 取得假資料
     console.log('載入資料:', this.forms); // 看看有沒有拿到
 

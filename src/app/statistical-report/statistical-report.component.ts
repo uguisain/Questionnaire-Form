@@ -27,6 +27,9 @@ export class StatisticalReportComponent {
   }
 
   ngOnInit(): void {
+    // 進入時回到最上方
+    window.scrollTo(0, 0);
+
     // 從路由參數拿 id（字串）→ 轉數字
     const id = +(this.route.snapshot.paramMap.get('id') || 0);
 
@@ -67,10 +70,13 @@ export class StatisticalReportComponent {
             data: optionData,
             // 線與邊框顏色
             backgroundColor: [
-            '#a62727',
-            '#4011c9',
-            '#11c928',
-            '#f6e33cff'
+            '#d47bacff',
+            '#a37bd4ff',
+            '#7bd47cff',
+            '#d4cf7bff',
+            '#7bd4d4ff',
+            '#d4a07bff',
+            '#636363ff',
             ],
             //設定hover時的偏移量，滑鼠移上去表會偏移，方便觀看選種的項目
             hoverOffset: 4,

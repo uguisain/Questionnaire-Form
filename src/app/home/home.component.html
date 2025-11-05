@@ -1,8 +1,16 @@
+<div style="background-image: url('pexels-j-knappitsch-433287109-15280106.jpg');
+background-size: cover; background-position: center; background-repeat: no-repeat;
+width: 100%; height: 100%; display: flex; align-items: center; min-height:632px"
+class="bg">
+<!-- ① 外層加 .home-shell，讓內容置中定寬 -->
+<div class="home-shell">
+<!--標題-->
+<div class="title"><h2>動態問卷</h2></div>
 <!-- 搜尋欄 -->
-<div>
-  問卷名稱: <input [(ngModel)]="searchname">
+<div class="search-bar">
+  問卷名稱: <input [(ngModel)]="searchname" style="border-radius: 15px; border: 1px solid darkorchid; height: 25px; outline: none; padding: 0 10px;">
+  <br><br>
   <div>統計日期: <input type="date"
-    [attr.min]="toDayStr"
     (change)="fromDate = $any($event.target).value; toDate = null">
     <!-- attr可避免把非字串帶入造成出錯 -->
         到
@@ -15,11 +23,12 @@
 </div>
 
 <!-- 清單資訊（總筆數 / 目前頁 / 總頁） -->
-<div class="list-header" style="margin-bottom: 8px;">
+<div class="list-header" style="color: #aac5fc;">
   共 {{ totalItems }} 筆．第 {{ currentPage }} / {{ totalPages }} 頁
 </div>
 
 <!-- 羅列表單 -->
+<div class="table-wrap">
 <table border="1" cellspacing="0" cellpadding="6">
   <thead>
     <tr>
@@ -35,7 +44,7 @@
   <tbody>
     <!-- 用 *ngFor 逐筆列出資料 -->
     <tr *ngFor="let f of pagedList">
-      <td>{{ f.id }}</td>
+      <td style="font-size: 20px; color: blueviolet;">{{ f.id }}</td>
       <td>{{ f.name }}</td>
       <td>{{ stateLabel(getState(f)) }}</td>
       <td>{{ f.startDate }}</td>
@@ -47,7 +56,7 @@
       </button>
 
       <!-- 已結束：顯示「檢視結果」按鈕（可點；目前先 console，之後導頁） -->
-      <button *ngIf="getState(f) === 'closed'" (click)="viewResult(f.id)">
+      <button *ngIf="getState(f) === 'closed'" (click)="viewResult(f.id)" class="secondary">
         檢視結果
       </button>
 
@@ -59,33 +68,37 @@
     </tr>
 
     <tr *ngIf="pagedList.length === 0">
-      <td colspan="6">目前沒有符合條件的資料。</td>
+      <td class="empty-row" colspan="6">目前沒有符合條件的資料。</td>
     </tr>
   </tbody>
 </table>
+</div>
 
 <!-- 簡易分頁列（第一頁 / 上一頁 / 數字頁碼 / 下一頁 / 最後一頁） -->
-<div style="display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap;">
-  <button (click)="goToPage(1)" [disabled]="currentPage === 1">« 第一頁</button>          <!-- 直接跳到第一頁 -->
-  <button (click)="prev()"      [disabled]="currentPage === 1">‹ 上一頁</button>           <!-- 往前一頁 -->
+<div class="pager">
+  <button style="color: rgb(10, 68, 87);" (click)="goToPage(1)" [disabled]="currentPage === 1">« 第一頁</button>          <!-- 直接跳到第一頁 -->
+  <button style="color: rgb(10, 68, 87);" (click)="prev()"      [disabled]="currentPage === 1">‹ 上一頁</button>           <!-- 往前一頁 -->
 
   <!-- 若開頭不是第1頁，顯示「...」提示 -->
-  <span *ngIf="pageNumbers[0] > 1">...</span>
+  <span class="dots" *ngIf="pageNumbers[0] > 1">...</span>
 
   <!-- 這裡畫出 1 ~ totalPages 的按鈕 -->
   <ng-container *ngFor="let n of pageNumbers">
     <button
       (click)="goToPage(n)"
-      [disabled]="n === currentPage">
+      [disabled]="n === currentPage"
+      [class.page-num--active]="n === currentPage">
       {{ n }}
     </button>
   </ng-container>
 
   <!-- 若結尾不是最後一頁，也顯示「...」提示 -->
-  <span *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages">...</span>
+  <span style="color: white;" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages">...</span>
 
-  <button (click)="next()" [disabled]="currentPage === totalPages">下一頁 ›</button>   <!-- 往後一頁 -->
-  <button (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">最後一頁 »</button> <!-- 直接跳最後頁 -->
+  <button style="color: rgb(10, 68, 87);" (click)="next()" [disabled]="currentPage === totalPages">下一頁 ›</button>   <!-- 往後一頁 -->
+  <button style="color: rgb(10, 68, 87);" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">最後一頁 »</button> <!-- 直接跳最後頁 -->
+</div>
+</div>
 </div>
 
 <router-outlet></router-outlet>

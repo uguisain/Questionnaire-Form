@@ -1,0 +1,149 @@
+/* 背景層：只鋪圖，完全不影響排版 */
+.page-root {
+  background-image: url('/celestial-cat-seamless-pattern-golden-starry-cats-repeat-background-mystery-stars-sun-moon-on-the-black-magic-sky-textile-design-fabric-wallpaper-minimal-line-art-esoteric-illustratio.jpg');
+  background-repeat: repeat;         /* 平舖 */
+  background-size: 450px auto;       /* 圖樣大小（可調 160~320） */
+  background-position: top left;     /* 對齊左上 */
+  background-color: rgba(12, 2, 41, 0.5);
+  background-blend-mode: hard-light;
+}
+
+/* 置中容器：控制高度與置中，不讓內容被 flex 擠壓 */
+.page-center {
+  min-height: 100svh;                /* 視窗滿高（svh 行動裝置友善） */
+  display: block;
+  align-items: flex-start;           /* 垂直從上開始（不壓縮內容高度） */
+  padding: 24px 0;                   /* 與視窗上下留白 */
+}
+
+.report-title {
+  display: flex;                    /* 讓內容容易水平垂直置中 */
+  justify-content: center;          /* 水平置中 */
+  align-items: center;              /* 垂直置中 */
+  width: fit-content;               /* 寬度依內容自動（不會太窄或太寬） */
+  margin: 0 auto 20px auto;         /* 上下間距20px、水平置中 */
+  padding: 10px 32px;               /* 內距讓背景不貼文字 */
+  background: linear-gradient(90deg, #bfe2e2, #ebcdff); /* 比單色更柔的淡藍漸層 */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(100, 150, 200, 0.25);     /* 淡陰影 */
+  color: #2a2f3a;                   /* 文字顏色 */
+
+  /* 動畫 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* 把 h2 自帶的 margin 拿掉，避免上下太開 */
+.report-title h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ===== 外層置中、不滿版 ===== */
+.report-shell {
+  max-width: 1024px;                   /* 報表頁稍寬，方便擺圖 */
+  margin: 10px auto;                   /* 置中＋上下留白 */
+  padding: 0 16px;                     /* 小螢幕左右保護 */
+  box-sizing: border-box;              /* 避免寬度計算跑掉 */
+  text-align: center;
+}
+
+/* ===== 背景：淡藍灰＋一點青綠，與其他頁做區別 ===== */
+:host {                                 /* 元件背景層 */
+  display: block;                       /* 讓背景能吃滿 */
+  min-height: 100svh;                   /* 至少滿一屏 */
+  background:
+    radial-gradient(1000px 520px at 10% -10%, #eef7ff 0%, transparent 60%),
+    radial-gradient(900px 500px at 110% 0%, #e7fbff 0%, transparent 60%),
+    #eef2f8;                            /* 藍灰底（不會太白） */
+  color: #2b3040;                       /* 主字色 */
+}
+
+/* ===== 圖表網格：自動流動排版 ===== */
+.report-grid {                          /* 放多張圖的容器 */
+  display: grid;                        /* 使用 CSS Grid */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 最小 320px，自動換行 */
+  gap: 14px;                            /* 卡片間距 */
+}
+
+/* ===== 單張圖卡片 ===== */
+.chart-card {                           /* 單張圖的卡片外框 */
+  background: linear-gradient(90deg, #e1e6fa, #eee1fa);
+  border: 1px solid #e2e8ff;            /* 柔邊框 */
+  border-radius: 14px;                   /* 圓角 */
+  padding: 14px;                         /* 內距 */
+  box-shadow: 0 10px 28px rgba(120, 150, 210, 0.12),
+              0 6px  16px rgba(120, 200, 200, 0.10); /* 淡藍＋淡青陰影 */
+
+  /* 動畫 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* 標題（比填寫頁更理性一點的藍灰色） */
+.chart-title {
+  font-size: 18px;                      /* 字級 */
+  font-weight: 700;                     /* 粗體 */
+  color: #3c4a80;                       /* 藍灰 */
+  margin: 4px 2px 10px;                 /* 與圖表間距 */
+}
+
+/* Canvas 尺寸（不改你的 Chart 程式，只做 CSS 限制） */
+.chart-canvas {
+  width: 100%;                          /* 撐滿卡片寬度 */
+  aspect-ratio: 1 / 1;                  /* 預設正方形圖 */
+  display: block;                       /* 避免 inline 留白縫隙 */
+  /* 若你的 Chart.js 會自行設高寬，此處仍可作為外層約束 */
+}
+
+/* ===== 操作列（返回） ===== */
+.report-actions {
+  display: flex;                        /* 水平排版 */
+  justify-content: flex-end;            /* 置右 */
+  margin-top: 16px;                     /* 與上方網格拉開 */
+}
+
+/* 返回按鈕風格：與其他頁不同的「藍灰外框」 */
+.btn-report-back {
+  background: #d2dcf7;                  /* 淡藍灰底 */
+  color: #334061;                       /* 字色 */
+  border: 1px solid #d8e0ff;            /* 外框 */
+  border-radius: 10px;                  /* 圓角 */
+  padding: 8px 14px;                    /* 內距 */
+  cursor: pointer;                      /* 指標 */
+  transition: transform .05s ease, background .2s ease, border-color .2s ease; /* 動畫 */
+
+  /* 動畫 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+.btn-report-back:hover {
+  background: #abb6e2;                  /* hover 更藍一點 */
+  border-color: #cdd8ff;                /* 邊框加深 */
+  transform: translateY(-2px);          /* 微浮起 */
+}
+.btn-report-back:active {
+  transform: translateY(0);             /* 點擊回原位 */
+}
+
+/* ===== 小螢幕微優化：縮小卡片內距，避免擠壓 ===== */
+@media (max-width: 380px) {
+  .chart-card { padding: 10px; }        /* 更小內距 */
+  .chart-title { font-size: 16px; }     /* 標題小一點 */
+}
+
+/* 動畫相關 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px); /* 一開始往下 30px */
+    filter: blur(6px);          /* 微微模糊 */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}

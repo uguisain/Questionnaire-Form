@@ -51,6 +51,9 @@ export class UserFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 進入時回到最上方
+    window.scrollTo(0, 0);
+
     // 從路由參數拿 id（字串）→ 轉數字
     const id = +(this.route.snapshot.paramMap.get('id') || 0);
 
@@ -184,6 +187,9 @@ export class UserFormComponent implements OnInit {
 
   // 送出答案（之後串 API）-------------------------------------
   send() {
+    // 進入時回到最上方
+    window.scrollTo(0, 0);
+
     // 防呆，必填通知
     // if() {}
 
