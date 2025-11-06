@@ -1,13 +1,16 @@
-<!-- dialog 標題(非必要) -->
-<h2 mat-dialog-title style="text-align: center; font-weight: bold;">{{data.title}}</h2>
+<!-- 整個對話框內容外層：掛動畫用 -->
+<div class="dlg-wrap" @dialogEnter>
+  <!-- dialog 標題(非必要) -->
+  <h2 mat-dialog-title class="dlg-title">{{ data.title }}</h2>
 
-<!-- dialog 內容 -->
-<mat-dialog-content>
-  <p style="text-align: center;">{{data.Message}}</p>
-</mat-dialog-content>
+  <!-- dialog 內容 -->
+  <mat-dialog-content class="dlg-content">
+    <p class="dlg-text">{{ data.Message }}</p>
+  </mat-dialog-content>
 
-<!-- dialog 按鈕 -->
-<mat-dialog-actions>
-  <!-- <button (click)="save()">確定</button> -->
-  <button (click)="end()">關閉</button>
-</mat-dialog-actions>
+  <!-- dialog 按鈕 -->
+  <mat-dialog-actions class="dlg-actions">
+    <!-- 你先維持只有關閉按鈕 -->
+    <button class="btn-ghost" (click)="end()">關閉</button>
+  </mat-dialog-actions>
+</div>

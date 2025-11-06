@@ -1,4 +1,24 @@
-button {
-  border-radius: 10px;
-  background-color: rgb(116, 172, 246);
+/* 整塊外觀（和你整站風格接近） */
+.dlg-wrap {
+  background: #f7f9ff;           /* 淡藍灰底 */
+  border: 1px solid #e2e8ff;     /* 細邊框 */
+  border-radius: 14px;           /* 圓角 */
+  padding: 16px;                 /* 內距 */
+  box-shadow: 0 10px 28px rgba(120,150,210,.14),
+              0  6px 14px rgba(120,200,220,.10); /* 柔陰影 */
+  color: #2b3040;                /* 主字色 */
 }
+
+/* 標題、內容、按鈕區小排版 */
+.dlg-title   { margin: 0 0 8px; font-size: 18px; font-weight: 800; color:#3c4a80; text-align: center; }
+.dlg-content { margin: 8px 0 12px; }
+.dlg-text    { margin: 0; text-align: center; }
+.dlg-actions { display: flex; justify-content: center; gap: 10px; }
+
+/* 次要按鈕（保持一致風格） */
+.btn-ghost {
+  background:#f2f4ff; color:#35406a; border:1px solid #dfe5ff; border-radius:10px;
+  padding:8px 14px; cursor:pointer; transition:transform .05s, background .2s;
+}
+.btn-ghost:hover { background:#e9edff; transform: translateY(-1px); }
+
