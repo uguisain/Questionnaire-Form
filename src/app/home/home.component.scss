@@ -149,7 +149,7 @@ button {
 }
 
 button:hover { transform: translateY(-1px); }
-button:active { transform: translateY(0); }
+button:active { transform: translateY(1px); }
 button[disabled] {
   background: #cbd5f6;
   cursor: not-allowed;
@@ -226,6 +226,21 @@ tbody .empty-row {
   animation-delay: 0.2s;
 }
 
+.state-open {
+  color: #1e9e57;            /* 綠：進行中 */
+  font-weight: 600;
+}
+
+.state-closed {
+  color: #9e2131;            /* 紅：已結束 */
+  font-weight: 600;
+}
+
+.state-not {
+  color: #7a7f8a;            /* 灰：未開始 */
+  font-weight: 500;
+}
+
 
 /* 動畫相關 */
 @keyframes fadeInUp {
@@ -244,3 +259,9 @@ tbody .empty-row {
 .bg {
   animation: fadeInBg 1.5s ease forwards;
 }
+
+@keyframes fadeInBg {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+

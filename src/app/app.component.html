@@ -1,29 +1,35 @@
-<!-- <button (click)="openDialog()">開啟</button> -->
-<!-- @if (showLoading) {
-<div class="overlar"></div>
-<mat-spinner></mat-spinner>
-} -->
+<!-- ====== Toolbar（不依賴第三方，純 CSS） ====== -->
+<header class="tb-root"> <!-- 最外層容器：可做固定/陰影 -->
+  <div class="tb-inner">
+    <!-- 左：品牌／標題 -->
+    <div class="tb-left">
+      <img src="/icecofee.png" alt="Logo" style="height: 35px; width: 20px; margin-right: 20px;">
+      <div class="tb-brand" routerLink="/">動態問卷系統</div> <!-- 你可換成 Logo 圖 -->
+    </div>
 
-<!-- <mat-drawer-container class="example-container" autosize>
- <mat-drawer #drawer class="example-sidenav" mode="side">
-  <mat-list role="list">
-  <mat-list-item role="listitem">頁面1</mat-list-item>
-  <mat-list-item role="listitem">頁面2</mat-list-item>
-  <mat-list-item role="listitem">頁面3</mat-list-item>
-  </mat-list>
- </mat-drawer>
+    <!-- 中：導覽（大螢幕顯示） -->
+    <nav class="tb-nav" [class.is-open]="menuOpen">
+      <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home" class="tb-link" routerLink="/"></mat-icon> -->
+    </nav>
 
- <div>
-  <div>
-    <br>
-    <h3>網頁內容</h3>
-    <button type="button" (click)="drawer.toggle()">
-      顯示sidenav
-    </button>
+    <!-- 右：搜尋 + 動作 -->
+    <div class="tb-right">
+      <!-- 簡易搜尋框（你要串邏輯再接） -->
+      <!-- <input class="tb-search" type="text" placeholder="搜尋…" [(ngModel)]="toolbarSearch"> -->
+      <!-- 登入按鈕（示意） -->
+      <button class="tb-btn" (click)="goLogin()">登入</button>
+
+      <!-- 小螢幕：漢堡鈕（切換導覽） -->
+      <button class="tb-burger" (click)="toggleMenu()">
+        <!-- 三條線（純 CSS） -->
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
- </div>
+</header>
 
-</mat-drawer-container> -->
+<!-- 內容與工具列間的間距（如果 header 設為 position:sticky/fixed 需要這層占位） -->
+<div class="tb-spacer"></div>
 
 
 

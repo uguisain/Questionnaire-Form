@@ -258,6 +258,25 @@
   animation: fadeInBg 1.5s ease forwards;
 }
 
+@keyframes fadeInBg {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.forget {
+  color: white;
+}
+
+.forget:hover {
+  cursor: pointer;
+  color: rgb(226, 151, 245);
+}
+
+.forget:active {
+  transform: scale(0.95);
+  color: rgb(174, 80, 195);
+}
+
 
 /* ===== 確認模式：卡片基調（與 .form-card 同系，但更清爽偏藍） ===== */
 .confirm-card {

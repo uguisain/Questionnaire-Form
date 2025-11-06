@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';                     // 元件、生命週期
+import { Component, inject, OnInit } from '@angular/core';                     // 元件、生命週期
 import { ActivatedRoute, Router } from '@angular/router';              // 讀參數、導頁
 import { CommonModule } from '@angular/common';                         // *ngIf 等指令（standalone 需要）
 import { RouterModule } from '@angular/router';                         // routerLink（standalone 需要）
 import { ExampleService, formElement } from '../@service/example.service'; // 你的服務與型別
 import { HomeComponent } from "../home/home.component";
 import { FormsModule } from "@angular/forms";
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-user-form',
@@ -14,6 +16,8 @@ import { FormsModule } from "@angular/forms";
   styleUrls: ['./user-form.component.scss']
 })
 export class UserFormComponent implements OnInit {
+  // dialog注入
+  readonly dialog = inject(MatDialog);
 
   pageMode = 'edit';
   // 'edit' = 填寫中
@@ -51,8 +55,8 @@ export class UserFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 進入時回到最上方
-    window.scrollTo(0, 0);
+    // // 進入時回到最上方
+    // window.scrollTo(0, 0);
 
     // 從路由參數拿 id（字串）→ 轉數字
     const id = +(this.route.snapshot.paramMap.get('id') || 0);
@@ -219,7 +223,10 @@ export class UserFormComponent implements OnInit {
         !Array.isArray(ans) && (ans === '' || ans === undefined || ans === null);
 
       if (notFilledMultiple || notFilledOther) {
-        alert('有必填題尚未填寫，請先完成再繼續');
+        this.dialog.open(DialogComponent, {
+          data: {Message: '有必填題尚未填寫，請先完成再繼續', title: '您尚未填寫完畢',},
+        });
+
         return;
       }
     }
@@ -245,6 +252,16 @@ export class UserFormComponent implements OnInit {
     console.log('送出最終資料：', this.FillinReq);
     // TODO: 之後改成呼叫 service API
     // this.example.submitAnswers(this.FillinReq).subscribe(...)
+
+    // dialog資料
+        const dialogData: any = {
+          title: '表單已送出',
+        };
+        // dialog
+        this.dialog.open(DialogComponent, {
+          data: dialogData,
+        });
+    this.router.navigate(['/home']);
   }
 
 }

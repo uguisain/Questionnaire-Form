@@ -46,12 +46,14 @@ export class HomeComponent {
   // ===== 導頁事件（之後會真接表單/結果）=====
   goFill(id: number) {
     this.router.navigate(['/form', id]);                 // 用絕對路徑，最直覺
+    window.scrollTo(0, 0);
   }
 
   viewResult(id: number) {
     // 之後你可以做 '/result/:id' 的頁面；現在先印 log 代表「會被觸發」
     console.log('前往檢視結果，id =', id);
     this.router.navigate(['/Report', id]);
+    window.scrollTo(0, 0);
   }
 
   // 存使用者選的開始日期

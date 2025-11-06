@@ -1,38 +1,134 @@
-mat-spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50% -50%);
-  z-index: 5;
+/* ===== 工具列外觀（可切 sticky 或 fixed） ===== */
+.tb-root {
+  position: sticky;       /* 捲動時吸附在上方；若要永遠固定可改 fixed */
+  top: 0;                 /* 置於頁面頂端 */
+  z-index: 50;            /* 在內容之上 */
+  backdrop-filter: blur(6px); /* 背景輕微模糊（有透明感） */
+  background: linear-gradient(0deg, rgba(232, 236, 250, 0.85), rgba(244, 232, 250, 0.85));
+  border-bottom: 1px solid #e0e6ff;
+  box-shadow: 0 6px 18px rgba(120,150,220,.12);
 }
 
-.overlar {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-  z-index: 2;
-  backdrop-filter: blur(2px);
+/* 內層容器：置中與寬度控制 */
+.tb-inner {
+  max-width: 1080px;      /* 中等寬度（可調） */
+  margin: 0 auto;         /* 水平置中 */
+  padding: 10px 16px;     /* 內距 */
+  display: grid;          /* 用 grid 排三欄：左/中/右 */
+  grid-template-columns: 1fr auto 1fr; /* 左中右 */
+  align-items: center;    /* 垂直置中 */
+  gap: 12px;              /* 欄位間距 */
 }
 
-.example-container {
-  width: 500px;
-  height: 300px;
-  border: 1px solid rgba(0, 0, 0, 0.5);
+/* 左：品牌 */
+.tb-left { display: flex; align-items: center; }
+.tb-brand {
+  font-size: 18px;        /* 標題大小 */
+  font-weight: 800;       /* 粗體 */
+  letter-spacing: .5px;   /* 字距 */
+  color: #32407a;         /* 藍灰 */
 }
 
-.example-sidenav-content {
+.tb-brand:hover {
+  cursor: pointer;
+}
+
+/* 中：導覽 */
+.tb-nav {
   display: flex;
-  height: 100%;
+  gap: 10px;
+  align-items: center;
+  justify-content: center; /* 中間對齊 */
+}
+.tb-link {
+  color: #3a457a;               /* 文字 */
+  text-decoration: none;        /* 去底線 */
+  padding: 6px 10px;            /* 觸控區域 */
+  border-radius: 10px;          /* 圓角 */
+  transition: background .2s ease, color .2s ease;
+}
+.tb-link:hover { background: #e9edff; }
+
+/* 右：搜尋 + 動作 + 漢堡 */
+.tb-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;    /* 靠右 */
+  gap: 10px;
+}
+
+/* 搜尋框（小而靈巧） */
+.tb-search {
+  background: #f6f8ff;          /* 淡底 */
+  border: 1px solid #dfe5ff;    /* 細邊框 */
+  border-radius: 10px;          /* 圓角 */
+  padding: 6px 10px;            /* 內距 */
+  color: #2a2f3a;               /* 字色 */
+  outline: none;                /* 去預設藍框 */
+}
+.tb-search:focus {
+  border-color: #7aa6ff;        /* 聚焦色 */
+  box-shadow: 0 0 0 3px rgba(122,166,255,.16);
+  background: #fff;
+}
+
+/* 右側一般按鈕（如登入） */
+.tb-btn {
+  background: #7a9bff;          /* 淡藍 */
+  color: #fff;
+  border: 1px solid #6f90f2;
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
+  box-shadow: 0 6px 14px rgba(122,155,255,.25);
+}
+.tb-btn:hover { background: #6f90f2; transform: translateY(-1px); }
+.tb-btn:active { transform: translateY(1px); }
+
+/* 漢堡鈕（小螢幕顯示） */
+.tb-burger {
+  display: none;                 /* 大螢幕隱藏 */
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1px solid #dfe5ff;
+  background: #f6f8ff;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+}
+.tb-burger span {
+  display: block;
+  width: 16px; height: 2px;
+  background: #3a457a;
+  border-radius: 1px;
 }
 
-.example-sidenav {
-  padding: 20px;
+/* 小螢幕（<= 768px）處理：導覽收合、展示漢堡 */
+@media (max-width: 768px) {
+  .tb-inner { grid-template-columns: 1fr auto 1fr; } /* 仍三欄，但中間空間縮小 */
+  .tb-search { display: none; }                      /* 手機先藏搜尋（簡潔） */
+  .tb-burger { display: inline-flex; }               /* 顯示漢堡鈕 */
+
+  /* 導覽預設隱藏（手機），點漢堡展開 */
+  .tb-nav {
+    position: absolute;          /* 飄在工具列下方 */
+    top: 56px; left: 0; right: 0;
+    margin: 0 auto;
+    max-width: 1080px;
+    padding: 8px 16px;
+    display: none;               /* 預設不顯示 */
+    gap: 8px;
+    justify-content: center;
+    background: rgba(245,248,255,.95);
+    border-bottom: 1px solid #e0e6ff;
+    box-shadow: 0 8px 18px rgba(120,150,220,.12);
+    border-radius: 0 0 12px 12px;
+  }
+  .tb-nav.is-open { display: flex; } /* menuOpen=true → 顯示 */
 }
 
-.example-spacer {
-  flex: 1 1 auto;
-}
+/* 內容占位（如果 .tb-root 改 fixed 才需要加高；sticky 可調小） */
+// .tb-spacer { height: 8px; }  /* 你覺得頂部太擠可調成 12~16 */
