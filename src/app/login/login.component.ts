@@ -1,18 +1,29 @@
 import { Component } from '@angular/core';
 import { FormsModule } from "@angular/forms";
+import { Router } from '@angular/router';
+import { AuthService } from '../@service/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+
+  constructor(
+    private auth: AuthService,   // 注入假登入服務
+    private router: Router,      // 登入成功導頁
+    private dialog: MatDialog    // 彈出提示對話框
+  ) {}
 
   pageMode: 'login' | 'register' | 'forgot' = 'login'; // 預設停在登入頁
 
   // 使用者輸入的帳密 -----------------------------------------
-  username: string = '';        // 帳號（用輸入框綁定）
+  email: string = '';        // 帳號（用輸入框綁定）
   password: string = '';        // 密碼（用輸入框綁定）
 
   // --- 註冊用欄位 ---
@@ -38,40 +49,20 @@ export class LoginComponent {
 
   // 登入流程 ---------------------------------------------------
   login() {
-    // 1) 先清空錯誤狀態
-    this.loginError = false;        // 每次登入先把錯誤提示關掉
-
-    // 2) 在假資料中找「帳號密碼都符合」的人
-    const found = this.fakeUsers.find(u =>
-      u.username === this.username && u.password === this.password
-    );
-    // 假碼示範：呼叫 API，把帳密送去後端驗證
-    // this.authService.login(this.username, this.password).subscribe(res => {
-    //   if (res.ok) { this.currentUser = res.user; this.isLoggedIn = true; }
-    //   else { this.loginError = true; }
-    // });
-
-    // 3) 判斷是否找到對應使用者
-    if (found) {
-      // 3a) 登入成功 → 設定狀態與目前使用者
-      this.isLoggedIn = true;       // 已登入
-      this.currentUser = {          // 存一份使用者資訊（不含密碼）
-        id: found.id,
-        name: found.name,
-        email: found.email,
-      };
-
-      // 3b)（可選）存在 localStorage：讓你重新整理也能保持登入狀態
-      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-
-      // 3c) 測試用：印出成功訊息，確認流程
-      console.log('✅ 登入成功：', this.currentUser);
+    const ok = this.auth.login(this.email, this.password); // true/false
+    if (ok) {
+      this.dialog.open(DialogComponent, {
+        data: { title: '登入成功', Message: '歡迎回來！', status: 'success' },
+        enterAnimationDuration: '160ms',
+        exitAnimationDuration: '120ms',
+      });
+      this.router.navigateByUrl('/'); // 要改去 /profile 也可
     } else {
-      // 3d) 登入失敗 → 顯示錯誤提示
-      this.isLoggedIn = false;      // 未登入
-      this.currentUser = null;      // 清空使用者
-      this.loginError = true;       // 顯示「帳號或密碼錯誤」
-      console.log('❌ 帳號或密碼錯誤');
+      this.dialog.open(DialogComponent, {
+        data: { title: '登入失敗', Message: '帳號或密碼不正確', status: 'error' },
+        enterAnimationDuration: '160ms',
+        exitAnimationDuration: '120ms',
+      });
     }
   }
 

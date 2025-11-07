@@ -3,7 +3,7 @@
   <div class="tb-inner">
     <!-- 左：品牌／標題 -->
     <div class="tb-left">
-      <img src="/icecofee.png" alt="Logo" style="height: 35px; width: 20px; margin-right: 20px;">
+      <img src="/coffee-hot-1.png" alt="Logo" style="height: 35px; margin-right: 10px;">
       <div class="tb-brand" routerLink="/">動態問卷系統</div> <!-- 你可換成 Logo 圖 -->
     </div>
 
@@ -14,16 +14,18 @@
 
     <!-- 右：搜尋 + 動作 -->
     <div class="tb-right">
-      <!-- 簡易搜尋框（你要串邏輯再接） -->
-      <!-- <input class="tb-search" type="text" placeholder="搜尋…" [(ngModel)]="toolbarSearch"> -->
-      <!-- 登入按鈕（示意） -->
-      <button class="tb-btn" (click)="goLogin()">登入</button>
+      <!-- 問候語：未登入 → 遊客，你好！；登入後 → (用戶名)，你好！ -->
+    <span>{{ displayName }}，你好！</span>
 
-      <!-- 小螢幕：漢堡鈕（切換導覽） -->
-      <button class="tb-burger" (click)="toggleMenu()">
-        <!-- 三條線（純 CSS） -->
-        <span></span><span></span><span></span>
-      </button>
+    <!-- 登入 / 登出按鈕切換 -->
+    @if (isLoggedIn) {
+      <!-- 已登入：顯示登出 + 個人首頁 -->
+      <button class="tb-btn" (click)="logout()">登出</button>
+      <button class="tb-btn" routerLink="/profile">個人首頁</button>
+    } @else {
+      <!-- 未登入：顯示登入按鈕 -->
+      <button class="tb-btn" routerLink="/Login">登入</button>
+    }
     </div>
   </div>
 </header>
