@@ -1,0 +1,23 @@
+<h3>⚖️ BMI 狀態判定</h3>
+
+<input
+  type="number"
+  placeholder="身高（公分）"
+  [(ngModel)]="height">
+
+<input
+  type="number"
+  placeholder="體重（公斤）"
+  [(ngModel)]="weight">
+
+<button (click)="checkBmi()">
+  計算 BMI
+</button>
+
+<p>
+  BMI：{{ bmiResult }}
+</p>
+
+<p>
+  狀態：{{ statusText }}
+</p>

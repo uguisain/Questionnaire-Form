@@ -1,6 +1,6 @@
 /* 背景：淡藍＋淡紫漸層 */
 .page-root {
-  min-height: 100vh;
+  min-height: 88vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -20,11 +20,11 @@
 /* Tabs 外框卡片 */
 .tabBox {
   width: 100%;
-  min-height: 400px;
+  min-height: 436px;
   padding: 20px;
   border-radius: 20px;
   backdrop-filter: blur(14px);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(253, 250, 255, 0.9);
   box-shadow: 0 10px 26px rgba(86, 108, 179, 0.14);
 
   /* 動畫 */
@@ -58,7 +58,7 @@
   .mat-mdc-tab-label.mdc-tab--active {
     background: linear-gradient(90deg, #9fb8ff, #c5b6ff);
     color: #ffffff;
-    box-shadow: 0 3px 10px rgba(140, 160, 240, 0.4);
+    box-shadow: 0 3px 10px rgba(154, 174, 255, 0.608);
   }
 
   // 指示線（可做得很淡或隱藏）
@@ -173,4 +173,16 @@ button:hover {
     transform: translateY(0);
     filter: blur(0);
   }
+}
+
+/* 隱藏所有數字輸入框的上下箭頭（Chrome、Edge、Safari） */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;  /* 隱藏控制鈕 */
+  margin: 0;                 /* 避免佔位 */
+}
+
+/* 隱藏 Firefox 的數值箭頭 */
+input[type="number"] {
+  -moz-appearance: textfield; /* 改成普通文字輸入框外觀 */
 }

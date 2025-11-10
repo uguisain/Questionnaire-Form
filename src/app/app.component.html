@@ -15,13 +15,13 @@
     <!-- 右：搜尋 + 動作 -->
     <div class="tb-right">
       <!-- 問候語：未登入 → 遊客，你好！；登入後 → (用戶名)，你好！ -->
-    <span>{{ displayName }}，你好！</span>
+    <span>{{ displayName }}，Hello！</span>
 
     <!-- 登入 / 登出按鈕切換 -->
     @if (isLoggedIn) {
       <!-- 已登入：顯示登出 + 個人首頁 -->
-      <button class="tb-btn" (click)="logout()">登出</button>
       <button class="tb-btn" routerLink="/profile">個人首頁</button>
+      <button class="tb-btn" (click)="logout()">登出</button>
     } @else {
       <!-- 未登入：顯示登入按鈕 -->
       <button class="tb-btn" routerLink="/Login">登入</button>

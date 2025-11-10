@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';            // [(ngModel)] 用
 import { AuthService } from '../@service/auth.service';  // 你的 AuthService 路徑
 import { UserProfile, QuestionnaireSummary } from '../@models/auth-model';      // 你的介面路徑
 import {MatTabsModule} from '@angular/material/tabs';
+import { DialogComponent } from '../dialog/dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-per-infor',
@@ -17,12 +19,13 @@ export class PerInforComponent {
   myAnswered: QuestionnaireSummary[] = []; // 已填寫
   myCreated: QuestionnaireSummary[] = [];  // 我新增
 
-    constructor(private auth: AuthService) {
+    constructor(private auth: AuthService, private router: Router,) {
       // 一進來就從 AuthService 拿目前登入的使用者資料
       const state = this.auth.getState(); // 一次拿到現在狀態
       this.user = state.user;
       this.myAnswered = this.auth.getMyAnswered(); // 從 service 抓清單
       this.myCreated = this.auth.getMyCreated();   // 從 service 抓清單
+
       }
 
     save() {
@@ -38,6 +41,11 @@ export class PerInforComponent {
 
       // 目前是存到 localStorage 的假資料，之後接 API 只要改 AuthService 實作
       alert('已儲存（目前為假資料，儲存在瀏覽器）');
+      // this.dialog.open(DialogComponent, {
+      //     enterAnimationDuration: '160ms',
+      //     exitAnimationDuration: '120ms',
+      //     data: {Message: '有必填題尚未填寫，請先完成再繼續', title: '您尚未填寫完畢'},
+      //   });
     }
 
 }
