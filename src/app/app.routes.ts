@@ -7,6 +7,7 @@ import { Test3Component } from './test3/test3.component';
 import { Test4Component } from './test4/test4.component';
 import { StatisticalReportComponent } from './statistical-report/statistical-report.component';
 import { LoginComponent } from './login/login.component';
+import { PerInforComponent } from './per-infor/per-infor.component';
 
 
 export const routes: Routes = [
@@ -20,6 +21,13 @@ export const routes: Routes = [
   { path: "test3", component: Test3Component},
   { path: "test4", component: Test4Component},
   { path: "Login", component: LoginComponent},
+  { path: 'profile', loadComponent: () =>
+    import('./per-infor/per-infor.component').then(m => m.PerInforComponent)},
+
+
+
+
+
   { path: "**", component: HomeComponent},
 
 ];

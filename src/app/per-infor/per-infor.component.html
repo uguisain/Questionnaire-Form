@@ -1,0 +1,84 @@
+<div class="page-root">
+  <div class="page-center">
+    <!-- Tabs 卡片 -->
+    <div class="tabBox">
+      <mat-tab-group class="profile-tabs" mat-stretch-tabs>
+        <!-- 個人資料 Tab -->
+        <mat-tab label="個人資料">
+          <div class="tab-pane">
+            @if (user) {
+              <h2 class="report-title">個人資料</h2>
+
+              <label>姓名</label>
+              <input [(ngModel)]="user.name">
+
+              <label>電話</label>
+              <input [(ngModel)]="user.phone">
+
+              <label>年齡</label>
+              <input type="number" [(ngModel)]="user.age">
+              <br>
+              <button (click)="save()" style="margin-bottom: 20px;">儲存變更</button>
+            } @else {
+              <p>尚未登入，請先 <a routerLink="/login">登入</a> 再查看個人資料。</p>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- 已填寫表單 Tab -->
+        <mat-tab label="已填寫表單">
+          <div class="tab-pane">
+            <h2 class="report-title">已填寫表單</h2>
+
+            @if (myAnswered?.length) {
+              <ul class="list">
+                @for (f of myAnswered; track f.id) {
+                  <li class="list-item">
+
+                    <div class="title">{{ f.id }}. {{ f.title }}</div>
+                    <div class="meta">填寫日期：{{ f.createdAt }}</div>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="hint">目前沒有已填寫的問卷紀錄。</p>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- 我新增的表單 Tab -->
+        <mat-tab label="我新增的表單">
+          <div class="tab-pane">
+            <h2 class="report-title">我新增的表單</h2>
+
+            @if (myCreated?.length) {
+              <ul class="list">
+                @for (f of myCreated; track f.id) {
+                  <li class="list-item">
+                    <div class="title">{{ f.id }}. {{ f.title }}</div>
+                    <div class="meta">建立日期：{{ f.createdAt }}</div>
+                    <!-- 之後這裡可以加「前往管理 / 刪除」按鈕 -->
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="hint">目前還沒有由你建立的問卷。</p>
+            }
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

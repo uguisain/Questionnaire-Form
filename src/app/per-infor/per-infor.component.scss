@@ -1,0 +1,176 @@
+/* 背景：淡藍＋淡紫漸層 */
+.page-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+  background: radial-gradient(circle at top, #dbe4fa, #dcd2f4);
+}
+
+/* 中央置中的卡片容器 */
+.page-center {
+  width: 100%;
+  max-width: 720px;
+  padding: 0 16px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Tabs 外框卡片 */
+.tabBox {
+  width: 100%;
+  min-height: 400px;
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 26px rgba(86, 108, 179, 0.14);
+
+  /* 動畫 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* Material Tabs 樣式微調 */
+.profile-tabs {
+  // 標籤列背景透明一點
+  .mat-mdc-tab-header {
+    background: transparent;
+    margin-bottom: 8px;
+  }
+
+  // 單個 Tab 標籤
+  .mat-mdc-tab-labels {
+    gap: 4px; // 標籤之間一點空隙
+  }
+
+  .mat-mdc-tab-label {
+    min-height: 40px;
+    border-radius: 999px;
+    padding: 0 18px;
+    font-size: 14px;
+    color: #6b6f8f;
+    transition: all 0.2s ease;
+  }
+
+  // 選中的 Tab
+  .mat-mdc-tab-label.mdc-tab--active {
+    background: linear-gradient(90deg, #9fb8ff, #c5b6ff);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(140, 160, 240, 0.4);
+  }
+
+  // 指示線（可做得很淡或隱藏）
+  .mat-mdc-tab-indicator {
+    .mat-mdc-tab-indicator-content {
+      height: 0; // 不需要底線，可設為 0
+    }
+  }
+}
+
+/* 每個 Tab 內頁內容 */
+.tab-pane {
+  padding: 12px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 標題：沿用你原本 report-title 風格 */
+.report-title {
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+  color: #4b5ea7;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  margin-bottom: 4px;
+}
+
+/* 表單欄位 */
+label {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d5ddff;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #9faefc;
+  box-shadow: 0 0 0 2px rgba(159, 174, 252, 0.18);
+}
+
+/* 儲存按鈕 */
+button {
+  margin-top: 10px;
+  padding: 8px 0;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #9fb8ff, #c5b6ff);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  box-shadow: 0 4px 12px rgba(140, 160, 240, 0.35);
+}
+
+/* 清單樣式（已填寫 / 我新增的表單） */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.list-item {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(244, 247, 255, 0.95);
+  border: 1px solid rgba(198, 208, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.list-item .title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #445088;
+}
+
+.list-item .meta {
+  font-size: 12px;
+  color: #7b82a4;
+}
+
+.hint {
+  font-size: 13px;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* 動畫相關 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px); /* 一開始往下 30px */
+    filter: blur(6px);          /* 微微模糊 */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
