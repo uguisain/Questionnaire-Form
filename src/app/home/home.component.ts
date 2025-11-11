@@ -3,6 +3,9 @@ import { FormsModule } from "@angular/forms";
 import { ExampleService, formElement } from '../@service/example.service';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService } from '../@service/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -45,6 +48,20 @@ export class HomeComponent {
 
   // ===== 導頁事件（之後會真接表單/結果）=====
   goFill(id: number) {
+    // 先判斷是否登入
+    if (!this.auth.isLoggedIn()) {
+      // 未登入 → 提示 + 導頁
+      const dialogData: any = {
+          title: '請先登入',
+        };
+        // dialog
+        this.dialog.open(DialogComponent, {
+          data: dialogData,
+        });
+      this.router.navigateByUrl('/Login');
+      return;
+    }
+
     this.router.navigate(['/form', id]);                 // 用絕對路徑，最直覺
     window.scrollTo(0, 0);
   }
@@ -70,7 +87,7 @@ export class HomeComponent {
   forms: formElement[] = [];
 
   // 注入服務------------------------------------------------------
-  constructor(private example: ExampleService, private router: Router) {}
+  constructor(private example: ExampleService, private router: Router, private auth: AuthService, private dialog: MatDialog) {}
 
   // 當畫面載入時執行
   ngOnInit(): void {

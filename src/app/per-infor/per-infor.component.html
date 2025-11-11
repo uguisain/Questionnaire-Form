@@ -1,4 +1,4 @@
-<div class="page-root">
+<div class="page-root bg">
   <div class="page-center">
     <!-- Tabs 卡片 -->
     <div class="tabBox">
@@ -49,16 +49,21 @@
         <!-- 我新增的表單 Tab -->
         <mat-tab label="我新增的表單">
           <div class="tab-pane">
-            <h2 class="report-title">我新增的表單</h2>
+            <div class="tab-header">
+              <h2 class="report-title">我新增的表單</h2>
+              <button class="outline-btn" (click)="openCreateFormDialog()">新增表單</button>
+            </div>
 
             @if (myCreated?.length) {
               <ul class="list">
                 @for (f of myCreated; track f.id) {
                   <li class="list-item">
+                  <div class="info">
                     <div class="title">{{ f.id }}. {{ f.title }}</div>
                     <div class="meta">建立日期：{{ f.createdAt }}</div>
-                    <!-- 之後這裡可以加「前往管理 / 刪除」按鈕 -->
-                  </li>
+                  </div>
+                  <button class="danger-btn" (click)="deleteMyCreated(f.id)">刪除</button>
+                </li>
                 }
               </ul>
             } @else {

@@ -112,6 +112,25 @@ export class AuthService {
     return [...this.state.myAnswered];         // 回傳拷貝
   }
 
+  // 新增一筆「我建立的問卷」到清單中
+  addMyCreated(title: string) {
+    if (!this.state.user) {
+      // 沒登入理論上不給新增；這裡先簡單擋掉
+      return;
+    }
+
+    const newForm: QuestionnaireSummary = {
+      id: Date.now(),                               // 用現在時間當假 ID（之後改 API 給的 ID）
+      title: title,
+      createdAt: new Date().toISOString().slice(0, 10), // yyyy-MM-dd
+    };
+
+    // 新的放前面，感覺比較像最新建立
+    this.state.myCreated = [newForm, ...this.state.myCreated];
+
+    this.save(); // 寫進 localStorage + 通知訂閱者更新
+  }
+
   deleteMyCreated(id: number) {
     // 刪除自己建立的問卷（僅從假清單移除）
     this.state.myCreated = this.state.myCreated.filter(q => q.id !== id);

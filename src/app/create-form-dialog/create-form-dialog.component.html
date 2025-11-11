@@ -1,0 +1,93 @@
+<div class="dialog-root">
+  <h2>建立新問卷</h2>
+
+  <!-- 問卷基本設定 -->
+  <div class="section">
+    <label>問卷名稱（必填）</label>
+    <input [(ngModel)]="form.name" placeholder="例如：顧客滿意度調查" style="margin-left: 15px;">
+
+    <label>問卷說明（選填）</label>
+    <textarea [(ngModel)]="form.description" rows="2" placeholder="簡單描述這份問卷的用途..." style="margin-left: 15px;"></textarea>
+
+    <div class="row">
+      <div class="field">
+        <label>開始日期</label>
+        <input type="date" [(ngModel)]="form.startDate" [attr.min]="toDayStr" (change)="form.endDate = null">
+      </div>
+      <div class="field">
+        <label>結束日期</label>
+        <input type="date" [(ngModel)]="form.endDate" [attr.min]="form.startDate || toDayStr">
+      </div>
+    </div>
+
+    <label class="inline">
+      <input type="checkbox" [(ngModel)]="form.published" style="min-width: 10px; width: 5%; margin-left: 15px;">
+      建立後立即發佈
+    </label>
+  </div>
+
+  <!-- 題目清單 -->
+  <div class="section">
+    <div class="section-header">
+      <span>題目設定（最多 {{ maxQuestions }} 題）</span>
+      <button class="mini" (click)="addQuestion()" [disabled]="form.questionList.length >= maxQuestions">
+        新增題目
+      </button>
+    </div>
+
+    <div *ngIf="form.questionList.length === 0" class="hint">
+      尚未新增題目，點右上角「新增題目」開始建立。
+    </div>
+
+    <div class="question-card" *ngFor="let q of form.questionList; let i = index">
+      <div class="q-header">
+        <div class="q-title">第 {{ i + 1 }} 題</div>
+        <button class="x" (click)="removeQuestion(i)">✕</button>
+      </div>
+
+      <label>題目內容</label>
+      <input [(ngModel)]="q.question" placeholder="請輸入題目文字">
+
+      <div class="row">
+        <div class="field">
+          <label>題型</label>
+          <select [(ngModel)]="q.type" (change)="onTypeChange(q)">
+            <option value="single">單選</option>
+            <option value="multiple">多選</option>
+            <option value="text">文字</option>
+          </select>
+        </div>
+
+        <div class="field check">
+          <label class="inline">
+            <input type="checkbox" [(ngModel)]="q.required" style="min-width: 10px; width: 5%;">
+            必填
+          </label>
+        </div>
+      </div>
+
+      <!-- 選項設定：僅單選 & 多選顯示 -->
+      <div *ngIf="q.type === 'single' || q.type === 'multiple'" class="options">
+        <div class="opt-row" *ngFor="let opt of q.options; let oi = index">
+          <span class="dot">●</span>
+          <input [(ngModel)]="q.options[oi]" placeholder="選項文字">
+          <button class="x mini-x" (click)="removeOption(q, oi)" *ngIf="q.options.length > 1">✕</button>
+        </div>
+        <button class="mini ghost" (click)="addOption(q)" *ngIf="(q.options?.length || 0) < 8">
+          新增選項
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 錯誤訊息 -->
+  <div class="error" *ngIf="errorMsg">
+    {{ errorMsg }}
+  </div>
+
+  <!-- 按鈕列 -->
+  <div class="btn-row">
+    <button class="ghost" (click)="cancel()">取消</button>
+    <button class="primary" (click)="save()">儲存問卷</button>
+  </div>
+</div>
