@@ -24,14 +24,14 @@ export class AuthService {
     if (raw) {
       this.state = JSON.parse(raw);                       // 還原為物件
     } else {
-      // 第一次可放一點示範資料（之後可改為空）
+      // 可放一點示範資料（之後可改為空）
       this.seed();                                        // 建立示範帳號與問卷
       this.save();                                        // 存進 localStorage
     }
   }
 
   private seed() {
-    // 建立一個示範使用者與兩個清單
+    // 示範使用者與兩個清單
     const demoUser: UserProfile = {
       id: 1,
       name: '示範用戶',

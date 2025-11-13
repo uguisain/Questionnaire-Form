@@ -147,3 +147,12 @@
     filter: blur(0);
   }
 }
+
+.bg {
+  animation: fadeInBg 1.5s ease forwards;
+}
+
+@keyframes fadeInBg {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

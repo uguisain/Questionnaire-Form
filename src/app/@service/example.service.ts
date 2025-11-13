@@ -32,13 +32,14 @@ const ELEMENT_DATA: formElement[] = [
       },
       {
         questionId: 2,
-        question: "你有養寵物嗎?",
+        question: "你喜歡甚麼科?",
         type: 'multiple',
         required: true,
         option: [
-          { ans: "有", code: 1 },
-          { ans: "從來沒有", code: 2 },
-          { ans: "曾經有，現在沒有", code: 3 }
+          { ans: "犬科", code: 1 },
+          { ans: "貓科", code: 2 },
+          { ans: "囓齒科", code: 3 },
+          { ans: "其他", code: 4 }
         ]
       },
       {

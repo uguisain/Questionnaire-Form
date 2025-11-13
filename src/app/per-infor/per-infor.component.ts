@@ -58,7 +58,10 @@ export class PerInforComponent {
 
     // 打開「新增問卷」Dialog
     openCreateFormDialog() {
-      const dialogRef = this.dialog.open(CreateFormDialogComponent);
+      const dialogRef = this.dialog.open(CreateFormDialogComponent, {
+      autoFocus: false,      // Dialog 開啟時不要強制把焦點跳到第一個 input
+      restoreFocus: false,   // Dialog 關閉時不要把焦點強制還原到觸發按鈕
+      });
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {

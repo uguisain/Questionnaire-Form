@@ -1,5 +1,5 @@
 .dialog-root {
-  min-width: 420px;
+  min-width: 520px;
   max-width: 520px;
   max-height: 80vh;
   padding: 16px 16px 12px;
@@ -39,8 +39,9 @@ h2 {
 }
 
 label {
-  font-size: 12px;
+  font-size: 13px;
   color: #666;
+  margin-left: 10px;
 }
 
 .inline {
@@ -67,6 +68,8 @@ input,
 textarea,
 select {
   width: 89%;
+  max-width: 89%;
+  min-height: 20px;
   padding: 5px 8px;
   border-radius: 8px;
   border: 1px solid #d5ddff;
@@ -109,6 +112,7 @@ select:focus {
   color: #c1c5de;
   cursor: pointer;
   font-size: 13px;
+  min-height: 13px;
 }
 
 .x:hover {

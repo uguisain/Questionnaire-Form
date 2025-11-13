@@ -1,28 +1,67 @@
-<div style="background-image: url('pexels-j-knappitsch-433287109-15280106.jpg');
-background-size: cover; background-position: center; background-repeat: no-repeat;
+<div style="background: linear-gradient(to bottom right, rgb(252, 229, 201), rgb(251, 220, 183));
 width: 100%; height: 100%; display: flex; align-items: center; min-height:632px"
 class="bg">
-<!-- ① 外層加 .home-shell，讓內容置中定寬 -->
+<!-- 外層 .home-shell 讓內容置中定寬 -->
 <div class="home-shell">
 <!--標題-->
 <!-- <div class="title"><h2>動態問卷</h2></div> -->
 <!-- 搜尋欄 -->
-<div class="search-bar">
-  問卷名稱: <input [(ngModel)]="searchname" style="border-radius: 15px; border: 1px solid darkorchid; height: 25px; outline: none; padding: 0 10px;">
+<div class="search-bar" style="position: relative;">
+  問卷名稱：<input [(ngModel)]="searchname" style="border-radius: 5px; border: 1px solid darkorchid; height: 25px; outline: none; padding: 0 10px; width: 200px; margin-bottom: 10px;">
   <br><br>
-  <div>統計日期: <input type="date"
+  <div>開始時間：<input type="date" style="width: 200px;"
     (change)="fromDate = $any($event.target).value; toDate = null">
-        <span style="margin-right: 10px;">到</span>
+        <span style="margin-left: 50px;">結束時間：</span>
         <input type="date"
+        style="width: 200px;"
         [(ngModel)]="toDate"
         [attr.min]="fromDate || toDayStr"
         (change)="toDate">
-        <!-- 這邊的[(ngModel)]可以同步控制畫面的日期 -->
+        <!-- [(ngModel)]同步控制畫面的日期 -->
+
+        <div class="status-filter" style="margin-top: 10px;">
+          <button
+            type="button"
+            class="chip-btn"
+            [class.active]="statusFilter === 'open'"
+            (click)="setStatusFilter('open')">
+            進行中
+          </button>
+
+          <button
+            type="button"
+            class="chip-btn"
+            [class.active]="statusFilter === 'closed'"
+            (click)="setStatusFilter('closed')">
+            已結束
+          </button>
+
+          <button
+            type="button"
+            class="chip-btn"
+            [class.active]="statusFilter === 'notStarted'"
+            (click)="setStatusFilter('notStarted')">
+            未開始
+          </button>
+
+          <!-- 重置放稍微右邊一點 -->
+          <button
+            type="button"
+            class="chip-btn reset"
+            style="margin-left: 590px;"
+            [class.active]="statusFilter === 'all'"
+            (click)="setStatusFilter('all')">
+            重置
+          </button>
+        </div>
+
   </div>
+  <img src="/yukiyanagi.png"
+       style="position: absolute; top: -18px; right: -17px; width: 150px; opacity: 1; transform: rotate(-10deg);">
 </div>
 
 <!-- 清單資訊（總筆數 / 目前頁 / 總頁） -->
-<div class="list-header" style="color: #aac5fc;">
+<div class="list-header" style="color: #122f69;">
   共 {{ totalItems }} 筆．第 {{ currentPage }} / {{ totalPages }} 頁
 </div>
 
@@ -43,7 +82,7 @@ class="bg">
   <tbody>
     <!-- 用 *ngFor 逐筆列出資料 -->
     <tr *ngFor="let f of pagedList">
-      <td style="font-size: 20px; color: blueviolet;">{{ f.id }}</td>
+      <td style="font-size: 20px;">{{ f.id }}</td>
       <td>{{ f.name }}</td>
       <td><span [ngClass]="{
         'state-open': getState(f) === 'open',
@@ -98,8 +137,8 @@ class="bg">
   <!-- 若結尾不是最後一頁，也顯示「...」提示 -->
   <span style="color: white;" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages">...</span>
 
-  <button style="color: rgb(10, 68, 87);" (click)="next()" [disabled]="currentPage === totalPages">下一頁 ›</button>   <!-- 往後一頁 -->
-  <button style="color: rgb(10, 68, 87);" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">最後一頁 »</button> <!-- 直接跳最後頁 -->
+  <button style="color: rgb(5, 46, 60);" (click)="next()" [disabled]="currentPage === totalPages">下一頁 ›</button>   <!-- 往後一頁 -->
+  <button style="color: rgb(5, 46, 60);" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">最後一頁 »</button> <!-- 直接跳最後頁 -->
 </div>
 </div>
 </div>

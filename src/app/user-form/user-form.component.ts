@@ -7,6 +7,7 @@ import { HomeComponent } from "../home/home.component";
 import { FormsModule } from "@angular/forms";
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+// import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-user-form',
@@ -51,7 +52,8 @@ export class UserFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,                                    // 讀網址上的 :id
     private router: Router,                                           // 返回/導頁
-    private example: ExampleService                                   // 從服務抓資料
+    private example: ExampleService,                                   // 從服務抓資料
+    // private overlay: Overlay,
   ) {}
 
   ngOnInit(): void {
@@ -194,9 +196,6 @@ export class UserFormComponent implements OnInit {
     // 進入時回到最上方
     window.scrollTo(0, 0);
 
-    // 防呆，必填通知
-    // if() {}
-
     // 把輸入的用戶資料寫回 FillinReq
     if (this.FillinReq.length > 0) {
       this.FillinReq[0].email = this.email || '';
@@ -206,7 +205,7 @@ export class UserFormComponent implements OnInit {
     }
 
     // 檢查是否有必填但沒填的題目
-  for (let i = 0; i < this.form.options.length; i++) {
+    for (let i = 0; i < this.form.options.length; i++) {
     const q = this.form.options[i]; // 這一題的設定 (包含 required, type)
     const ans = this.FillinReq[0].questionAnswerList[i].answerList; // 使用者填的內容
 

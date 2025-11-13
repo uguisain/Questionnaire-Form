@@ -45,8 +45,6 @@
 
  <!-- 問題欄位 -->
       <div class="section">
-        <h3 class="section-title">{{ form.name }}</h3>
-
         <ol class="question-list">
           @for (question of form.options; track $index; let i = $index) {
 
@@ -57,6 +55,7 @@
               <span class="question-text">{{ question.question }}</span>
 
               @if (question.type === 'single') {
+                <span style="font-size: small;"> (單選)</span>
                 <div class="option-list">
                   @for (option of question.option; track $index) {
                     <label class="option-item">
@@ -72,6 +71,7 @@
               }
 
               @if (question.type === 'multiple') {
+                <span style="font-size: small;"> (複選)</span>
                 <div class="option-list">
                   @for (option of question.option; track $index) {
                     <label class="option-item">
@@ -86,6 +86,7 @@
               }
 
               @if (question.type === 'text') {
+                <span style="font-size: small;"> (簡答)</span>
                 <div class="option-list">
                   @for (option of question.option; track $index) {
                     <textarea class="text-area"

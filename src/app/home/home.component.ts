@@ -109,42 +109,76 @@ export class HomeComponent {
     });
   }
 
-  // ===== 即時篩選（穩定版＋防呆）=====
+  // ===== 即時篩選（關鍵字 + 日期 + 狀態）=====
   get filteredForms(): formElement[] {
     // 1) 關鍵字（小寫、去空白）
-    const kw = (this.searchname || '').trim().toLowerCase(); // 使用者輸入的關鍵字（可能是空字串）
+    const kw = (this.searchname || '').trim().toLowerCase();
 
     // 2) 日期條件（都是 'YYYY-MM-DD' → 字串比較OK）
-    const from = this.fromDate || '';  // 起始日期，沒填就當空字串
-    const to   = this.toDate   || '';  // 結束日期，沒填就當空字串
+    const from = this.fromDate || '';
+    const to   = this.toDate   || '';
 
     // 3) 過濾（每一筆 row 都做檢查）
     return this.forms.filter(row => {
-      // (a) 名稱條件：先把 row.name 做防呆，避免 null/undefined 爆掉
-      const name = (row.name || '').toLowerCase();           // 沒有名稱就當空字串
-      const nameOK = kw === '' || name.includes(kw);         // 關鍵字空白→通過；否則要包含
+      // (a) 名稱條件
+      const name = (row.name || '').toLowerCase();
+      const nameOK = kw === '' || name.includes(kw);
 
-      // (b) 日期條件：分三種情況，各自好讀
-      const onlyFrom = !!from && !to;                        // 只選了開始
-      const onlyTo   = !from && !!to;                        // 只選了結束
-      const both     = !!from && !!to;                       // 同時選了開始與結束
+      // (b) 日期條件
+      const onlyFrom = !!from && !to;
+      const onlyTo   = !from && !!to;
+      const both     = !!from && !!to;
 
-      let dateOK = true;                                     // 預設通過
+      let dateOK = true;
       if (onlyFrom) {
-        dateOK = row.endDate >= from;                        // 表單結束 >= 條件開始
+        dateOK = row.endDate >= from;
       } else if (onlyTo) {
-        dateOK = row.startDate <= to;                        // 表單開始 <= 條件結束
+        dateOK = row.startDate <= to;
       } else if (both) {
         // 區間重疊： [startDate, endDate] vs [from, to]
-        dateOK = row.startDate <= to && row.endDate >= from; // 有交集就通過
+        dateOK = row.startDate <= to && row.endDate >= from;
       }
-      // 兩者都 true 才保留
-      return nameOK && dateOK;
+
+      // (c) 狀態條件：呼叫你下面寫好的 matchStatus()
+      const statusOK = this.matchStatus(row);
+
+      // 三個條件都 true 才保留
+      return nameOK && dateOK && statusOK;
     });
   }
 
+  // 目前篩選的狀態：all = 不篩，全部顯示
+statusFilter: 'all' | 'open' | 'closed' | 'notStarted' = 'all';
+
+// 點狀態按鈕時呼叫，切換狀態
+setStatusFilter(filter: 'all' | 'open' | 'closed' | 'notStarted') {
+  this.statusFilter = filter; // 記住目前篩選是哪一種
+}
+
+// 判斷某一個表單是否通過「狀態篩選」
+matchStatus(form: any): boolean {
+  if (this.statusFilter === 'all') {
+    return true; // 不篩選 → 全部通過
+  }
+
+  const state = this.getState(form); // 你原本的狀態判斷函式
+
+  // ⚠️ 下面這段要依照你 getState 回傳的實際字串改
+  if (this.statusFilter === 'open') {
+    return state === 'open';           // 進行中
+  }
+  if (this.statusFilter === 'closed') {
+    return state === 'closed';       // 已結束（請改成你實際用的字串）
+  }
+  if (this.statusFilter === 'notStarted') {
+    return state === 'notStarted';     // 未開始（同樣請改成實際字串）
+  }
+
+  return true;
+}
+
   // --- 分頁設定區 ---
-  pageSize: number = 10;           // 一頁幾筆（可改）；預設 5
+  pageSize: number = 5;           // 一頁幾筆（可改）；預設 5
   currentPage: number = 1;        // 目前在第幾頁；從 1 開始
 
   // 這裡假設你有 filteredList（篩選後的陣列）；

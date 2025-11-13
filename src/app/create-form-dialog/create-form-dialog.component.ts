@@ -41,7 +41,7 @@ export class CreateFormDialogComponent {
     questionList: [],
   };
 
-  // 簡單錯誤訊息顯示用（不做太複雜驗證）
+  // 簡單錯誤訊息顯示用
   errorMsg: string = '';
 
   constructor(
@@ -82,11 +82,11 @@ export class CreateFormDialogComponent {
     }
   }
 
-  // 為單選/多選題新增選項
+  // 單選/多選題新增選項
   addOption(q: QuizQuestionReq) {
     if (q.type === 'text') return; // 文字題不需要選項
     if (!q.options) q.options = [];
-    if (q.options.length >= 8) return; // 先隨便限制最多 8 個選項
+    if (q.options.length >= 8) return; // 先限制最多 8 個選項
     q.options.push('');
   }
 

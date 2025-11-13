@@ -34,8 +34,7 @@
               <ul class="list">
                 @for (f of myAnswered; track f.id) {
                   <li class="list-item">
-
-                    <div class="title">{{ f.id }}. {{ f.title }}</div>
+                    <div class="title">{{ f.title }}</div>
                     <div class="meta">填寫日期：{{ f.createdAt }}</div>
                   </li>
                 }
@@ -59,7 +58,7 @@
                 @for (f of myCreated; track f.id) {
                   <li class="list-item">
                   <div class="info">
-                    <div class="title">{{ f.id }}. {{ f.title }}</div>
+                    <div class="title">{{ f.title }}</div>
                     <div class="meta">建立日期：{{ f.createdAt }}</div>
                   </div>
                   <button class="danger-btn" (click)="deleteMyCreated(f.id)">刪除</button>

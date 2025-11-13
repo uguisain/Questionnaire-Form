@@ -1,10 +1,9 @@
-<div style="background-image: url('pexels-bri-schneiter-28802-346529.jpg');
-background-size: cover; background-position: center; background-repeat: no-repeat;
+<div style="background: linear-gradient(to bottom right, #C2E2FA, #8ab6d7);
 width: 100%; height: 91.2%; display: flex; align-items: center;"
 class="bg">
   <div class="loginBox">
     @if (pageMode === 'login') {
-      <h1>登入</h1>
+      <h1 style="color: rgb(124, 41, 226);">登入</h1>
     <input placeholder="信箱" [(ngModel)]="email">
     <br>
     <input placeholder="密碼" type="password" [(ngModel)]="password">
@@ -19,7 +18,7 @@ class="bg">
 
     <!-- 註冊畫面 -->
   @if (pageMode === 'register') {
-    <h1>註冊</h1>
+    <h1 style="color: rgb(124, 41, 226);">註冊</h1>
     <input placeholder="帳號" [(ngModel)]="regUsername">       <!-- 新帳號 -->
     <br>
     <input placeholder="Email" [(ngModel)]="regEmail">         <!-- Email -->
@@ -30,17 +29,17 @@ class="bg">
     <br>
     <button style="margin: 5px 0px;" (click)="register()">建立帳號</button>   <!-- 送出註冊 -->
     <br>
-    <h4 style="cursor: pointer;" (click)="goLogin()">返回登入</h4>            <!-- 回登入 -->
+    <h4 style="cursor: pointer; color: rgb(176, 132, 238);" (click)="goLogin()">返回登入</h4>            <!-- 回登入 -->
   }
 
   <!-- 忘記密碼畫面 -->
   @if (pageMode === 'forgot') {
-    <h1>忘記密碼</h1>
+    <h1 style="color: rgb(124, 41, 226);">忘記密碼</h1>
     <input placeholder="請輸入註冊 Email" [(ngModel)]="forgotEmail">          <!-- 輸入Email -->
     <br>
     <button style="margin: 5px 0px;" (click)="sendReset()">寄送重設連結</button> <!-- 模擬寄信 -->
     <br>
-    <h4 style="cursor: pointer;" (click)="goLogin()">返回登入</h4>             <!-- 回登入 -->
+    <h4 style="cursor: pointer; color: rgb(176, 132, 238);" (click)="goLogin()">返回登入</h4>             <!-- 回登入 -->
   }
   </div>
 </div>
