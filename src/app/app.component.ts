@@ -1,13 +1,10 @@
-import { LoadingService } from './@service/loading.service';
 import { Component, inject, ViewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { MatPaginatorModule} from '@angular/material/paginator';
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { HomeComponent } from "./home/home.component";
-import { TestComponent } from "./test/test.component";
 import { MatTabsModule } from '@angular/material/tabs';
-import { Test2Component } from './test2/test2.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -23,11 +20,9 @@ import { AuthState } from './@models/auth-model';       // 同樣請用你的實
     FormsModule,
     CommonModule,
     HomeComponent,
-    TestComponent,
     MatTabsModule,
     RouterLink,
     RouterLinkActive,
-    Test2Component,
     MatProgressSpinnerModule,
     MatSidenavModule,
     MatButtonModule, MatListModule, MatToolbarModule, MatIconModule, ],

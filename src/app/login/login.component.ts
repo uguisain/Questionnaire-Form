@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
 import { AuthService } from '../@service/auth.service';
@@ -13,11 +13,12 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+  // dialog注入
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private auth: AuthService,   // 注入假登入服務
     private router: Router,      // 登入成功導頁
-    private dialog: MatDialog    // 彈出提示對話框
   ) {}
 
   pageMode: 'login' | 'register' | 'forgot' = 'login'; // 預設停在登入頁
@@ -91,18 +92,33 @@ export class LoginComponent {
   register() {
     // 1) 空值檢查
     if (!this.regUsername || !this.regEmail || !this.regPassword || !this.regConfirm) {
-      alert('請填完所有欄位');            // 必填檢查
+      // 必填檢查
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '請填完所有欄位'},
+        });
       return;                               // 中止
     }
     // 2) 密碼一致性
     if (this.regPassword !== this.regConfirm) {
-      alert('兩次輸入的密碼不一致');       // 密碼確認
+      // 密碼確認
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '兩次輸入的密碼不一致'},
+        });
       return;                               // 中止
     }
     // 3) 帳號是否已存在
     const exists = this.fakeUsers.some(u => u.username === this.regUsername);
     if (exists) {
-      alert('此帳號已被使用');              // 帳號重複
+      // 帳號重複
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '此帳號已被使用'},
+        });
       return;                               // 中止
     }
     // 4) 寫進假資料（模擬後端建立使用者）
@@ -114,22 +130,41 @@ export class LoginComponent {
       email: this.regEmail,                 // Email
     };
     this.fakeUsers.push(newUser);           // 加進假資料
-    alert('註冊成功，請使用新帳密登入');     // 提示成功
+    // 提示成功
+    this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '註冊成功，請使用新帳密登入'},
+        });
     this.goLogin();                         // 回登入頁
   }
 
   // --- 忘記密碼流程（最小版本：只檢查帳號是否存在，再提示）---
   sendReset() {
     if (!this.forgotEmail) {                // 檢查是否有填Email
-      alert('請輸入 Email');
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '請輸入 Email'},
+        });
       return;                               // 中止
     }
     const exists = this.fakeUsers.some(u => u.email === this.forgotEmail);
     if (!exists) {
-      alert('查無此 Email');               // 沒有這個Email
+      // 沒有這個Email
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '查無此 Email'},
+        });
       return;                               // 中止
     }
-    alert('已寄出重設密碼連結（模擬）');    // 模擬寄信
+    // 模擬寄信
+    this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '已寄出重設密碼連結'},
+        });
     this.goLogin();                          // 回登入頁
   }
 

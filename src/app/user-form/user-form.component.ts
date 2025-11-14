@@ -68,7 +68,12 @@ export class UserFormComponent implements OnInit {
 
     // 找不到就導回首頁
     if (!this.form) {
-      alert('找不到這份表單');
+      // alert('找不到這份表單');
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '找不到這份表單'},
+        });
       this.router.navigate(['/home']);
       return;                                                         // 結束函式
     }
@@ -76,7 +81,12 @@ export class UserFormComponent implements OnInit {
     // 如果表單已超過填寫時間，就返回首頁
     const today = this.toDayStr;
     if (today > this.form.endDate) {
-      alert('表單已過期，將回到首頁');
+      // alert('表單已過期，將回到首頁');
+      this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: {title: '表單已過期，將回到首頁'},
+        });
       this.router.navigate(['/home']);
       return;                                                         // 結束函式
     }

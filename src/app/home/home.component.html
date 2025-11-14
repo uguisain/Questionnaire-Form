@@ -48,7 +48,7 @@ class="bg">
           <button
             type="button"
             class="chip-btn reset"
-            style="margin-left: 590px;"
+            style="margin-left: 407px;"
             [class.active]="statusFilter === 'all'"
             (click)="setStatusFilter('all')">
             重置
@@ -56,8 +56,11 @@ class="bg">
         </div>
 
   </div>
+  <img src="/yuru_neko5.png"
+       style="position: absolute; top: 23px; right: 45px; width: 170px; opacity: 1;">
   <img src="/yukiyanagi.png"
        style="position: absolute; top: -18px; right: -17px; width: 150px; opacity: 1; transform: rotate(-10deg);">
+
 </div>
 
 <!-- 清單資訊（總筆數 / 目前頁 / 總頁） -->
@@ -93,17 +96,17 @@ class="bg">
       <td>{{ f.endDate }}</td>
       <td>
         <!-- 進行中：顯示「填寫」按鈕（可點） -->
-      <button *ngIf="getState(f) === 'open'" (click)="goFill(f.id)">
+      <button *ngIf="getState(f) === 'open'" (click)="goFill(f.id)" style="font-weight: bold; color: blueviolet;">
         填寫
       </button>
 
       <!-- 已結束：顯示「檢視結果」按鈕（可點；目前先 console，之後導頁） -->
-      <button *ngIf="getState(f) === 'closed'" (click)="viewResult(f.id)" class="secondary">
+      <button *ngIf="getState(f) === 'closed'" (click)="viewResult(f.id)" class="secondary" style="font-weight: bold; color: rgb(68, 6, 47);">
         檢視結果
       </button>
 
       <!-- 未開始：顯示禁用按鈕，不能點 -->
-      <button *ngIf="getState(f) === 'notStarted'" disabled>
+      <button *ngIf="getState(f) === 'notStarted'" disabled style="color: gray;">
         尚未開始
       </button>
       </td>

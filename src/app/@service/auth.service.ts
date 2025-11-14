@@ -1,5 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { AuthState, UserProfile, QuestionnaireSummary } from '../@models/auth-model';
+import { UserProfile, QuestionnaireSummary, AuthState } from '../@models/user-data-model';
+import { UserDataService } from "../@service/user-data.service";
+// import { AuthState } from '../@models/auth-model';
 
 const STORAGE_KEY = 'mock_auth_state'; // localStorage 的鍵名
 
@@ -18,61 +20,74 @@ export class AuthService {
     myAnswered: [],    // 我填過的問卷清單
   };
 
-  constructor() {
+  constructor(private userData: UserDataService) {
     // 啟動時嘗試從 localStorage 還原狀態
     const raw = localStorage.getItem(STORAGE_KEY);        // 讀取字串
     if (raw) {
       this.state = JSON.parse(raw);                       // 還原為物件
     } else {
-      // 可放一點示範資料（之後可改為空）
-      this.seed();                                        // 建立示範帳號與問卷
-      this.save();                                        // 存進 localStorage
+      // 第一次啟動時，從 UserDataService 拿「用戶資料 JSON」
+      const profile = this.userData.getUserProfile();
+      this.state.user = profile;                // 注意：這裡沒有 token，只是預設使用者
+      this.state.myCreated = this.userData.getMyCreated();
+      this.state.myAnswered = this.userData.getMyAnswered();
+      this.save();
     }
   }
 
-  private seed() {
-    // 示範使用者與兩個清單
-    const demoUser: UserProfile = {
-      id: 1,
-      name: '示範用戶',
-      email: 'demo@example.com',
-      phone: '0912-345-678',
-      age: 22,
-    };
-    const created: QuestionnaireSummary[] = [
-      { id: 101, title: '我的第一份問卷', createdAt: '2025-10-10' },
-      { id: 102, title: '顧客滿意度小調查', createdAt: '2025-10-18' },
-    ];
-    const answered: QuestionnaireSummary[] = [
-      { id: 201, title: '校園午餐口味調查', createdAt: '2025-09-30' },
-    ];
-    // 注意：seed 不登入，只是提供假資料庫概念
-    this.state.myCreated = created;     // 假資料（我的問卷）
-    this.state.myAnswered = answered;   // 假資料（我填過的）
-  }
+  // private seed() {
+  //   // 示範使用者與兩個清單
+  //   const demoUser: UserProfile = {
+  //     id: 1,
+  //     name: '示範用戶',
+  //     email: 'demo@example.com',
+  //     phone: '0912-345-678',
+  //     age: 22,
+  //   };
+  //   const created: QuestionnaireSummary[] = [
+  //     { id: 101, title: '我的第一份問卷', createdAt: '2025-10-10' },
+  //     { id: 102, title: '顧客滿意度小調查', createdAt: '2025-10-18' },
+  //   ];
+  //   const answered: QuestionnaireSummary[] = [
+  //     { id: 201, title: '校園午餐口味調查', createdAt: '2025-09-30' },
+  //   ];
+  //   // 注意：seed 不登入，只是提供假資料庫概念
+  //   this.state.myCreated = created;     // 假資料（我的問卷）
+  //   this.state.myAnswered = answered;   // 假資料（我填過的）
+  // }
 
   private save() {
-    // 把現在的狀態寫回 localStorage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-    // 通知畫面更新（Toolbar、頁面等）
     this.authChanged.emit(this.state);
   }
 
   login(email: string, password: string): boolean {
-    // 假驗證規則：只要 Email 為 demo@example.com、密碼任意就放行
-    if (email === 'demo@example.com' && password.length > 0) {
-      this.state.user = {
-        id: 1,
-        name: '示範用戶',
-        email: 'demo@example.com',
-        phone: '0912-345-678',
-        age: 22,
-      };
-      this.state.token = 'MOCK_TOKEN_ABC123'; // 假 token 字串
-      this.save();                             // 存檔與廣播
-      return true;                             // 回傳成功
+    // 向 UserDataService 查詢這組帳密是哪個 user
+    const record = this.userData.getUserByCredentials(email, password);
+
+    if (!record) {
+      // 沒找到 → 登入失敗
+      return false;
     }
-    return false; // 其他帳密視為失敗
+
+    // 告訴 UserDataService：現在是這個 user 登入
+    this.userData.setCurrentUser(record);
+
+    // 拿目前 user 的 profile（不含 password）
+    const profile = this.userData.getUserProfile();
+
+    // 塞進 AuthState
+    this.state.user = profile;
+    this.state.myCreated = this.userData.getMyCreated();
+    this.state.myAnswered = this.userData.getMyAnswered();
+    this.state.token = 'MOCK_TOKEN_ABC123'; // 假 token
+
+    this.save();
+    return true;
+  }
+
+  isAdmin(): boolean {
+    return this.state.user?.role === 'ADMIN';
   }
 
   logout() {
@@ -96,44 +111,39 @@ export class AuthService {
 }
 
   updateProfile(patch: Partial<UserProfile>) {
-    // 修改使用者資料（例如 name/phone/age）
-    if (!this.state.user) return;             // 未登入就不處理
-    this.state.user = { ...this.state.user, ...patch }; // 合併變更
-    this.save();                               // 存檔與廣播
+    if (!this.state.user) return;
+
+    // 交給 UserDataService 更新資料庫
+    const updated = this.userData.updateUserProfile(patch);
+
+    // 再把最新資料同步回 AuthState
+    this.state.user = updated;
+    this.save();
   }
 
   getMyCreated(): QuestionnaireSummary[] {
-    // 取得我建立的問卷清單
-    return [...this.state.myCreated];          // 回傳拷貝
+    return [...this.state.myCreated];
   }
 
   getMyAnswered(): QuestionnaireSummary[] {
-    // 取得我填過的問卷清單
-    return [...this.state.myAnswered];         // 回傳拷貝
+    return [...this.state.myAnswered];
   }
 
-  // 新增一筆「我建立的問卷」到清單中
   addMyCreated(title: string) {
-    if (!this.state.user) {
-      // 沒登入理論上不給新增；這裡先簡單擋掉
-      return;
-    }
+    // 讓 UserDataService 實際產生一筆問卷摘要
+    const created = this.userData.addMyCreated(title);
 
-    const newForm: QuestionnaireSummary = {
-      id: Date.now(),                               // 用現在時間當假 ID（之後改 API 給的 ID）
-      title: title,
-      createdAt: new Date().toISOString().slice(0, 10), // yyyy-MM-dd
-    };
-
-    // 新的放前面，感覺比較像最新建立
-    this.state.myCreated = [newForm, ...this.state.myCreated];
-
-    this.save(); // 寫進 localStorage + 通知訂閱者更新
+    // 同步更新 AuthState 裡的 myCreated
+    this.state.myCreated = this.userData.getMyCreated();
+    this.save();
   }
 
   deleteMyCreated(id: number) {
-    // 刪除自己建立的問卷（僅從假清單移除）
-    this.state.myCreated = this.state.myCreated.filter(q => q.id !== id);
-    this.save();                               // 存檔與廣播
+    // 實際刪除交給 UserDataService
+    this.userData.deleteMyCreated(id);
+
+    // 再同步最新清單
+    this.state.myCreated = this.userData.getMyCreated();
+    this.save();
   }
 }

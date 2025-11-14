@@ -86,4 +86,29 @@ export class PerInforComponent {
     this.myCreated = this.auth.getMyCreated(); // 重新抓一次最新清單，更新畫面
   }
 
+  // 1. 從「已填寫表單」進去看結果
+  goAnsweredResult(id: number) {
+    // 這裡請改成你現在專案的「結果頁路由」
+    // 假設是 /statistical-report/:id
+    this.router.navigate(['/Report', id]);
+  }
+
+  // 2. 我新增的表單：編輯
+  editCreatedForm(id: number) {
+    // 未來你可能會有 /builder/:id 或 /form-edit/:id 之類
+    // 現在先導到填寫頁當「編輯頁」用也可以
+    this.router.navigate(['/form', id]); // 自己換成實際路由
+  }
+
+  // 3. 我新增的表單：預覽（用填寫頁預覽）
+  previewCreatedForm(id: number) {
+    // 最簡單：先跟 edit 用同一頁，之後你再細分邏輯
+    this.router.navigate(['/form', id]);
+  }
+
+  // 4. 我新增的表單：顯示結果（其實跟已填寫用同一個結果頁）
+  viewCreatedResult(id: number) {
+    this.router.navigate(['/Report', id]);
+  }
+
 }

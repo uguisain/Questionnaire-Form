@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ReportService } from '../@service/report.service';
 import Chart from 'chart.js/auto';
+import { DialogComponent } from '../dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-statistical-report',
@@ -16,6 +18,9 @@ export class StatisticalReportComponent {
     private router: Router,                                           // 返回/導頁
     private reportService: ReportService                              // 從服務抓資料                                   // 從服務抓資料
   ) {}
+
+  // dialog注入
+  readonly dialog = inject(MatDialog);
 
   Report: any = {
   statisticsVoList: []
@@ -38,7 +43,12 @@ export class StatisticalReportComponent {
 
     // 找不到就導回首頁
     if (!this.Report) {
-      alert('找不到這份報表');
+      // alert('找不到這份報表');
+      this.dialog.open(DialogComponent, {
+                enterAnimationDuration: '160ms',
+                exitAnimationDuration: '120ms',
+                data: {title: '找不到這份報表'},
+              });
       this.router.navigate(['/home']);
       return;
     }
@@ -90,17 +100,32 @@ export class StatisticalReportComponent {
               data: data,
             });
     }
-
-
-
-
-
-
-
-
-
-
-
   }
 
+  getTotalCount(list: OptionCountVo[]): number {
+    if (!list) return 0;
+    return list.reduce((sum, o) => sum + (o.count ?? 0), 0);
+  }
+
+  getPercent(count: number, list: OptionCountVo[]): number {
+    const total = this.getTotalCount(list);
+    if (!total) return 0;
+    return Math.round((count / total) * 100);
+  }
+
+  getTopOption(list: OptionCountVo[]): OptionCountVo | null {
+    if (!list || list.length === 0) return null;
+    return list.reduce((max, cur) => (cur.count > max.count ? cur : max), list[0]);
+  }
+
+  getBottomOption(list: OptionCountVo[]): OptionCountVo | null {
+    if (!list || list.length === 0) return null;
+    return list.reduce((min, cur) => (cur.count < min.count ? cur : min), list[0]);
+  }
+
+}
+
+interface OptionCountVo {
+  option: string;
+  count: number;
 }

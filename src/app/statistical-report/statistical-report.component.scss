@@ -43,11 +43,10 @@
 
 /* ===== 外層置中、不滿版 ===== */
 .report-shell {
-  max-width: 1024px;                   /* 報表頁稍寬，方便擺圖 */
+  max-width: 800px;                   /* 報表頁稍寬，方便擺圖 */
   margin: 10px auto;                   /* 置中＋上下留白 */
   padding: 0 16px;                     /* 小螢幕左右保護 */
   box-sizing: border-box;              /* 避免寬度計算跑掉 */
-  text-align: center;
 }
 
 /* ===== 背景：淡藍灰＋一點青綠，與其他頁做區別 ===== */
@@ -63,19 +62,72 @@
 
 /* ===== 圖表網格：自動流動排版 ===== */
 .report-grid {                          /* 放多張圖的容器 */
-  display: grid;                        /* 使用 CSS Grid */
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 最小 320px，自動換行 */
-  gap: 14px;                            /* 卡片間距 */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;                         /* 卡片間距 */
+}
+
+/* 單題卡片：左圖 + 右資訊 */
+.report-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 22px rgba(90, 110, 170, 0.18);
+
+  /* 動畫 */
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* 左邊圓餅圖固定寬度 */
+.report-card__left {
+  flex: 0 0 260px;           /* 固定約 260px 寬 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 右邊資訊欄佔滿剩餘空間 */
+.report-card__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 題目標題＋簡易 meta */
+.question-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.question-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #3f4b86;
+}
+
+.question-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: #7a81a3;
 }
 
 /* ===== 單張圖卡片 ===== */
 .chart-card {                           /* 單張圖的卡片外框 */
+  display: flex;
   background: linear-gradient(90deg, #e1e6fa, #eee1fa);
   border: 1px solid #e2e8ff;            /* 柔邊框 */
   border-radius: 14px;                   /* 圓角 */
   padding: 14px;                         /* 內距 */
   box-shadow: 0 10px 28px rgba(120, 150, 210, 0.12),
               0 6px  16px rgba(120, 200, 200, 0.10); /* 淡藍＋淡青陰影 */
+  margin-bottom: 20px;
 
   /* 動畫 */
   animation: fadeInUp 1s ease forwards;
@@ -155,4 +207,76 @@
 @keyframes fadeInBg {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* 選項列表，讓右邊不空空 */
+.option-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 每條選項 = label + bar + 數字，用 grid 塞滿寬度 */
+.option-item {
+  display: grid;
+  grid-template-columns: minmax(80px, 120px) 1fr max-content;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.option-label {
+  color: #4a4f73;
+}
+
+/* 百分比進度條 */
+.option-bar {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(210, 218, 255, 0.8);
+  overflow: hidden;
+}
+
+.option-bar-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #9fb8ff, #c5b6ff);
+}
+
+/* count + 百分比 */
+.option-count {
+  font-size: 12px;
+  color: #6d7399;
+}
+
+/* 額外摘要區塊，填滿右下角空間 */
+.question-summary {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(190, 198, 245, 0.9);
+  font-size: 12px;
+  color: #7a81a3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 手機版：上下排 */
+@media (max-width: 768px) {
+  .report-card {
+    flex-direction: column;
+  }
+
+  .report-card__left {
+    flex: 0 0 auto;
+  }
+
+  .option-item {
+    grid-template-columns: 1fr;
+  }
 }

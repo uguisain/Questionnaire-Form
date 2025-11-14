@@ -69,12 +69,33 @@
 
       <!-- 選項設定：僅單選 & 多選顯示 -->
       <div *ngIf="q.type === 'single' || q.type === 'multiple'" class="options">
-        <div class="opt-row" *ngFor="let opt of q.options; let oi = index">
+        <div
+          class="opt-row"
+          *ngFor="let opt of q.options; let oi = index; trackBy: trackByIndex"
+        >
           <span class="dot">●</span>
-          <input [(ngModel)]="q.options[oi]" placeholder="選項文字" style="margin-left: 10px;">
-          <button class="x mini-x" (click)="removeOption(q, oi)" *ngIf="q.options.length > 1">✕</button>
+          <input
+            [(ngModel)]="q.options[oi]"
+            [ngModelOptions]="{ standalone: true }"
+            [attr.name]="'option_' + oi"
+            placeholder="選項文字"
+            style="margin-left: 10px;"
+          >
+          <button
+            class="x mini-x"
+            (click)="removeOption(q, oi)"
+            *ngIf="q.options.length > 1"
+          >
+            ✕
+          </button>
         </div>
-        <button class="mini ghost" style="margin-top: 5px;" (click)="addOption(q)" *ngIf="(q.options?.length || 0) < 8">
+
+        <button
+          class="mini ghost"
+          style="margin-top: 5px;"
+          (click)="addOption(q)"
+          *ngIf="(q.options?.length || 0) < 8"
+        >
           新增選項
         </button>
       </div>

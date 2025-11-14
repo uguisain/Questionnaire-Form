@@ -90,6 +90,10 @@ export class CreateFormDialogComponent {
     q.options.push('');
   }
 
+  trackByIndex(index: number, _item: any): number {
+    return index;
+  }
+
   // 移除某一個選項
   removeOption(q: QuizQuestionReq, index: number) {
     if (!q.options) return;

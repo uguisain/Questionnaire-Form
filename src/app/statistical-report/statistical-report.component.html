@@ -4,14 +4,54 @@
 <div class="report-shell">
   <div class="report-title"><h2>{{ Report.id }}. {{ Report.name }}</h2></div>
   <!-- 圖表網格：多張圖自動排版 -->
-  <div class="report-grid">
     @for (Da of Report.statisticsVoList; track $index) {
-      <div class="chart-card">
-        <h2 class="chart-title">{{ Da.question }}</h2>
-        <canvas class="chart-canvas" id="{{ Da.questionId }}"></canvas>
+      <div class="report-card" style="margin-bottom: 20px;">
+        <div class="report-card__left">
+          <canvas class="chart-canvas" id="{{ Da.questionId }}"></canvas>
+        </div>
+
+        <!-- 右：統計資訊 -->
+      <div class="report-card__right">
+        <!-- 題目 & 總覽 -->
+        <div class="question-header">
+          <div class="question-title">
+            {{ Da.questionId }}. {{ Da.question }}
+          </div>
+          <div class="question-meta">
+            <span>題型：{{ Da.type }} ｜</span>
+            <span>必填：{{ Da.required ? '是' : '否' }} ｜</span>
+            <span>總答題人數：{{ getTotalCount(Da.optionCountVoList) }} 人</span>
+          </div>
+        </div>
+
+        <!-- 各選項統計 -->
+        <ul class="option-list">
+          @for (row of Da.optionCountVoList; track $index) {
+            <li class="option-item">
+              <span class="option-label">{{ row.option }}</span>
+
+              <!-- 百分比條 -->
+              <span class="option-bar">
+                <span class="option-bar-fill"
+                  [style.width.%]="getPercent(row.count, Da.optionCountVoList)">
+                </span>
+              </span>
+
+              <span class="option-count">
+                {{ row.count }} 人 ({{ getPercent(row.count, Da.optionCountVoList) }}%)
+              </span>
+            </li>
+          }
+        </ul>
+
+        <!-- 額外摘要（讓右邊更飽滿一點，可選） -->
+        <div class="question-summary">
+          <div>最高票選項：{{ getTopOption(Da.optionCountVoList)?.option || '—' }} ｜</div>
+          <div>最低票選項：{{ getBottomOption(Da.optionCountVoList)?.option || '—' }}</div>
+        </div>
+      </div>
       </div>
     }
-  </div>
 
   <div class="report-actions">
     <button class="btn-report-back" (click)="back()">返回清單</button>

@@ -141,9 +141,10 @@ button:hover {
   border-radius: 10px;
   background: rgba(244, 247, 255, 0.95);
   border: 1px solid rgba(198, 208, 255, 0.85);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  // display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 .list-item .title {
@@ -155,6 +156,43 @@ button:hover {
 .list-item .meta {
   font-size: 12px;
   color: #7b82a4;
+}
+
+/* 已填寫表單：整列可點的樣式 */
+.list-item--clickable {
+  cursor: pointer;
+}
+
+.list-item--clickable:hover {
+  background: rgba(228, 235, 255, 0.98);
+  box-shadow: 0 2px 8px rgba(140, 160, 240, 0.3);
+}
+
+.list-chevron {
+  font-size: 14px;
+  color: #9fa6cf;
+}
+
+/* 「我新增的表單」操作按鈕列 */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #c5d0ff;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  color: #4b5ea7;
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  background: linear-gradient(90deg, #9fb8ff11, #c5b6ff22);
 }
 
 .hint {
@@ -196,11 +234,11 @@ button:hover {
 //   gap: 8px;
 // }
 
-// .list-item .info {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 2px;
-// }
+.list-item .info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
 .danger-btn {
   margin-left: 600px;
@@ -255,4 +293,16 @@ input[type="number"] {
 @keyframes fadeInBg {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* 小螢幕時，讓行動按鈕換行不要擠爆 */
+@media (max-width: 768px) {
+  .list-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions {
+    align-self: flex-end;
+  }
 }
