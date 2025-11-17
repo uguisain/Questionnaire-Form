@@ -3,8 +3,6 @@ width: 100%; height: 100%; display: flex; align-items: center; min-height:632px"
 class="bg">
 <!-- 外層 .home-shell 讓內容置中定寬 -->
 <div class="home-shell">
-<!--標題-->
-<!-- <div class="title"><h2>動態問卷</h2></div> -->
 <!-- 搜尋欄 -->
 <div class="search-bar" style="position: relative;">
   問卷名稱：<input [(ngModel)]="searchname" style="border-radius: 5px; border: 1px solid darkorchid; height: 25px; outline: none; padding: 0 10px; width: 200px; margin-bottom: 10px;">
@@ -94,7 +92,24 @@ class="bg">
       }">{{ stateLabel(getState(f)) }}</span></td>
       <td>{{ f.startDate }}</td>
       <td>{{ f.endDate }}</td>
-      <td>
+
+      <!-- 管理員 -->
+      @if(auth.isAdmin()) {
+        <td>
+        <!-- 進行中：顯示「填寫」按鈕（可點） -->
+      <button (click)="goFill(f.id)" style="font-weight: bold; color: blueviolet; margin-right: 5px;">
+        預覽
+      </button>
+      <button (click)="viewResult(f.id)" class="secondary" style="font-weight: bold; color: rgb(68, 6, 47); margin-right: 5px;">
+        結果
+      </button>
+      <button (click)="delFill(f.id)" class="del" style="color: rgb(24, 16, 16);">
+        刪除
+      </button>
+      </td>
+      } @else {
+        <!-- 一般用戶 -->
+        <td>
         <!-- 進行中：顯示「填寫」按鈕（可點） -->
       <button *ngIf="getState(f) === 'open'" (click)="goFill(f.id)" style="font-weight: bold; color: blueviolet;">
         填寫
@@ -110,6 +125,7 @@ class="bg">
         尚未開始
       </button>
       </td>
+      }
     </tr>
 
     <tr *ngIf="pagedList.length === 0">

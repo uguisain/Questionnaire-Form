@@ -202,6 +202,11 @@ button.secondary {
   box-shadow: 0 4px 12px rgba(160,140,255,0.25);
 }
 
+button.del {
+  background: linear-gradient(to bottom right, #f3b2b2, rgb(241, 150, 150));
+  box-shadow: 0 4px 12px rgba(255, 155, 140, 0.25);
+}
+
 /* 斑馬紋＋滑過高亮 */
 tbody tr:nth-child(even) { background: #fcfdff; }
 tbody tr:hover { background: var(--primary-weak); }

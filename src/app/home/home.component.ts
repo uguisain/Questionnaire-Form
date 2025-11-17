@@ -67,10 +67,15 @@ export class HomeComponent {
   }
 
   viewResult(id: number) {
-    // 之後你可以做 '/result/:id' 的頁面；現在先印 log 代表「會被觸發」
-    console.log('前往檢視結果，id =', id);
     this.router.navigate(['/Report', id]);
     window.scrollTo(0, 0);
+  }
+
+  // 這個要做刪除表單
+  delFill(id: number) {
+    this.forms = this.forms.filter(f => f.id !== id);
+
+    // return this.http.delete(`/api/forms/${id}`); // 未來接api時完善
   }
 
   // 存使用者選的開始日期
@@ -87,7 +92,7 @@ export class HomeComponent {
   forms: formElement[] = [];
 
   // 注入服務------------------------------------------------------
-  constructor(private example: ExampleService, private router: Router, private auth: AuthService, private dialog: MatDialog) {}
+  constructor(private example: ExampleService, private router: Router, public auth: AuthService, private dialog: MatDialog) {}
 
   // 當畫面載入時執行
   ngOnInit(): void {
