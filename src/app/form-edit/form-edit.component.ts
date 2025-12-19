@@ -29,6 +29,9 @@ export class FormEditComponent {
     quiz: QuizReq | null = null;  // 這是問卷資訊
     questions:QuestionReq []=[];  // 這是問題
 
+    // 這個用來放最後重組完的資料
+    updateReq: QuizUpdateReq | null = null;
+
     // 錯誤訊息用
     errorMsg = '';
 
@@ -181,6 +184,28 @@ export class FormEditComponent {
 
     console.log('quiz（編輯後）=', JSON.stringify(this.quiz, null, 2));
     console.log('questions（編輯後）=', JSON.stringify(this.questions, null, 2));
+
+    // 以下重組資料
+    const updateReq = {
+      id: this.quiz.id,
+      title: this.quiz.title,
+      description: this.quiz.description,
+      startDate: this.quiz.startDate,
+      endDate: this.quiz.endDate,
+      published: this.quiz.published,
+      questionVoList: this.questions.map((q, index) => ({
+        ...q,
+        quizId: this.quiz!.id,            // 保險：統一補 quizId
+        questionId: index + 1,            // 問題重新編號
+      })),
+    }
+
+    console.log('updateReq =', JSON.stringify(updateReq, null, 2));
+
+    this.http.postApi('http://localhost:8080/quiz/update', updateReq)
+    .subscribe((res) => {
+      console.log(res);
+    });
   }
 
 }

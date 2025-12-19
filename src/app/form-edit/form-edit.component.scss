@@ -192,6 +192,16 @@ button.danger {
   color: rgba(120, 45, 65, 0.85);
 }
 
+button.add {
+  padding: 8px 16px;
+  border-radius: 14px;
+
+  background: rgba(190, 240, 209, 0.85);
+  border: 1px solid rgba(140, 155, 210, 0.45);
+
+  color: rgba(35, 80, 43, 0.9);
+}
+
 // -----------------------------------------------------------------------------------------------------
 
 .section-header {
@@ -248,22 +258,156 @@ button.danger {
   gap: 6px;
 }
 
+.question-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
+.split-row {
+  display: flex;
+  gap: 12px;
+}
 
+.field-narrow {
+  max-width: 160px;
+}
 
+/* 手機時自動直排 */
+@media (max-width: 700px) {
+  .split-row {
+    flex-direction: column;
+  }
 
+  .field-narrow {
+    max-width: none;
+  }
+}
 
+.text-preview {
+  padding: 10px 12px;
+  border-radius: 14px;
 
+  background: rgba(245, 248, 255, 0.65);
+  border: 1px dashed rgba(160, 175, 210, 0.4);
+}
 
+.options-area {
+  padding: 12px;
+  border-radius: 14px;
 
+  background: rgba(240, 243, 255, 0.55);
+  border: 1px solid rgba(160, 175, 210, 0.3);
+}
 
+.options-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  margin-bottom: 8px;
+}
 
+.options-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(35, 45, 80, 0.7);
+}
 
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
+.option-no {
+  width: 20px;
+  text-align: right;
+  font-size: 13px;
+  color: rgba(35, 45, 80, 0.65);
+}
 
+.form-input {
+  width: 100%;
+  border: none;
+  outline: none;
 
+  background: transparent;
+
+  font-size: 14px;
+  color: rgba(35, 45, 80, 0.9);
+
+  /* 讓內容不要貼邊 */
+  padding: 4px 2px;
+}
+
+.form-select {
+  width: 100%;
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 14px;
+  color: rgba(35, 45, 80, 0.9);
+
+  padding: 4px 2px;
+
+  cursor: pointer;
+}
+
+.actions {
+  margin-top: 18px;
+  padding-top: 14px;
+
+  /* 上面一條淡淡分隔線 */
+  border-top: 1px solid rgba(160, 175, 210, 0.25);
+}
+
+.actions-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actions-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  min-height: 40px; /* 讓它跟其他欄位高度比較接近 */
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 10px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(160, 175, 210, 0.25);
+
+  color: rgba(35, 45, 80, 0.78);
+  font-size: 14px;
+}
+
+/* 只調 checkbox 本身，不碰 input[type=checkbox] 全域 */
+.toggle-input {
+  width: 16px;
+  height: 16px;
+  margin: 0; /* 避免預設 margin 造成歪掉 */
+}
 
 
 
