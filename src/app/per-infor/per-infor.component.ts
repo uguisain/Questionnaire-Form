@@ -6,8 +6,9 @@ import { UserProfile, QuestionnaireSummary } from '../@models/auth-model';      
 import { MatTabsModule } from '@angular/material/tabs';
 import { DialogComponent } from '../dialog/dialog.component';
 import { Router } from '@angular/router';
-import { CreateFormDialogComponent } from '../create-form-dialog/create-form-dialog.component'; // 路徑依你放的位置調整
+import { CreateFormDialogComponent, QuizCreateReq } from '../create-form-dialog/create-form-dialog.component'; // 路徑依你放的位置調整
 import { MatDialog } from '@angular/material/dialog';
+import { HttpService } from "../@service/http.service";
 
 @Component({
   selector: 'app-per-infor',
@@ -21,13 +22,17 @@ export class PerInforComponent {
   myAnswered: QuestionnaireSummary[] = []; // 已填寫
   myCreated: QuestionnaireSummary[] = [];  // 我新增
 
-    constructor(private auth: AuthService, private router: Router, private dialog: MatDialog ) {
+    constructor(
+      private auth: AuthService,
+      private router: Router,
+      private dialog: MatDialog,
+      private http: HttpService, ) {
+
       // 一進來就從 AuthService 拿目前登入的使用者資料
       const state = this.auth.getState(); // 一次拿到現在狀態
       this.user = state.user;
       this.myAnswered = this.auth.getMyAnswered(); // 從 service 抓清單
       this.myCreated = this.auth.getMyCreated();   // 從 service 抓清單
-
       }
 
     save() {
@@ -59,20 +64,25 @@ export class PerInforComponent {
     // 打開「新增問卷」Dialog
     openCreateFormDialog() {
       const dialogRef = this.dialog.open(CreateFormDialogComponent, {
-      autoFocus: false,      // Dialog 開啟時不要強制把焦點跳到第一個 input
-      restoreFocus: false,   // Dialog 關閉時不要把焦點強制還原到觸發按鈕
+        autoFocus: false,
+        restoreFocus: false,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          // result: QuizCreateReq
-          // 現在我們先用 name 更新「我新增的表單」列表
-          // 未來這裡會改成呼叫真正的後端 API
-          this.auth.addMyCreated(result.name);
+      dialogRef.afterClosed().subscribe((result: QuizCreateReq | null) => {
+        if (!result) return;
 
-          // 再抓一次最新清單
-          this.myCreated = this.auth.getMyCreated();
-        }
+      // API
+      this.http.postApi<any>('http://localhost:8080/quiz/create', result)
+        .subscribe({
+          next: (res) => {
+            this.auth.addMyCreated(result.title);
+            this.myCreated = this.auth.getMyCreated();
+            console.log('POST 成功回來', res)
+          },
+          error: (err) => {
+            console.error('POST 失敗', err);
+          }
+        });
       });
     }
 
@@ -84,7 +94,7 @@ export class PerInforComponent {
 
     this.auth.deleteMyCreated(id);       // 請 AuthService 刪除那一筆
     this.myCreated = this.auth.getMyCreated(); // 重新抓一次最新清單，更新畫面
-  }
+    }
 
   // 1. 從「已填寫表單」進去看結果
   goAnsweredResult(id: number) {

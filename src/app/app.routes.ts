@@ -5,12 +5,14 @@ import { Test4Component } from './test4/test4.component';
 import { StatisticalReportComponent } from './statistical-report/statistical-report.component';
 import { LoginComponent } from './login/login.component';
 import { PerInforComponent } from './per-infor/per-infor.component';
+import { FormEditComponent } from './form-edit/form-edit.component';
 
 
 export const routes: Routes = [
   { path: "home", component: HomeComponent},
   { path: "UserForm", component: UserFormComponent},
   { path: 'form/:id', component: UserFormComponent }, // 表單頁
+  { path: 'formEdit/:id', component: FormEditComponent }, // 表單編輯頁
   { path: "Report", component: StatisticalReportComponent},
   { path: 'Report/:id', component: StatisticalReportComponent }, // 統計頁
   { path: "test4", component: Test4Component},

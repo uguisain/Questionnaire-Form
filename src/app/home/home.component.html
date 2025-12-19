@@ -84,7 +84,7 @@ class="bg">
     <!-- 用 *ngFor 逐筆列出資料 -->
     <tr *ngFor="let f of pagedList">
       <td style="font-size: 20px;">{{ f.id }}</td>
-      <td>{{ f.name }}</td>
+      <td>{{ f.title }}</td>
       <td><span [ngClass]="{
         'state-open': getState(f) === 'open',
         'state-closed': getState(f) === 'closed',
@@ -99,6 +99,9 @@ class="bg">
         <!-- 進行中：顯示「填寫」按鈕（可點） -->
       <button (click)="goFill(f.id)" style="font-weight: bold; color: blueviolet; margin-right: 5px;">
         預覽
+      </button>
+      <button (click)="edit(f.id)" style="font-weight: bold; color: rgb(47, 124, 101); margin-right: 5px;">
+        編輯
       </button>
       <button (click)="viewResult(f.id)" class="secondary" style="font-weight: bold; color: rgb(68, 6, 47); margin-right: 5px;">
         結果

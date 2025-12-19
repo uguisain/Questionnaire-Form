@@ -1,0 +1,215 @@
+<div class="edit-page">
+  <div class="edit-container">
+    <div class="edit-card">
+      <div class="edit-alerts">
+        <!-- 讀取失敗或提示 -->
+        @if (errorMsg) {
+        <div class="error">{{ errorMsg }}</div>
+        }
+      </div>
+
+      <!-- Header -->
+      <div class="edit-header">
+        <h2 class="edit-title">編輯表單</h2>
+      </div>
+
+      @if (!quiz) {
+      <div class="loading">載入中...</div>
+      } @else {
+
+      <!-- 問卷資訊 -->
+      <div class="section-card">
+        <div class="section-title">問卷資訊</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">問卷名稱</label>
+            <div class="field-control">
+              <input
+                type="text"
+                [(ngModel)]="quiz.title"
+                placeholder="請輸入問卷名稱"
+              />
+            </div>
+          </div>
+
+          <div class="field field-span-2">
+            <label class="field-label">問卷說明</label>
+            <div class="field-control">
+              <textarea
+                rows="3"
+                [(ngModel)]="quiz.description"
+                placeholder="請輸入問卷說明"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">開始日期</label>
+            <div class="field-control">
+              <input type="date" [(ngModel)]="quiz.startDate" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">結束日期</label>
+            <div class="field-control">
+              <input type="date" [(ngModel)]="quiz.endDate" />
+            </div>
+          </div>
+
+          <div class="field field-span-2">
+            <label class="field-label">狀態</label>
+            <div class="toggle-row">
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="quiz.published" />
+                立即發佈
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 問卷內容 -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">題目清單</div>
+          <div class="section-actions">
+            <button type="button" (click)="addQuestion()">＋ 新增題目</button>
+          </div>
+        </div>
+
+        @if (questions.length === 0) {
+        <div class="empty">目前沒有題目</div>
+        } @else {
+
+        <div class="question-list">
+          @for (question of questions; track question.questionId; let i =
+          $index) {
+
+          <div class="question-card">
+            <!-- 題目頭 -->
+            <div class="question-head">
+              <div class="q-meta">
+                <span class="q-no">第 {{ i + 1 }} 題</span>
+
+                <label class="required">
+                  <input type="checkbox" [(ngModel)]="question.required" />
+                  必填
+                </label>
+              </div>
+
+              <div class="q-actions">
+                <button
+                  type="button"
+                  class="danger"
+                  (click)="removeQuestion(i)"
+                >
+                  刪除題目
+                </button>
+              </div>
+            </div>
+
+            <!-- 題目內容 -->
+            <div class="question-body">
+              <div class="split-row">
+                <div class="field">
+                  <label class="field-label">題目名稱</label>
+                  <div class="field-control">
+                    <input
+                      type="text"
+                      [(ngModel)]="question.question"
+                      placeholder="請輸入問題"
+                    />
+                  </div>
+                </div>
+
+                <div class="field field-narrow">
+                  <label class="field-label">題型</label>
+                  <div class="field-control">
+                    <select
+                      [(ngModel)]="question.type"
+                      (ngModelChange)="onTypeChange(question)"
+                    >
+                      <option value="single">單選</option>
+                      <option value="multiple">多選</option>
+                      <option value="text">簡答</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 簡答 -->
+              @if (question.type === 'text') {
+              <div class="text-preview">
+                <label class="field-label">回答框（預覽）</label>
+                <div class="field-control">
+                  <textarea
+                    rows="2"
+                    disabled
+                    placeholder="使用者會在這裡輸入..."
+                  ></textarea>
+                </div>
+              </div>
+              } @else {
+
+              <!-- 單選 / 多選 -->
+              <div class="options-area">
+                <div class="options-head">
+                  <span class="options-title">選項</span>
+                  <button type="button" (click)="addOption(question)">
+                    ＋ 新增選項
+                  </button>
+                </div>
+
+                <div class="option-list">
+                  @for (opt of question.optionsList; track $index; let j =
+                  $index) {
+                  <div class="option-row">
+                    <span class="option-no">{{ j + 1 }}</span>
+
+                    <div class="field-control option-input">
+                      <input
+                        type="text"
+                        [(ngModel)]="question.optionsList[j].optionName"
+                        placeholder="選項內容"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      class="ghost"
+                      (click)="removeOption(question, j)"
+                    >
+                      移除
+                    </button>
+                  </div>
+                  }
+                </div>
+
+                @if (!question.optionsList || question.optionsList.length === 0)
+                {
+                <div class="hint">至少需要一個選項</div>
+                }
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- 底部操作 -->
+      <section class="actions actions-bar">
+        <div class="actions-right">
+          <button type="button" class="ghost" (click)="cancel()">取消</button>
+          <button type="button" class="primary" (click)="saveUpdate()">
+            儲存更新
+          </button>
+        </div>
+      </section>
+      }
+    </div>
+  </div>
+</div>

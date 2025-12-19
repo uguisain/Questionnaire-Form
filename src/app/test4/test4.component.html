@@ -1,6 +1,9 @@
-<button (click)="nameM()">只有名字</button>
-<br>
-<button (click)="ageM()">年齡+5</button>
-<br>
-<button (click)="stringM()">新陣列</button>
-<br>
+<p>test4</p>
+
+@for (Date of quiz; track $index) {
+  <h1 style="text-align: center;">{{ Date.title }}</h1>
+  <h2>問卷說明: {{ Date.description }}</h2>
+  <h2>開始時間: {{ Date.startDate }}</h2>
+  <h2>開始時間: {{ Date.endDate }}</h2>
+  <h3>是否公開: {{ Date.published }}</h3>
+}

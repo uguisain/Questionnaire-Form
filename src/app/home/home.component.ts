@@ -1,11 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { ExampleService, formElement } from '../@service/example.service';
+import { ExampleService } from '../@service/example.service';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../@service/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { HttpService } from "../@service/http.service";
+import { ApiResponse, HomeList, } from "../@Interface/quizList";
 
 @Component({
   selector: 'app-home',
@@ -30,7 +32,7 @@ export class HomeComponent {
 
   // ===== 用日期判斷狀態（核心邏輯）=====
   // 傳回 'notStarted' | 'open' | 'closed'
-  getState(row: formElement): 'notStarted' | 'open' | 'closed' {
+  getState(row: HomeList): 'notStarted' | 'open' | 'closed' {
     const today = this.toDayStr;                  // 今天（字串）
     // 都是 'YYYY-MM-DD' → 直接用字串比較即可（字典順序 = 日期順序）
     if (today < row.startDate) return 'notStarted';     // 今天在開始前 → 尚未開始
@@ -62,7 +64,12 @@ export class HomeComponent {
       return;
     }
 
-    this.router.navigate(['/form', id]);                 // 用絕對路徑，最直覺
+    this.router.navigate(['/form', id]);
+    window.scrollTo(0, 0);
+  }
+
+  edit(id: number) {
+    this.router.navigate(['/formEdit', id]);
     window.scrollTo(0, 0);
   }
 
@@ -73,7 +80,7 @@ export class HomeComponent {
 
   // 這個要做刪除表單
   delFill(id: number) {
-    this.forms = this.forms.filter(f => f.id !== id);
+    this.quiz = this.quiz.filter(f => f.id !== id);
 
     // return this.http.delete(`/api/forms/${id}`); // 未來接api時完善
   }
@@ -89,21 +96,34 @@ export class HomeComponent {
 
   // 表單----------------------------------------------------------
   // 存放從服務拿到的資料
-  forms: formElement[] = [];
+  // forms: formElement[] = [];
+  quiz: HomeList[] = []; // 這是問卷陣列必須用迴圈取值
 
   // 注入服務------------------------------------------------------
-  constructor(private example: ExampleService, private router: Router, public auth: AuthService, private dialog: MatDialog) {}
+  constructor(
+    private example: ExampleService,
+    private router: Router,
+    public auth: AuthService,
+    private http: HttpService,
+    private dialog: MatDialog ) {}
 
   // 當畫面載入時執行
   ngOnInit(): void {
+    this.http.getApi<ApiResponse<HomeList>>('http://localhost:8080/quiz/get_all')
+    .subscribe((res) => {
+      this.quiz = res.quizList;
+      console.log(res);
+    });
+
     // 進入時回到最上方
     window.scrollTo(0, 0);
 
-    this.forms = this.example.getForms(); // 取得假資料
-    console.log('載入資料:', this.forms); // 看看有沒有拿到
+    // this.forms = this.example.getForms(); // 取得假資料
+    // // this.quiz = this.http.getApi('http://localhost:8080/quiz/get_all');
+    // console.log('載入資料:', this.forms); // 看看有沒有拿到
 
     // 排序用(id)
-    this.forms.sort((a, b) => {
+    this.quiz.sort((a, b) => {
       if (a.id < b.id) {
         return -1;
       }
@@ -115,7 +135,7 @@ export class HomeComponent {
   }
 
   // ===== 即時篩選（關鍵字 + 日期 + 狀態）=====
-  get filteredForms(): formElement[] {
+  get filteredForms(): HomeList[] {
     // 1) 關鍵字（小寫、去空白）
     const kw = (this.searchname || '').trim().toLowerCase();
 
@@ -124,9 +144,9 @@ export class HomeComponent {
     const to   = this.toDate   || '';
 
     // 3) 過濾（每一筆 row 都做檢查）
-    return this.forms.filter(row => {
+    return this.quiz.filter(row => {
       // (a) 名稱條件
-      const name = (row.name || '').toLowerCase();
+      const name = (row.title || '').toLowerCase();
       const nameOK = kw === '' || name.includes(kw);
 
       // (b) 日期條件
@@ -188,7 +208,7 @@ matchStatus(form: any): boolean {
 
   // 這裡假設你有 filteredList（篩選後的陣列）；
   // 若沒有，就先讓它指向原本的 formList（顯示全部）：
-  get filteredList(): formElement[] { return this.filteredForms; }
+  get filteredList(): HomeList[] { return this.filteredForms; }
 
   get totalItems(): number {      // 計算目前要顯示的總筆數（走篩選結果）
     return this.filteredList?.length ?? 0;   // 沒資料就回 0

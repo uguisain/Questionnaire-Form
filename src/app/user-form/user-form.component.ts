@@ -7,6 +7,8 @@ import { HomeComponent } from "../home/home.component";
 import { FormsModule } from "@angular/forms";
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { HttpService } from "../@service/http.service";
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 // import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
@@ -38,8 +40,11 @@ export class UserFormComponent implements OnInit {
     return `${yyyy}-${mm}-${dd}`;                 // 'YYYY-MM-DD'
   }
 
- // 單筆表單資料（從服務抓回來）
-  form: any;                                                         // 後端原始格式（維持 any，先求能動）
+ // 單筆表單資料（從API抓回來）
+  quiz: QuizReq | null = null;  // 這是問卷資訊
+  questions:QuestionReq []=[];  // 這是問題
+
+  // form: any;                                                         // 後端原始格式（維持 any，先求能動）
   // 使用者資訊
   userName: string = '';
   userPhoneNumber: string = '';
@@ -52,7 +57,8 @@ export class UserFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,                                    // 讀網址上的 :id
     private router: Router,                                           // 返回/導頁
-    private example: ExampleService,                                   // 從服務抓資料
+    // private example: ExampleService,                               // 從服務抓資料
+    private http: HttpService,                                        // API
     // private overlay: Overlay,
   ) {}
 
@@ -62,65 +68,83 @@ export class UserFormComponent implements OnInit {
 
     // 從路由參數拿 id（字串）→ 轉數字
     const id = +(this.route.snapshot.paramMap.get('id') || 0);
+    console.log("取得的表單id: " + id);
 
     // 依 id 取得單筆表單
-    this.form = this.example.getFormById(id);
+    // this.form = this.example.getFormById(id);
+    forkJoin({
+        quiz: this.http.getApi<any>(`http://localhost:8080/quiz/get_quiz/${id}`),
+        questions: this.http.getApi<any>(`http://localhost:8080/quiz/get_question2?quizId=${id}`),
+      }).subscribe({
+        next: ({ quiz, questions }) => {
+          console.log('quiz', quiz);
+          console.log('questions', questions);
 
-    // 找不到就導回首頁
-    if (!this.form) {
-      // alert('找不到這份表單');
-      this.dialog.open(DialogComponent, {
-          enterAnimationDuration: '160ms',
-          exitAnimationDuration: '120ms',
-          data: {title: '找不到這份表單'},
-        });
-      this.router.navigate(['/home']);
-      return;                                                         // 結束函式
-    }
+          this.quiz = quiz?.quizList?.[0] ?? null;
+          this.questions = questions?.questionVoList ?? [];
 
-    // 如果表單已超過填寫時間，就返回首頁
-    const today = this.toDayStr;
-    if (today > this.form.endDate) {
-      // alert('表單已過期，將回到首頁');
-      this.dialog.open(DialogComponent, {
-          enterAnimationDuration: '160ms',
-          exitAnimationDuration: '120ms',
-          data: {title: '表單已過期，將回到首頁'},
-        });
-      this.router.navigate(['/home']);
-      return;                                                         // 結束函式
-    }
+          // 找不到就導回首頁
+          if (!this.quiz) {
+            // alert('找不到這份表單');
+            this.dialog.open(DialogComponent, {
+                enterAnimationDuration: '160ms',
+                exitAnimationDuration: '120ms',
+                data: {title: '找不到這份表單'},
+              });
+            this.router.navigate(['/home']);
+            return;                                                         // 結束函式
+          }
 
-    // 把 this.form 統一成「陣列」來處理 (這個不知道到底需不需要)
-    // const formsArray = Array.isArray(this.form) ? this.form : [this.form];
+          // 如果表單已超過填寫時間，就返回首頁
+          const today = this.toDayStr;
+          if (today > this.quiz.endDate) {
+            // alert('表單已過期，將回到首頁');
+            this.dialog.open(DialogComponent, {
+                enterAnimationDuration: '160ms',
+                exitAnimationDuration: '120ms',
+                data: {title: '表單已過期，將回到首頁'},
+              });
+            this.router.navigate(['/home']);
+            return;                                                         // 結束函式
+          }
 
-    // 重組資料 → 放進 FillinReq-----------------------------------------------
-    let Req = {                            // 建立要送後端的請求物件
-    quizId: this.form.id,                  // 問卷ID
-    userName: this.userName,
-    userPhoneNumber: this.userPhoneNumber,
-    email: this.email,
-    userAge: this.userAge,
-    questionAnswerList: [] as any[],       // 先放空陣列，等下把每一題塞進來
-    };
+          const Req = {
+            quizId: this.quiz.id,
+            userName: this.userName,
+            userPhoneNumber: this.userPhoneNumber,
+            email: this.email,
+            userAge: this.userAge,
+            questionAnswerList: [] as any[],
+          };
 
-    for (let ans of this.form.options) {
-      Req.questionAnswerList.push({
-      questionId: ans.questionId,
-      question: ans.question,
-      type: ans.type,
-      answerList: ans.type === 'multiple' ? [] : '' ,
-      // multiple 題：準備一個空陣列 []
-      // 其他題：維持成 '' 就好
+          for (let ans of this.questions) {
+            Req.questionAnswerList.push({
+              questionId: ans.questionId,
+              question: ans.question,
+              type: ans.type,
+              answerList: ans.type === 'multiple' ? [] : '',
+            });
+          }
+
+          console.log('Req：', Req);
+
+          // ⚠️ 避免重複 push（如果 ngOnInit 因某些原因跑兩次會疊加）
+          this.FillinReq = [];
+          this.FillinReq.push(Req);
+
+          console.log('FillinReq 重組完成：', this.FillinReq);
+
+        },
+        error: (err) => {
+          console.error(err);
+          this.dialog.open(DialogComponent, {
+            enterAnimationDuration: '160ms',
+            exitAnimationDuration: '120ms',
+            data: { title: '讀取表單失敗' },
+          });
+          this.router.navigate(['/home']);
+        },
       });
-    }
-
-    console.log('Req：', Req); // 確認Req重組完的樣子
-
-    this.FillinReq.push(Req); // 把Req丟進去FillinReq
-
-    // 檢查FillinReq
-    console.log('FillinReq 重組完成：', this.FillinReq);
   }
 
   // 切換多選答案，把 optionCode 放進或拿出陣列
@@ -155,7 +179,7 @@ export class UserFormComponent implements OnInit {
   // 把某一題的答案，轉成可以看得懂的文字
   getAnswerDisplay(i: number) {
   // i = 第幾題 ($index)
-  const question = this.form.options[i];
+  const question = this.questions[i];
   // 例如 {
   //   questionId: 1,
   //   question: "你是甚麼派?",
@@ -164,15 +188,13 @@ export class UserFormComponent implements OnInit {
   // }
 
   const answer = this.FillinReq[0].questionAnswerList[i].answerList;
-  // 可能是數字 (single)
-  // 可能是陣列 (multiple)
-  // 可能是字串 (text)
 
+  // 可能是數字 (single) 陣列 (multiple) 字串 (text)
   // 單選題：answer 是一個 code (比如 2)
   if (question.type === 'single') {
     // 去 options 裡找 code 相同的那一個
-    const found = question.option.find((o: { code: any; }) => o.code === answer);
-    return found ? found.ans : answer;
+    const found = this.questions[i].optionsList.find((o: { code: any; }) => o.code === answer);
+    return found ? found.optionName : answer;
     // 如果找到就回中文(貓派)，找不到就先回原本值
   }
 
@@ -181,8 +203,8 @@ export class UserFormComponent implements OnInit {
     if (Array.isArray(answer)) {
       // 把每一個 code 轉成文字，再用逗號串起來
       const labels = answer.map(code => {
-        const found = question.option.find((o: { code: any; }) => o.code === code);
-        return found ? found.ans : code;
+        const found = this.questions[i].optionsList.find((o: { code: any; }) => o.code === code);
+        return found ? found.optionName : code;
       });
       return labels.join(', ');
     } else {
@@ -215,8 +237,8 @@ export class UserFormComponent implements OnInit {
     }
 
     // 檢查是否有必填但沒填的題目
-    for (let i = 0; i < this.form.options.length; i++) {
-    const q = this.form.options[i]; // 這一題的設定 (包含 required, type)
+    for (let i = 0; i < this.questions.length; i++) {
+    const q = this.questions[i]; // 這一題的設定 (包含 required, type)
     const ans = this.FillinReq[0].questionAnswerList[i].answerList; // 使用者填的內容
 
     if (q.required) { // 只檢查必填題
@@ -259,7 +281,7 @@ export class UserFormComponent implements OnInit {
   }
 
   finalSubmit() {
-    console.log('送出最終資料：', this.FillinReq);
+    console.log('送出最終資料：' + JSON.stringify(this.FillinReq, null, 2));
     // TODO: 之後改成呼叫 service API
     // this.example.submitAnswers(this.FillinReq).subscribe(...)
 
@@ -274,4 +296,44 @@ export class UserFormComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
+}
+
+// 這是問卷的 interface
+export interface QuizReq {
+  id:number;                         // 問卷ID
+  title: string;                     // 問卷名稱
+  description: string;               // 問卷說明（可空）
+  startDate: string;                 // 開始日期 yyyy-MM-dd
+  endDate: string;                   // 結束日期 yyyy-MM-dd
+  published: boolean;                // 是否發佈
+}
+
+// 這是問題的 interface
+export interface QuestionReq {
+  quizId: number;                        // 問卷編號
+  questionId: number;                    // 題目編號
+  question: string;                      // 題目名稱
+  type: 'single' | 'multiple' | 'text';  // 題目類型
+  required: boolean;                     // 是否必填
+  optionsList: OptionReq[];              // 題目選項（文字題可為空陣列）
+}
+
+// 這是選項的 interface
+export interface OptionReq {
+  code: number;
+  optionName: string;
+}
+
+// API 接收原包 quiz
+export interface GetQuizRes {
+  code: number;
+  message: string;
+  quizList: QuizReq[];
+}
+
+// API 接收原包 Question
+export interface GetQuestionRes {
+  code: number;
+  message: string;
+  questionVoList: QuestionReq[];
 }

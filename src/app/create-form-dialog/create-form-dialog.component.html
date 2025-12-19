@@ -4,7 +4,7 @@
   <!-- 問卷基本設定 -->
   <div class="section">
     <label>問卷名稱（必填）</label>
-    <input [(ngModel)]="form.name" placeholder="例如：顧客滿意度調查" style="margin-left: 20px;">
+    <input [(ngModel)]="form.title" placeholder="例如：顧客滿意度調查" style="margin-left: 20px;">
 
     <label>問卷說明（選填）</label>
     <textarea [(ngModel)]="form.description" rows="2" placeholder="簡單描述這份問卷的用途..." style="margin-left: 20px;"></textarea>
@@ -30,16 +30,16 @@
   <div class="section">
     <div class="section-header">
       <span style="margin-left: 10px;">題目設定（最多 {{ maxQuestions }} 題）</span>
-      <button class="mini" (click)="addQuestion()" [disabled]="form.questionList.length >= maxQuestions">
+      <button class="mini" (click)="addQuestion()" [disabled]="form.questionVoList.length >= maxQuestions">
         新增題目
       </button>
     </div>
 
-    <div *ngIf="form.questionList.length === 0" class="hint" style="margin-left: 10px;">
+    <div *ngIf="form.questionVoList.length === 0" class="hint" style="margin-left: 10px;">
       尚未新增題目，點右上角「新增題目」開始建立。
     </div>
 
-    <div class="question-card" *ngFor="let q of form.questionList; let i = index">
+    <div class="question-card" *ngFor="let q of form.questionVoList; let i = index">
       <div class="q-header">
         <div class="q-title" style="margin-left: 10px;">第 {{ i + 1 }} 題</div>
         <button class="x" (click)="removeQuestion(i)">✕</button>
@@ -71,11 +71,11 @@
       <div *ngIf="q.type === 'single' || q.type === 'multiple'" class="options">
         <div
           class="opt-row"
-          *ngFor="let opt of q.options; let oi = index; trackBy: trackByIndex"
+          *ngFor="let opt of q.optionsList; let oi = index; trackBy: trackByIndex"
         >
           <span class="dot">●</span>
           <input
-            [(ngModel)]="q.options[oi]"
+            [(ngModel)]="q.optionsList[oi]"
             [ngModelOptions]="{ standalone: true }"
             [attr.name]="'option_' + oi"
             placeholder="選項文字"
@@ -84,7 +84,7 @@
           <button
             class="x mini-x"
             (click)="removeOption(q, oi)"
-            *ngIf="q.options.length > 1"
+            *ngIf="q.optionsList.length > 1"
           >
             ✕
           </button>
@@ -94,7 +94,7 @@
           class="mini ghost"
           style="margin-top: 5px;"
           (click)="addOption(q)"
-          *ngIf="(q.options?.length || 0) < 8"
+          *ngIf="(q.optionsList?.length || 0) < 8"
         >
           新增選項
         </button>

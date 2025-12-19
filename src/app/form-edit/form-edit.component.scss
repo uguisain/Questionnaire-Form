@@ -1,0 +1,269 @@
+/* 1) 整頁背景 + 讓內容垂直有呼吸感 */
+.edit-page {
+  min-height: 100vh;
+  padding: 24px 16px;
+
+  /* 冷色、淡雅背景：你之後想換色只要改這裡 */
+  background: linear-gradient(180deg,
+    rgba(230, 236, 255, 0.65),
+    rgba(240, 244, 255, 0.35)
+  );
+}
+
+/* 2) 置中容器：控制頁面最大寬度 */
+.edit-container {
+  max-width: 980px;  /* 你也可以用 900 / 1100 */
+  margin: 0 auto;
+}
+
+/* 3) 主卡片：真正放內容的地方 */
+.edit-card {
+  padding: 20px;
+  border-radius: 18px;
+
+  /* 白底但不刺眼 */
+  background: rgba(255, 255, 255, 0.72);
+
+  /* 冷灰藍的淡邊框 */
+  border: 1px solid rgba(160, 175, 210, 0.35);
+
+  /* 很淡的陰影，讓它浮起來但不亮眼 */
+  box-shadow:
+    0 8px 24px rgba(30, 45, 90, 0.08);
+}
+
+/* 小螢幕時讓卡片更好呼吸 */
+@media (max-width: 600px) {
+  .edit-page { padding: 16px 12px; }
+  .edit-card { padding: 16px; border-radius: 16px; }
+}
+
+.edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+  padding: 12px 14px;
+
+  border-radius: 16px;
+
+  /* 讓 Header 有一點淡淡的底色，跟 card 有層次 */
+  background: rgba(240, 244, 255, 0.55);
+  border: 1px solid rgba(160, 175, 210, 0.28);
+}
+
+.edit-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  /* 冷色系字色，不用純黑 */
+  color: rgba(35, 45, 80, 0.88);
+}
+
+.loading {
+  margin-top: 12px;
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px dashed rgba(160, 175, 210, 0.35);
+
+  color: rgba(35, 45, 80, 0.72);
+  font-size: 14px;
+
+  /* 置中一點點，感覺更柔和 */
+  text-align: center;
+}
+
+.section-card {
+  margin-top: 14px;
+  padding: 16px;
+
+  border-radius: 18px;
+
+  /* 淡紫藍底，跟 edit-card 做出層次 */
+  background: rgba(240, 243, 255, 0.65);
+  border: 1px solid rgba(160, 175, 210, 0.28);
+
+  /* 很淡的內陰影感，讓它更柔 */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.section-title {
+  margin-bottom: 12px;
+
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+
+  color: rgba(35, 45, 80, 0.75);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 14px;
+}
+
+/* 讓某些欄位跨兩欄（例如 description） */
+.field-span-2 {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 13px;
+  color: rgba(35, 45, 80, 0.7);
+}
+
+/* 不改 input/textarea 的預設樣式，只給外框容器距離 */
+.field-control {
+  padding: 8px 10px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(160, 175, 210, 0.25);
+}
+
+/* 手機自動變一欄 */
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.edit-alerts {
+  margin-bottom: 12px;
+
+  /* 如果沒錯誤，這塊就只是留白，不會影響版面 */
+  min-height: 0;
+}
+
+.error {
+  padding: 10px 14px;
+  border-radius: 14px;
+
+  /* 不用鮮紅，偏冷紫紅 */
+  background: rgba(245, 230, 235, 0.75);
+  border: 1px solid rgba(190, 140, 155, 0.35);
+
+  color: rgba(120, 45, 65, 0.85);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+// 按鈕區 ---------------------------------------------------------------------------------------------
+button.primary {
+  padding: 8px 16px;
+  border-radius: 14px;
+
+  background: rgba(190, 205, 240, 0.85);
+  border: 1px solid rgba(140, 155, 210, 0.45);
+
+  color: rgba(35, 45, 80, 0.9);
+}
+
+button.ghost {
+  padding: 8px 14px;
+  border-radius: 14px;
+
+  background: transparent;
+  border: 1px solid rgba(160, 175, 210, 0.4);
+
+  color: rgba(35, 45, 80, 0.75);
+}
+
+button.danger {
+  padding: 6px 12px;
+  border-radius: 12px;
+
+  background: rgba(235, 200, 210, 0.7);
+  border: 1px solid rgba(190, 140, 155, 0.45);
+
+  color: rgba(120, 45, 65, 0.85);
+}
+
+// -----------------------------------------------------------------------------------------------------
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+.section-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.question-card {
+  padding: 14px;
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(160, 175, 210, 0.35);
+
+  box-shadow: 0 6px 18px rgba(30, 45, 90, 0.08);
+}
+
+.question-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+}
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.q-no {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(35, 45, 80, 0.75);
+}
+
+.q-actions {
+  display: flex;
+  gap: 6px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
