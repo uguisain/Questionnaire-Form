@@ -1,7 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { UserProfile, QuestionnaireSummary, AuthState } from '../@models/user-data-model';
 import { UserDataService } from "../@service/user-data.service";
-// import { AuthState } from '../@models/auth-model';
 
 const STORAGE_KEY = 'mock_auth_state'; // localStorage 的鍵名
 
@@ -34,27 +33,6 @@ export class AuthService {
       this.save();
     }
   }
-
-  // private seed() {
-  //   // 示範使用者與兩個清單
-  //   const demoUser: UserProfile = {
-  //     id: 1,
-  //     name: '示範用戶',
-  //     email: 'demo@example.com',
-  //     phone: '0912-345-678',
-  //     age: 22,
-  //   };
-  //   const created: QuestionnaireSummary[] = [
-  //     { id: 101, title: '我的第一份問卷', createdAt: '2025-10-10' },
-  //     { id: 102, title: '顧客滿意度小調查', createdAt: '2025-10-18' },
-  //   ];
-  //   const answered: QuestionnaireSummary[] = [
-  //     { id: 201, title: '校園午餐口味調查', createdAt: '2025-09-30' },
-  //   ];
-  //   // 注意：seed 不登入，只是提供假資料庫概念
-  //   this.state.myCreated = created;     // 假資料（我的問卷）
-  //   this.state.myAnswered = answered;   // 假資料（我填過的）
-  // }
 
   private save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));

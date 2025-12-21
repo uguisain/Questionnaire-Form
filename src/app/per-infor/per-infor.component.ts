@@ -105,6 +105,7 @@ export class PerInforComponent {
 
   // 2. 我新增的表單：編輯
   editCreatedForm(id: number) {
+    console.log(id);
     // 未來你可能會有 /builder/:id 或 /form-edit/:id 之類
     // 現在先導到填寫頁當「編輯頁」用也可以
     this.router.navigate(['/form', id]); // 自己換成實際路由
