@@ -24,16 +24,12 @@
       <div class="section">
         <div class="field-row">
           <label class="field-label">姓名</label>
-          <input class="text-input" [(ngModel)]="userName" />
+          <input class="text-input" [(ngModel)]="name" />
         </div>
 
         <div class="field-row">
           <label class="field-label">電話</label>
-          <input
-            class="text-input"
-            type="number"
-            [(ngModel)]="userPhoneNumber"
-          />
+          <input class="text-input" type="text" [(ngModel)]="phone" />
         </div>
 
         <div class="field-row">
@@ -43,7 +39,7 @@
 
         <div class="field-row">
           <label class="field-label">年齡</label>
-          <input class="text-input" type="number" [(ngModel)]="userAge" />
+          <input class="text-input" type="number" [(ngModel)]="age" />
         </div>
       </div>
 
@@ -95,7 +91,7 @@
               <textarea
                 class="text-area"
                 name="{{ question.questionId }}"
-                [(ngModel)]="FillinReq[0].questionAnswerList[i].answerList"
+                [(ngModel)]="FillinReq[0].answers[i].answerVoList[0].optionName"
               ></textarea>
             </div>
             }
@@ -123,32 +119,30 @@
         <!-- 基本資料小卡片 -->
         <div class="kv-card">
           <p class="kv-item">
-            姓名：<b>{{ FillinReq[0].userName || userName }}</b>
+            姓名：<b>{{ FillinReq[0].name || name }}</b>
           </p>
           <p class="kv-item">
-            電話：<b>{{ FillinReq[0].userPhoneNumber || userPhoneNumber }}</b>
+            電話：<b>{{ FillinReq[0].phone || phone }}</b>
           </p>
           <p class="kv-item">
             信箱：<b>{{ FillinReq[0].email || email }}</b>
           </p>
           <p class="kv-item">
-            年齡：<b>{{ FillinReq[0].userAge || userAge }}</b>
+            年齡：<b>{{ FillinReq[0].age || age }}</b>
           </p>
         </div>
 
         <ol class="answer-list">
-          @for (ans of FillinReq[0].questionAnswerList; track $index; let i =
-          $index) {
+          @for (q of questions; track $index; let i = $index) {
           <li class="answer-item">
-            <div class="answer-q">{{ ans.question }}</div>
+            <div class="answer-q">{{ q.question }}</div>
 
             <div class="answer-a">
               <span class="badge-you">你的答案</span>
-              <!-- 單選 / 多選 → 用同一個顯示函式 -->
-              @if (questions[i].type === 'single') { {{ getAnswerDisplay(i) }} }
-              @if (questions[i].type === 'multiple') {
-              {{ getAnswerDisplay(i) }} } @if (questions[i].type === 'text') {
-              {{ ans.answerList }} }
+
+              @if (q.type === 'single') { {{ getAnswerDisplay(i) }} } @if
+              (q.type === 'multiple') { {{ getAnswerDisplay(i) }} } @if (q.type
+              === 'text') { {{ getTextDisplay(i) }} }
             </div>
           </li>
           }

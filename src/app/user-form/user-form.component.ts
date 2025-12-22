@@ -46,10 +46,10 @@ export class UserFormComponent implements OnInit {
 
   // form: any;                                                         // 後端原始格式（維持 any，先求能動）
   // 使用者資訊
-  userName: string = '';
-  userPhoneNumber: string = '';
+  name: string = '';
+  phone: string = '';
   email: string = '';
-  userAge!: number;
+  age!: number;
 
   // 最終要送後端的「重組後」請求陣列
   FillinReq: any[] = [];
@@ -72,8 +72,10 @@ export class UserFormComponent implements OnInit {
     // 依 id 取得單筆表單
     // this.form = this.example.getFormById(id);
     forkJoin({
-      quiz: this.http.getApi<any>(`http://localhost:8080/quiz/get_quiz/${id}`),
-      questions: this.http.getApi<any>(
+      quiz: this.http.getApi<GetQuizRes>(
+        `http://localhost:8080/quiz/get_quiz/${id}`
+      ),
+      questions: this.http.getApi<GetQuestionRes>(
         `http://localhost:8080/quiz/get_question2?quizId=${id}`
       ),
     }).subscribe({
@@ -111,29 +113,55 @@ export class UserFormComponent implements OnInit {
         // -------------------------------------------------------------------------------
         const Req = {
           quizId: this.quiz.id,
-          userName: this.userName,
-          userPhoneNumber: this.userPhoneNumber,
+          name: this.name,
+          phone: this.phone as String,
           email: this.email,
-          userAge: this.userAge,
-          questionAnswerList: [] as QuestionAnswerReq[],
+          age: this.age,
+          answers: [] as QuestionAnswerReq[],
         };
 
         for (let q of this.questions) {
-          // 單選/多選：把所有選項做成「送出格式」
-          const optionAnsList: OptionAnsReq[] = (q.optionsList || []).map(
-            (opt) => ({
-              code: opt.code,
-              optionName: opt.optionName,
-              optionAns: 'false',
-            })
-          );
+          if (q.type == 'single' || q.type == 'multiple') {
+            const answerVoList: OptionAnsReq[] = (q.optionsList || []).map(
+              (opt) => ({
+                code: opt.code,
+                optionName: opt.optionName,
+                check: false,
+              })
+            );
+            Req.answers.push({
+              questionId: q.questionId,
+              answerVoList: answerVoList,
+            });
+          }
 
-          Req.questionAnswerList.push({
-            questionId: q.questionId,
-            question: q.question,
-            type: q.type,
-            answerList: q.type === 'text' ? '' : optionAnsList,
-          });
+          // 簡答題：塞一筆「空答案容器」
+          if (q.type == 'text') {
+            Req.answers.push({
+              questionId: q.questionId,
+              answerVoList: [
+                {
+                  code: 0, // 固定 0
+                  optionName: '', // 使用者輸入文字
+                  check: true, // 固定 true
+                },
+              ],
+            });
+          }
+
+          // 選擇題：依 optionsList 建完整的 answerVoList（全 false）
+          // const optionAnsList: OptionAnsReq[] = (q.optionsList || []).map(
+          //   (opt) => ({
+          //     code: opt.code,
+          //     optionName: opt.optionName,
+          //     check: false,
+          //   })
+          // );
+
+          // Req.answers.push({
+          //   questionId: q.questionId,
+          //   answerVoList: q.type === 'text' ? "" : optionAnsList,
+          // });
         }
         // -------------------------------------------------------------------------------
         console.log('Req：', Req);
@@ -160,12 +188,11 @@ export class UserFormComponent implements OnInit {
   toggleMulti(i: number, optionCode: number, event: any) {
     const checked = !!event.target.checked;
 
-    const list = this.FillinReq[0].questionAnswerList[i]
-      .answerList as OptionAnsReq[];
+    const list = this.FillinReq[0].answers[i].answerVoList as OptionAnsReq[];
 
     const target = list.find((o) => o.code === optionCode);
     if (target) {
-      target.optionAns = checked ? 'true' : 'false';
+      target.check = checked ? true : false;
     }
 
     console.log('多選第', i, '題現在的答案 = ', list);
@@ -173,39 +200,44 @@ export class UserFormComponent implements OnInit {
 
   // 切換單選答案
   selectSingle(i: number, optionCode: number) {
-    const list = this.FillinReq[0].questionAnswerList[i]
-      .answerList as OptionAnsReq[];
+    const list = this.FillinReq[0].answers[i].answerVoList as OptionAnsReq[];
 
     for (const o of list) {
-      o.optionAns = o.code === optionCode ? 'true' : 'false';
+      o.check = o.code === optionCode ? true : false;
     }
 
     console.log('單選第', i, '題現在的答案 = ', list);
   }
 
   isOptionTrue(i: number, optionCode: number): boolean {
-    const list = this.FillinReq[0].questionAnswerList[i].answerList;
+    const list = this.FillinReq[0].answers[i].answerVoList;
 
     if (!Array.isArray(list)) return false;
 
     const found = (list as OptionAnsReq[]).find((o) => o.code === optionCode);
-    return found?.optionAns === 'true';
+    return found?.check === true;
   }
 
   // 把某一題的答案，轉成可以看得懂的文字
   getAnswerDisplay(i: number) {
     const q = this.questions[i];
-    const ans = this.FillinReq[0].questionAnswerList[i].answerList;
+    const ans = this.FillinReq[0].answers[i].answerVoList;
 
     if (q.type === 'text') return ans as string;
 
-    // single / multiple：挑 optionAns === 'true' 的選項
+    // single / multiple：挑 check === 'true' 的選項
     const list = ans as OptionAnsReq[];
     const labels = list
-      .filter((o) => o.optionAns === 'true')
+      .filter((o) => o.check === true)
       .map((o) => o.optionName);
 
     return labels.join(', ');
+  }
+
+  getTextDisplay(i: number): string {
+    const voList = this.FillinReq[0].answers[i]?.answerVoList;
+    if (!voList || voList.length === 0) return '';
+    return voList[0].optionName || '';
   }
 
   // 送出答案（之後串 API）-------------------------------------
@@ -216,15 +248,15 @@ export class UserFormComponent implements OnInit {
     // 把輸入的用戶資料寫回 FillinReq
     if (this.FillinReq.length > 0) {
       this.FillinReq[0].email = this.email || '';
-      this.FillinReq[0].userName = this.userName || '';
-      this.FillinReq[0].userPhoneNumber = this.userPhoneNumber || '';
-      this.FillinReq[0].userAge = this.userAge || '';
+      this.FillinReq[0].name = this.name || '';
+      this.FillinReq[0].phone = this.phone || '';
+      this.FillinReq[0].age = this.age || '';
     }
 
     // 檢查是否有必填但沒填的題目
     for (let i = 0; i < this.questions.length; i++) {
       const q = this.questions[i]; // 這一題的設定 (包含 required, type)
-      const ans = this.FillinReq[0].questionAnswerList[i].answerList; // 使用者填的內容
+      const ans = this.FillinReq[0].answers[i].answerVoList; // 使用者填的內容
 
       if (q.required) {
         if (q.type === 'text') {
@@ -242,7 +274,7 @@ export class UserFormComponent implements OnInit {
           }
         } else {
           const list = ans as OptionAnsReq[];
-          const hasAnyTrue = list.some((o) => o.optionAns === 'true');
+          const hasAnyTrue = list.some((o) => o.check === true);
           if (!hasAnyTrue) {
             this.dialog.open(DialogComponent, {
               enterAnimationDuration: '160ms',
@@ -274,19 +306,30 @@ export class UserFormComponent implements OnInit {
   }
 
   finalSubmit() {
-    console.log('送出最終資料：' + JSON.stringify(this.FillinReq, null, 2));
+    console.log('送出最終資料：' + JSON.stringify(this.FillinReq[0], null, 2));
     // TODO: 之後改成呼叫 service API
     // this.example.submitAnswers(this.FillinReq).subscribe(...)
 
-    // dialog資料
-    const dialogData: any = {
-      title: '表單已送出',
-    };
-    // dialog
-    this.dialog.open(DialogComponent, {
-      data: dialogData,
-    });
-    this.router.navigate(['/home']);
+    this.http.postApi('http://localhost:8080/quiz/fillin', this.FillinReq[0])
+    .subscribe({
+      next: (res) => {
+        console.log(res);
+        this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: { title: '表單送出成功' },
+        });
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error(err);
+        this.dialog.open(DialogComponent, {
+          enterAnimationDuration: '160ms',
+          exitAnimationDuration: '120ms',
+          data: { title: '表單送出失敗' },
+        });
+        return;
+    }});
   }
 }
 
@@ -335,13 +378,21 @@ export interface GetQuestionRes {
 export interface OptionAnsReq {
   code: number;
   optionName: string;
-  optionAns: 'true' | 'false';
+  check: boolean;
 }
 
 // 每一題送出答案的格式
 export interface QuestionAnswerReq {
   questionId: number;
-  question: string;
-  type: 'single' | 'multiple' | 'text';
-  answerList: OptionAnsReq[] | string; // 單/多 => array，文字 => string
+  answerVoList: OptionAnsReq[] | string; // 單/多 => array，文字 => string
+}
+
+// 整個送出答案的格式
+export interface FillinReqPayload {
+  name: string;
+  phone: string;
+  email: string;
+  age: number;
+  quizId: number;
+  answers: QuestionAnswerReq[];
 }

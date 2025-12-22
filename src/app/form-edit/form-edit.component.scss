@@ -4,7 +4,8 @@
   padding: 24px 16px;
 
   /* 冷色、淡雅背景：你之後想換色只要改這裡 */
-  background: linear-gradient(180deg,
+  background: linear-gradient(
+    180deg,
     rgba(230, 236, 255, 0.65),
     rgba(240, 244, 255, 0.35)
   );
@@ -12,7 +13,7 @@
 
 /* 2) 置中容器：控制頁面最大寬度 */
 .edit-container {
-  max-width: 980px;  /* 你也可以用 900 / 1100 */
+  max-width: 980px; /* 你也可以用 900 / 1100 */
   margin: 0 auto;
 }
 
@@ -28,14 +29,18 @@
   border: 1px solid rgba(160, 175, 210, 0.35);
 
   /* 很淡的陰影，讓它浮起來但不亮眼 */
-  box-shadow:
-    0 8px 24px rgba(30, 45, 90, 0.08);
+  box-shadow: 0 8px 24px rgba(30, 45, 90, 0.08);
 }
 
 /* 小螢幕時讓卡片更好呼吸 */
 @media (max-width: 600px) {
-  .edit-page { padding: 16px 12px; }
-  .edit-card { padding: 16px; border-radius: 16px; }
+  .edit-page {
+    padding: 16px 12px;
+  }
+  .edit-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
 }
 
 .edit-header {
@@ -171,6 +176,14 @@ button.primary {
 
   color: rgba(35, 45, 80, 0.9);
 }
+button.primary:hover {
+  transform: translateY(-3px); /* 按鈕浮起 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 浮起時陰影 */
+}
+button.primary:active {
+  transform: translateY(0); /* 回到原位 */
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
 
 button.ghost {
   padding: 8px 14px;
@@ -180,6 +193,14 @@ button.ghost {
   border: 1px solid rgba(160, 175, 210, 0.4);
 
   color: rgba(35, 45, 80, 0.75);
+}
+button.ghost:hover {
+  transform: translateY(-3px); /* 按鈕浮起 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 浮起時陰影 */
+}
+button.ghost:active {
+  transform: translateY(0); /* 回到原位 */
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
 button.danger {
@@ -191,6 +212,14 @@ button.danger {
 
   color: rgba(120, 45, 65, 0.85);
 }
+button.danger:hover {
+  transform: translateY(-3px); /* 按鈕浮起 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 浮起時陰影 */
+}
+button.danger:active {
+  transform: translateY(0); /* 回到原位 */
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
 
 button.add {
   padding: 8px 16px;
@@ -200,6 +229,14 @@ button.add {
   border: 1px solid rgba(140, 155, 210, 0.45);
 
   color: rgba(35, 80, 43, 0.9);
+}
+button.add:hover {
+  transform: translateY(-3px); /* 按鈕浮起 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 浮起時陰影 */
+}
+button.add:active {
+  transform: translateY(0); /* 回到原位 */
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
 // -----------------------------------------------------------------------------------------------------
@@ -408,6 +445,3 @@ button.add {
   height: 16px;
   margin: 0; /* 避免預設 margin 造成歪掉 */
 }
-
-
-
