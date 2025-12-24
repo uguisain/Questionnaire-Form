@@ -28,13 +28,13 @@ export interface UserRecord extends UserProfile {
 // 「用戶資料 JSON」的整包格式
 export interface UserDataStore {
   user: UserRecord;                  // 用戶資訊
-  myCreated: QuestionnaireSummary[]; // 我新增的表單
+  // myCreated: QuestionnaireSummary[]; // 我新增的表單
   myAnswered: QuestionnaireSummary[];// 我填寫過的表單
 }
 
 export interface AuthState {
   token: string | null;                 // 假的登入憑證
   user: UserProfile | null;             // 當前登入使用者
-  myCreated: QuestionnaireSummary[];    // 我建立的問卷
+  // myCreated: QuestionnaireSummary[];    // 我建立的問卷
   myAnswered: QuestionnaireSummary[];   // 我填過的問卷
 }

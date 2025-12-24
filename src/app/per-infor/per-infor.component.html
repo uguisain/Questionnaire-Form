@@ -30,16 +30,16 @@
           <div class="tab-pane">
             <h2 class="report-title">已填寫表單</h2>
 
-            @if (myAnswered?.length) {
+            @if (answeredQuiz?.length) {
               <ul class="list">
-                @for (f of myAnswered; track f.id) {
+                @for (f of answeredQuiz; track f.id) {
                   <li class="list-item list-item--clickable"
                       (click)="goAnsweredResult(f.id)">
                     <div class="info">
                       <div class="title">{{ f.title }}</div>
-                      <div class="meta">填寫日期：{{ f.createdAt }}</div>
+                      <!-- <div class="meta">填寫日期：{{ f.createdAt }}</div> -->
                     </div>
-                    <span class="list-chevron">➜</span>
+                    <span class="list-chevron">➜ 點擊查看當前問卷統計頁面</span>
                   </li>
                 }
               </ul>

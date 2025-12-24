@@ -19,6 +19,6 @@ export interface QuestionnaireSummary {
 export interface AuthState {
   token: string | null;                 // 假的登入憑證
   user: UserProfile | null;             // 當前登入使用者
-  myCreated: QuestionnaireSummary[];    // 我建立的問卷
+  // myCreated: QuestionnaireSummary[];    // 我建立的問卷
   myAnswered: QuestionnaireSummary[];   // 我填過的問卷
 }

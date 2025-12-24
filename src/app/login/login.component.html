@@ -20,15 +20,12 @@ class="bg">
   @if (pageMode === 'register') {
     <h1 style="color: rgb(124, 41, 226);">註冊</h1>
     <input placeholder="用戶名" [(ngModel)]="regUsername">       <!-- 新帳號 -->
-    <br>
     <input placeholder="Email" [(ngModel)]="regEmail">         <!-- Email -->
-    <br>
+    <input placeholder="電話號碼" [(ngModel)]="regPhone">         <!-- 手機 -->
+    <input placeholder="年齡" [(ngModel)]="regAge">         <!-- 年齡 -->
     <input placeholder="密碼" type="password" [(ngModel)]="regPassword">     <!-- 新密碼 -->
-    <br>
     <input placeholder="確認密碼" type="password" [(ngModel)]="regConfirm">   <!-- 確認密碼 -->
-    <br>
     <button style="margin: 5px 0px;" (click)="register()">建立帳號</button>   <!-- 送出註冊 -->
-    <br>
     <h4 style="cursor: pointer; color: rgb(176, 132, 238);" (click)="goLogin()">返回登入</h4>            <!-- 回登入 -->
   }
 

@@ -33,7 +33,7 @@ export class UserDataService {
   // 這裡你可以沿用你原本的 store，只是我用一個預設：demo 用戶
   private store: UserDataStore = {
     user: this.mockUsers[0],   // 預設先放示範用戶
-    myCreated: [],             // 不額外塞假表單，讓前端功能新增
+    // myCreated: [],             // 不額外塞假表單，讓前端功能新增
     myAnswered: [],
   };
 
@@ -68,9 +68,9 @@ export class UserDataService {
   }
 
   // 取得「我新增的表單」清單
-  getMyCreated(): QuestionnaireSummary[] {
-    return [...this.store.myCreated];
-  }
+  // getMyCreated(): QuestionnaireSummary[] {
+  //   return [...this.store.myCreated];
+  // }
 
   // 取得「我填寫過的表單」清單
   getMyAnswered(): QuestionnaireSummary[] {
@@ -79,21 +79,21 @@ export class UserDataService {
 
   // 新增一個「我建立的問卷」，
   // 這裡直接幫你產生 id / 建立日期，未來接後端就改成用 API 回傳
-  addMyCreated(title: string): QuestionnaireSummary {
-    const newForm: QuestionnaireSummary = {
-      id: Date.now(), // 先用 timestamp 當假 ID
-      title,
-      createdAt: new Date().toISOString().slice(0, 10),
-    };
+  // addMyCreated(title: string): QuestionnaireSummary {
+  //   const newForm: QuestionnaireSummary = {
+  //     id: Date.now(), // 先用 timestamp 當假 ID
+  //     title,
+  //     createdAt: new Date().toISOString().slice(0, 10),
+  //   };
 
-    this.store.myCreated = [newForm, ...this.store.myCreated];
-    return newForm;
-  }
+  //   this.store.myCreated = [newForm, ...this.store.myCreated];
+  //   return newForm;
+  // }
 
   // 刪除一個「我建立的問卷」
-  deleteMyCreated(id: number) {
-    this.store.myCreated = this.store.myCreated.filter(f => f.id !== id);
-  }
+  // deleteMyCreated(id: number) {
+  //   this.store.myCreated = this.store.myCreated.filter(f => f.id !== id);
+  // }
 
   // 之後你有「填寫問卷」功能，就可以做類似：
   // addMyAnswered(summary: QuestionnaireSummary) { ... }

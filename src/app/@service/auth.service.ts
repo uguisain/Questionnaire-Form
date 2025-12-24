@@ -1,34 +1,34 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { UserProfile, QuestionnaireSummary, AuthState } from '../@models/user-data-model';
-import { UserDataService } from "../@service/user-data.service";
+import { UserProfile, AuthState } from '../@models/user-data-model';
+import { UserDataService } from '../@service/user-data.service';
+import { HttpService } from './http.service';
 
 const STORAGE_KEY = 'mock_auth_state'; // localStorage 的鍵名
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   // 用 EventEmitter 通知各處（像 Toolbar）登入狀態改變
   authChanged = new EventEmitter<AuthState>();
 
   private state: AuthState = {
-    token: null,       // 預設未登入
-    user: null,        // 無使用者
-    myCreated: [],     // 我建立的問卷清單
-    myAnswered: [],    // 我填過的問卷清單
+    token: null, // 預設未登入
+    user: null, // 無使用者
+    // myCreated: [],     // 我建立的問卷清單
+    myAnswered: [], // 我填過的問卷清單
   };
 
-  constructor(private userData: UserDataService) {
+  constructor(private userData: UserDataService, private http: HttpService) {
     // 啟動時嘗試從 localStorage 還原狀態
-    const raw = localStorage.getItem(STORAGE_KEY);        // 讀取字串
+    const raw = localStorage.getItem(STORAGE_KEY); // 讀取字串
     if (raw) {
-      this.state = JSON.parse(raw);                       // 還原為物件
+      this.state = JSON.parse(raw); // 還原為物件
     } else {
       // 第一次啟動時，從 UserDataService 拿「用戶資料 JSON」
       const profile = this.userData.getUserProfile();
-      this.state.user = profile;                // 注意：這裡沒有 token，只是預設使用者
-      this.state.myCreated = this.userData.getMyCreated();
+      this.state.user = profile; // 注意：這裡沒有 token，只是預設使用者
+      // this.state.myCreated = this.userData.getMyCreated();
       this.state.myAnswered = this.userData.getMyAnswered();
       this.save();
     }
@@ -56,7 +56,7 @@ export class AuthService {
 
     // 塞進 AuthState
     this.state.user = profile;
-    this.state.myCreated = this.userData.getMyCreated();
+    // this.state.myCreated = this.userData.getMyCreated();
     this.state.myAnswered = this.userData.getMyAnswered();
     this.state.token = 'MOCK_TOKEN_ABC123'; // 假 token
 
@@ -70,9 +70,9 @@ export class AuthService {
 
   logout() {
     // 登出：清除 token 與使用者（清單保留以示範，但你也可以清空）
-    this.state.token = null;     // 無 token
-    this.state.user = null;      // 無使用者
-    this.save();                 // 存檔與廣播
+    this.state.token = null; // 無 token
+    this.state.user = null; // 無使用者
+    this.save(); // 存檔與廣播
   }
 
   isLoggedIn(): boolean {
@@ -81,12 +81,12 @@ export class AuthService {
   }
 
   getState(): AuthState {
-  return {
-    ...this.state,
-    myCreated: [...this.state.myCreated],
-    myAnswered: [...this.state.myAnswered],
-  };
-}
+    return {
+      ...this.state,
+      // myCreated: [...this.state.myCreated],
+      myAnswered: [...this.state.myAnswered],
+    };
+  }
 
   updateProfile(patch: Partial<UserProfile>) {
     if (!this.state.user) return;
@@ -99,29 +99,14 @@ export class AuthService {
     this.save();
   }
 
-  getMyCreated(): QuestionnaireSummary[] {
-    return [...this.state.myCreated];
-  }
+  // getMyAnswered(): any[] {
+  //   return [...this.state.myAnswered];
+  // }
 
-  getMyAnswered(): QuestionnaireSummary[] {
-    return [...this.state.myAnswered];
-  }
-
-  addMyCreated(title: string) {
-    // 讓 UserDataService 實際產生一筆問卷摘要
-    const created = this.userData.addMyCreated(title);
-
-    // 同步更新 AuthState 裡的 myCreated
-    this.state.myCreated = this.userData.getMyCreated();
-    this.save();
-  }
-
-  deleteMyCreated(id: number) {
-    // 實際刪除交給 UserDataService
-    this.userData.deleteMyCreated(id);
-
-    // 再同步最新清單
-    this.state.myCreated = this.userData.getMyCreated();
-    this.save();
+  getMyAnsweredId(email: String) {
+    // 這邊之後再改成從當前登入狀態抓取
+    return this.http.getApi(
+      'http://localhost:8080/quiz/get_answered?email=' + email
+    );
   }
 }
