@@ -301,14 +301,12 @@ export class UserFormComponent implements OnInit {
   // 以下是確認畫面用
 
   backToEdit() {
-    // 用戶覺得哪題打錯了 -> 回去繼續改
+    // 返回修改
     this.pageMode = 'edit';
   }
 
   finalSubmit() {
     console.log('送出最終資料：' + JSON.stringify(this.FillinReq[0], null, 2));
-    // TODO: 之後改成呼叫 service API
-    // this.example.submitAnswers(this.FillinReq).subscribe(...)
 
     this.http.postApi('http://localhost:8080/quiz/fillin', this.FillinReq[0])
     .subscribe({

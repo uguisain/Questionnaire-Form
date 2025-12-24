@@ -12,7 +12,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog',
+  selector: 'app-dialog2',
   imports: [
     MatDialogTitle,
     MatDialogModule,
@@ -21,8 +21,8 @@ import { CommonModule } from '@angular/common';
     MatDialogContent,
     CommonModule,
   ],
-  templateUrl: './dialog.component.html',
-  styleUrl: './dialog.component.scss',
+  templateUrl: './dialog2.component.html',
+  styleUrl: './dialog2.component.scss',
   // 動畫區
   animations: [
     // dialogEnter：進場淡入＋微縮放；退場淡出
@@ -49,13 +49,20 @@ import { CommonModule } from '@angular/common';
     ]),
   ],
 })
-export class DialogComponent {
+export class Dialog2Component {
   // 關閉用
-  readonly dialogRef = inject(MatDialogRef<DialogComponent>);
+  readonly dialogRef = inject(MatDialogRef<Dialog2Component>);
   // 接收資料用
   readonly data = inject<any>(MAT_DIALOG_DATA);
 
-  end() {
-    this.dialogRef.close();
+  // 回傳「取消」
+  cancel() {
+    this.dialogRef.close(false);
   }
+
+  // 回傳「確認」
+  confirm() {
+    this.dialogRef.close(true);
+  }
+
 }

@@ -86,6 +86,20 @@
 .tb-btn:hover { background: #6f90f2; transform: translateY(-1px); }
 .tb-btn:active { transform: translateY(1px); }
 
+/* 創建表單按鈕 */
+.cr-btn {
+  background: #35a967;
+  color: #fff;
+  border: 1px solid #619867;
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
+  box-shadow: 0 6px 14px rgba(122, 255, 162, 0.25);
+}
+.cr-btn:hover { background: #30985d; transform: translateY(-1px); }
+.cr-btn:active { transform: translateY(1px); }
+
 /* 漢堡鈕（小螢幕顯示） */
 .tb-burger {
   display: none;                 /* 大螢幕隱藏 */

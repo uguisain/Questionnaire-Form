@@ -54,11 +54,6 @@ export class PerInforComponent {
         this.dialog.open(DialogComponent, {
           data: dialogData,
         });
-      // this.dialog.open(DialogComponent, {
-      //     enterAnimationDuration: '160ms',
-      //     exitAnimationDuration: '120ms',
-      //     data: {Message: '有必填題尚未填寫，請先完成再繼續', title: '您尚未填寫完畢'},
-      //   });
     }
 
     // 打開「新增問卷」Dialog

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../@service/http.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { DialogComponent } from '../dialog/dialog.component';
+import { Dialog2Component } from '../dialog2/dialog2.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
