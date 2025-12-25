@@ -1,28 +1,58 @@
-<div style="background: linear-gradient(to bottom right, rgb(252, 229, 201), rgb(251, 220, 183));
-width: 100%; height: 100%; display: flex; align-items: center; min-height:632px"
-class="bg">
-<!-- 外層 .home-shell 讓內容置中定寬 -->
-<div class="home-shell">
-<!-- 搜尋欄 -->
-<div class="search-bar" style="position: relative;">
-  問卷名稱：<input [(ngModel)]="searchname" style="border-radius: 5px; border: 1px solid darkorchid; height: 25px; outline: none; padding: 0 10px; width: 200px; margin-bottom: 10px;">
-  <br><br>
-  <div>開始時間：<input type="date" style="width: 200px;"
-    (change)="fromDate = $any($event.target).value; toDate = null">
-        <span style="margin-left: 50px;">結束時間：</span>
-        <input type="date"
-        style="width: 200px;"
-        [(ngModel)]="toDate"
-        [attr.min]="fromDate || toDayStr"
-        (change)="toDate">
+<div
+  style="
+    background: linear-gradient(
+      to bottom right,
+      rgb(252, 229, 201),
+      rgb(251, 220, 183)
+    );
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 632px;
+  "
+  class="bg"
+>
+  <!-- 外層 .home-shell 讓內容置中定寬 -->
+  <div class="home-shell">
+    <!-- 搜尋欄 -->
+    <div class="search-bar" style="position: relative">
+      問卷名稱：<input
+        [(ngModel)]="searchname"
+        style="
+          border-radius: 5px;
+          border: 1px solid darkorchid;
+          height: 25px;
+          outline: none;
+          padding: 0 10px;
+          width: 200px;
+          margin-bottom: 10px;
+        "
+      />
+      <br /><br />
+      <div>
+        開始時間：<input
+          type="date"
+          style="width: 200px"
+          (change)="fromDate = $any($event.target).value; toDate = null"
+        />
+        <span style="margin-left: 50px">結束時間：</span>
+        <input
+          type="date"
+          style="width: 200px"
+          [(ngModel)]="toDate"
+          [attr.min]="fromDate || toDayStr"
+          (change)="(toDate)"
+        />
         <!-- [(ngModel)]同步控制畫面的日期 -->
 
-        <div class="status-filter" style="margin-top: 10px;">
+        <div class="status-filter" style="margin-top: 10px">
           <button
             type="button"
             class="chip-btn"
             [class.active]="statusFilter === 'open'"
-            (click)="setStatusFilter('open')">
+            (click)="setStatusFilter('open')"
+          >
             進行中
           </button>
 
@@ -30,7 +60,8 @@ class="bg">
             type="button"
             class="chip-btn"
             [class.active]="statusFilter === 'closed'"
-            (click)="setStatusFilter('closed')">
+            (click)="setStatusFilter('closed')"
+          >
             已結束
           </button>
 
@@ -38,7 +69,8 @@ class="bg">
             type="button"
             class="chip-btn"
             [class.active]="statusFilter === 'notStarted'"
-            (click)="setStatusFilter('notStarted')">
+            (click)="setStatusFilter('notStarted')"
+          >
             未開始
           </button>
 
@@ -46,123 +78,218 @@ class="bg">
           <button
             type="button"
             class="chip-btn reset"
-            style="margin-left: 407px;"
+            style="margin-left: 407px"
             [class.active]="statusFilter === 'all'"
-            (click)="setStatusFilter('all')">
+            (click)="setStatusFilter('all')"
+          >
             重置
           </button>
         </div>
+      </div>
 
+      <img
+        src="/yuru_neko5.png"
+        style="
+          position: absolute;
+          top: 23px;
+          right: 45px;
+          width: 170px;
+          opacity: 1;
+        "
+      />
+      <img
+        src="/yukiyanagi.png"
+        style="
+          position: absolute;
+          top: -18px;
+          right: -17px;
+          width: 150px;
+          opacity: 1;
+          transform: rotate(-10deg);
+        "
+      />
+    </div>
+
+    <!-- 清單資訊（總筆數 / 目前頁 / 總頁） -->
+    <div class="list-header" style="color: #122f69">
+      共 {{ totalItems }} 筆．第 {{ currentPage }} / {{ totalPages }} 頁
+
+      <!-- 切換管理員模式 -->
+      <button class="btn-admin-toggle" (click)="toggleAdminMode()">
+        {{ isAdminMode ? "離開管理員模式" : "切換為管理員模式" }}
+      </button>
+    </div>
+
+    <!-- 羅列表單 -->
+    <div class="table-wrap">
+      <table border="1" cellspacing="0" cellpadding="6">
+        <thead>
+          <tr>
+            <th>表單ID</th>
+            <th>問卷名稱</th>
+            <th>狀態</th>
+            <th>起始日期</th>
+            <th>結束日期</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- 用 *ngFor 逐筆列出資料 -->
+          <tr *ngFor="let f of pagedList">
+            <td style="font-size: 20px">{{ f.id }}</td>
+            <td>{{ f.title }}</td>
+            <td>
+              <span
+                [ngClass]="{
+                  'state-open': getState(f) === 'open',
+                  'state-closed': getState(f) === 'closed',
+                  'state-not': getState(f) === 'notStarted'
+                }"
+                >{{ stateLabel(getState(f)) }}</span
+              >
+            </td>
+            <td>{{ f.startDate }}</td>
+            <td>{{ f.endDate }}</td>
+
+            <!-- 管理員 -->
+            @if(isAdminMode) {
+            <td>
+              <!-- 進行中：顯示「填寫」按鈕（可點） -->
+              <button
+                (click)="goFill2(f.id)"
+                style="font-weight: bold; color: blueviolet; margin-right: 5px"
+              >
+                預覽
+              </button>
+              <button
+                (click)="edit(f.id)"
+                style="
+                  font-weight: bold;
+                  color: rgb(47, 124, 101);
+                  margin-right: 5px;
+                "
+              >
+                編輯
+              </button>
+              <button
+                (click)="viewResult(f.id)"
+                class="secondary"
+                style="
+                  font-weight: bold;
+                  color: rgb(68, 6, 47);
+                  margin-right: 5px;
+                "
+              >
+                結果
+              </button>
+              <button
+                (click)="delFill(f.id)"
+                class="del"
+                style="color: rgb(24, 16, 16)"
+              >
+                刪除
+              </button>
+            </td>
+            } @else {
+            <!-- 一般用戶 -->
+            <td>
+              <!-- 進行中：顯示「填寫」按鈕（可點） -->
+              <button
+                *ngIf="getState(f) === 'open'"
+                (click)="goFill(f.id)"
+                style="font-weight: bold; color: blueviolet"
+              >
+                填寫
+              </button>
+
+              <!-- 已結束：顯示「檢視結果」按鈕（可點；目前先 console，之後導頁） -->
+              <button
+                *ngIf="getState(f) === 'closed'"
+                (click)="viewResult(f.id)"
+                class="secondary"
+                style="font-weight: bold; color: rgb(68, 6, 47)"
+              >
+                檢視結果
+              </button>
+
+              <!-- 未開始：顯示禁用按鈕，不能點 -->
+              <button
+                *ngIf="getState(f) === 'notStarted'"
+                disabled
+                style="color: gray"
+              >
+                尚未開始
+              </button>
+            </td>
+            }
+          </tr>
+
+          <tr *ngIf="pagedList.length === 0">
+            <td class="empty-row" colspan="6">目前沒有符合條件的資料。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 簡易分頁列（第一頁 / 上一頁 / 數字頁碼 / 下一頁 / 最後一頁） -->
+    <div class="pager">
+      <button
+        style="color: rgb(10, 68, 87)"
+        (click)="goToPage(1)"
+        [disabled]="currentPage === 1"
+      >
+        « 第一頁
+      </button>
+      <!-- 直接跳到第一頁 -->
+      <button
+        style="color: rgb(10, 68, 87)"
+        (click)="prev()"
+        [disabled]="currentPage === 1"
+      >
+        ‹ 上一頁
+      </button>
+      <!-- 往前一頁 -->
+
+      <!-- 若開頭不是第1頁，顯示「...」提示 -->
+      <span style="color: white" *ngIf="pageNumbers[0] > 1">...</span>
+
+      <!-- 這裡畫出 1 ~ totalPages 的按鈕 -->
+      <ng-container *ngFor="let n of pageNumbers">
+        <button
+          (click)="goToPage(n)"
+          [disabled]="n === currentPage"
+          [class.page-num--active]="n === currentPage"
+        >
+          {{ n }}
+        </button>
+      </ng-container>
+
+      <!-- 若結尾不是最後一頁，也顯示「...」提示 -->
+      <span
+        style="color: white"
+        *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages"
+        >...</span
+      >
+
+      <button
+        style="color: rgb(5, 46, 60)"
+        (click)="next()"
+        [disabled]="currentPage === totalPages"
+      >
+        下一頁 ›
+      </button>
+      <!-- 往後一頁 -->
+      <button
+        style="color: rgb(5, 46, 60)"
+        (click)="goToPage(totalPages)"
+        [disabled]="currentPage === totalPages"
+      >
+        最後一頁 »
+      </button>
+      <!-- 直接跳最後頁 -->
+    </div>
   </div>
-  <img src="/yuru_neko5.png"
-       style="position: absolute; top: 23px; right: 45px; width: 170px; opacity: 1;">
-  <img src="/yukiyanagi.png"
-       style="position: absolute; top: -18px; right: -17px; width: 150px; opacity: 1; transform: rotate(-10deg);">
-
-</div>
-
-<!-- 清單資訊（總筆數 / 目前頁 / 總頁） -->
-<div class="list-header" style="color: #122f69;">
-  共 {{ totalItems }} 筆．第 {{ currentPage }} / {{ totalPages }} 頁
-</div>
-
-<!-- 羅列表單 -->
-<div class="table-wrap">
-<table border="1" cellspacing="0" cellpadding="6">
-  <thead>
-    <tr>
-      <th>表單ID</th>
-      <th>問卷名稱</th>
-      <th>狀態</th>
-      <th>起始日期</th>
-      <th>結束日期</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <!-- 用 *ngFor 逐筆列出資料 -->
-    <tr *ngFor="let f of pagedList">
-      <td style="font-size: 20px;">{{ f.id }}</td>
-      <td>{{ f.title }}</td>
-      <td><span [ngClass]="{
-        'state-open': getState(f) === 'open',
-        'state-closed': getState(f) === 'closed',
-        'state-not': getState(f) === 'notStarted'
-      }">{{ stateLabel(getState(f)) }}</span></td>
-      <td>{{ f.startDate }}</td>
-      <td>{{ f.endDate }}</td>
-
-      <!-- 管理員 -->
-      @if(auth.isAdmin()) {
-        <td>
-        <!-- 進行中：顯示「填寫」按鈕（可點） -->
-      <button (click)="goFill(f.id)" style="font-weight: bold; color: blueviolet; margin-right: 5px;">
-        預覽
-      </button>
-      <button (click)="edit(f.id)" style="font-weight: bold; color: rgb(47, 124, 101); margin-right: 5px;">
-        編輯
-      </button>
-      <button (click)="viewResult(f.id)" class="secondary" style="font-weight: bold; color: rgb(68, 6, 47); margin-right: 5px;">
-        結果
-      </button>
-      <button (click)="delFill(f.id)" class="del" style="color: rgb(24, 16, 16);">
-        刪除
-      </button>
-      </td>
-      } @else {
-        <!-- 一般用戶 -->
-        <td>
-        <!-- 進行中：顯示「填寫」按鈕（可點） -->
-      <button *ngIf="getState(f) === 'open'" (click)="goFill(f.id)" style="font-weight: bold; color: blueviolet;">
-        填寫
-      </button>
-
-      <!-- 已結束：顯示「檢視結果」按鈕（可點；目前先 console，之後導頁） -->
-      <button *ngIf="getState(f) === 'closed'" (click)="viewResult(f.id)" class="secondary" style="font-weight: bold; color: rgb(68, 6, 47);">
-        檢視結果
-      </button>
-
-      <!-- 未開始：顯示禁用按鈕，不能點 -->
-      <button *ngIf="getState(f) === 'notStarted'" disabled style="color: gray;">
-        尚未開始
-      </button>
-      </td>
-      }
-    </tr>
-
-    <tr *ngIf="pagedList.length === 0">
-      <td class="empty-row" colspan="6">目前沒有符合條件的資料。</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<!-- 簡易分頁列（第一頁 / 上一頁 / 數字頁碼 / 下一頁 / 最後一頁） -->
-<div class="pager">
-  <button style="color: rgb(10, 68, 87);" (click)="goToPage(1)" [disabled]="currentPage === 1">« 第一頁</button>          <!-- 直接跳到第一頁 -->
-  <button style="color: rgb(10, 68, 87);" (click)="prev()"      [disabled]="currentPage === 1">‹ 上一頁</button>           <!-- 往前一頁 -->
-
-  <!-- 若開頭不是第1頁，顯示「...」提示 -->
-  <span style="color: white;" *ngIf="pageNumbers[0] > 1">...</span>
-
-  <!-- 這裡畫出 1 ~ totalPages 的按鈕 -->
-  <ng-container *ngFor="let n of pageNumbers">
-    <button
-      (click)="goToPage(n)"
-      [disabled]="n === currentPage"
-      [class.page-num--active]="n === currentPage">
-      {{ n }}
-    </button>
-  </ng-container>
-
-  <!-- 若結尾不是最後一頁，也顯示「...」提示 -->
-  <span style="color: white;" *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages">...</span>
-
-  <button style="color: rgb(5, 46, 60);" (click)="next()" [disabled]="currentPage === totalPages">下一頁 ›</button>   <!-- 往後一頁 -->
-  <button style="color: rgb(5, 46, 60);" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">最後一頁 »</button> <!-- 直接跳最後頁 -->
-</div>
-</div>
 </div>
 
 <router-outlet></router-outlet>

@@ -28,6 +28,9 @@ import { Dialog2Component } from '../dialog2/dialog2.component';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+  // 是否為管理員模式（純前端顯示用）
+  isAdminMode: boolean = false;
+
   // 注入服務------------------------------------------------------
   constructor(
     private example: ExampleService,
@@ -68,8 +71,46 @@ export class HomeComponent {
     return '進行中';
   }
 
+  toggleAdminMode() {
+    this.isAdminMode = !this.isAdminMode;
+    console.log('管理員模式：', this.isAdminMode);
+  }
+
+  // 存使用者輸入的搜尋內容
+  searchname: string = '';
+
   // ===== 導頁事件（之後會真接表單/結果）=====
   goFill(id: number) {
+    // 先判斷是否登入
+    if (!this.auth.isLoggedIn()) {
+      // 未登入 → 提示 + 導頁
+      const dialogData: any = {
+        title: '請先登入',
+      };
+      // dialog
+      this.dialog.open(DialogComponent, {
+        data: dialogData,
+      });
+      this.router.navigateByUrl('/Login');
+      return;
+    }
+    // 抓已填過的表單Id
+    const email = this.auth.getEmail();
+    this.auth.getMyAnsweredId(email).subscribe((res: any) => {
+      console.log(res);
+      if (res.quizIdList.includes(id)) {
+      this.dialog.open(DialogComponent, {
+        data: { title: '已填寫過該表單', Message: '已抵達結果頁面' },
+      });
+      this.router.navigate(['/Report', id]);
+    }
+      console.log('answeredId:', this.answeredId);
+    });
+    this.router.navigate(['/form', id]);
+    window.scrollTo(0, 0);
+  }
+
+  goFill2(id: number) {
     // 先判斷是否登入
     if (!this.auth.isLoggedIn()) {
       // 未登入 → 提示 + 導頁
@@ -137,13 +178,13 @@ export class HomeComponent {
   // 存使用者選的結束日期
   toDate: string | null = null;
 
-  // 存使用者輸入的搜尋內容
-  searchname: string = '';
-
   // 表單----------------------------------------------------------
   // 存放從服務拿到的資料
   // forms: formElement[] = [];
   quiz: HomeList[] = []; // 這是問卷陣列必須用迴圈取值
+
+  // 放已填問卷的id陣列
+  answeredId: any[] = [];
 
   // 當畫面載入時執行
   ngOnInit(): void {

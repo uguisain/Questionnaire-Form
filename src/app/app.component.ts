@@ -17,7 +17,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from './@service/auth.service'; // 路徑依你的實際位置調整
-import { AuthState } from './@models/auth-model'; // 同樣請用你的實際檔名
+// import { AuthState } from './@models/auth-model'; // 同樣請用你的實際檔名
 import {
   CreateFormDialogComponent,
   QuizCreateReq,
@@ -62,7 +62,7 @@ export class AppComponent {
     });
   }
 
-  authState!: AuthState; // 用來存目前登入狀態
+  authState!: any; // 用來存目前登入狀態
 
   // ===== Toolbar 需要的極少數屬性與方法 =====
   toolbarSearch: string = ''; // 搜尋框雙向綁定（你之後要用再接）

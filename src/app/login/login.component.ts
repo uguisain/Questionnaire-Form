@@ -45,48 +45,32 @@ export class LoginComponent {
   loginError: boolean = false; // 是否登入失敗（顯示錯誤提示）
   currentUser: any = null; // 登入成功後的使用者物件
 
-  // 假資料：模擬後端的使用者清單 ----------------------------
-  // 之後接後端時，把這段換成 call API 驗證
-  private fakeUsers = [
-    {
-      id: 1,
-      username: 'demo',
-      password: '1234',
-      name: '示範用戶',
-      email: 'demo@example.com',
-    },
-    {
-      id: 2,
-      username: 'alice',
-      password: '0000',
-      name: '小艾 Alice',
-      email: 'alice@example.com',
-    },
-  ];
-
   // 登入流程 ---------------------------------------------------
   login() {
-    const body = {
-      email: this.email,
-      password: this.password,
-    };
-    this.http.postApi('http://localhost:8080/user/login', body).subscribe({
+    const email = this.email;
+    const password = this.password;
+
+    // （可選）最基本空值檢查，避免打空的出去
+    if (!email || !password) {
+      this.dialog.open(DialogComponent, {
+        data: { title: '登入失敗', Message: '請輸入帳號與密碼' },
+      });
+      return;
+    }
+
+    this.auth.login(email, password).subscribe({
       next: (res: any) => {
-        if (res.code === 200) {
-          // 把登入者存起來
-          localStorage.setItem(
-            'mock_user',
-            JSON.stringify({
-              email: res.email ?? body.email,
-              name: res.name ?? '',
-              phone: res.phone ?? '',
-              age: res.age ?? ''
-            })
-          );
+        if (res?.code === 200) {
+          // ✅ AuthService 已經存好 state + localStorage
           this.router.navigate(['/home']);
+          this.dialog.open(DialogComponent, {
+            enterAnimationDuration: '160ms',
+            exitAnimationDuration: '120ms',
+            data: { title: '登入成功' },
+          });
         } else {
           this.dialog.open(DialogComponent, {
-            data: { title: '登入失敗', Message: res.message },
+            data: { title: '登入失敗', Message: res?.message || '帳密錯誤' },
           });
         }
       },
@@ -100,11 +84,11 @@ export class LoginComponent {
   }
 
   // （可選）登出 ----------------------------------------------------------------
-  logout() {
-    this.isLoggedIn = false; // 變回未登入
-    this.currentUser = null; // 清空使用者
-    localStorage.removeItem('currentUser'); // 清掉本機保存
-  }
+  // logout() {
+  //   this.isLoggedIn = false; // 變回未登入
+  //   this.currentUser = null; // 清空使用者
+  //   localStorage.removeItem('currentUser'); // 清掉本機保存
+  // }
 
   // （可選）一進來就嘗試讀取本機的登入狀態（方便你測試）
   ngOnInit() {
@@ -200,17 +184,6 @@ export class LoginComponent {
       });
       return;
     }
-    // 信箱是否已存在
-    const exists = this.fakeUsers.some((u) => u.email === this.regEmail);
-    if (exists) {
-      // 帳號重複
-      this.dialog.open(DialogComponent, {
-        enterAnimationDuration: '160ms',
-        exitAnimationDuration: '120ms',
-        data: { title: '此帳號已被使用' },
-      });
-      return;
-    }
     // 寫進入資料庫
     const reg = {
       name: this.regUsername,
@@ -220,20 +193,28 @@ export class LoginComponent {
       age: this.regAge,
     };
     console.log('送出最終註冊資料：' + JSON.stringify(reg, null, 2));
-    this.http.postApi('http://localhost:8080/quiz/add_user', reg).subscribe({
-      next: (res) => {
+
+    this.auth.register(reg).subscribe({
+      next: (res: any) => {
         console.log(res);
-        // 提示成功
-        this.dialog.open(DialogComponent, {
-          enterAnimationDuration: '160ms',
-          exitAnimationDuration: '120ms',
-          data: { title: '註冊成功，請使用新帳密登入' },
-        });
-        this.goLogin(); // 回登入頁
+        if (res?.code === 200) {
+          this.dialog.open(DialogComponent, {
+            enterAnimationDuration: '160ms',
+            exitAnimationDuration: '120ms',
+            data: { title: '註冊成功，請使用新帳密登入' },
+          });
+          this.goLogin();
+        } else {
+          // 後端有回 message 就顯示 message，沒有就顯示預設
+          this.dialog.open(DialogComponent, {
+            enterAnimationDuration: '160ms',
+            exitAnimationDuration: '120ms',
+            data: { title: res?.message || '註冊失敗，請重試' },
+          });
+        }
       },
       error: (err) => {
         console.error(err);
-        // 提示失敗
         this.dialog.open(DialogComponent, {
           enterAnimationDuration: '160ms',
           exitAnimationDuration: '120ms',
@@ -244,32 +225,32 @@ export class LoginComponent {
   }
 
   // --- 忘記密碼流程（最小版本：只檢查帳號是否存在，再提示）---
-  sendReset() {
-    if (!this.forgotEmail) {
-      // 檢查是否有填Email
-      this.dialog.open(DialogComponent, {
-        enterAnimationDuration: '160ms',
-        exitAnimationDuration: '120ms',
-        data: { title: '請輸入 Email' },
-      });
-      return; // 中止
-    }
-    const exists = this.fakeUsers.some((u) => u.email === this.forgotEmail);
-    if (!exists) {
-      // 沒有這個Email
-      this.dialog.open(DialogComponent, {
-        enterAnimationDuration: '160ms',
-        exitAnimationDuration: '120ms',
-        data: { title: '查無此 Email' },
-      });
-      return; // 中止
-    }
-    // 模擬寄信
-    this.dialog.open(DialogComponent, {
-      enterAnimationDuration: '160ms',
-      exitAnimationDuration: '120ms',
-      data: { title: '已寄出重設密碼連結' },
-    });
-    this.goLogin(); // 回登入頁
-  }
+  // sendReset() {
+  //   if (!this.forgotEmail) {
+  //     // 檢查是否有填Email
+  //     this.dialog.open(DialogComponent, {
+  //       enterAnimationDuration: '160ms',
+  //       exitAnimationDuration: '120ms',
+  //       data: { title: '請輸入 Email' },
+  //     });
+  //     return; // 中止
+  //   }
+  //   // const exists = this.fakeUsers.some((u) => u.email === this.forgotEmail);
+  //   if (!exists) {
+  //     // 沒有這個Email
+  //     this.dialog.open(DialogComponent, {
+  //       enterAnimationDuration: '160ms',
+  //       exitAnimationDuration: '120ms',
+  //       data: { title: '查無此 Email' },
+  //     });
+  //     return; // 中止
+  //   }
+  //   // 模擬寄信
+  //   this.dialog.open(DialogComponent, {
+  //     enterAnimationDuration: '160ms',
+  //     exitAnimationDuration: '120ms',
+  //     data: { title: '已寄出重設密碼連結' },
+  //   });
+  //   this.goLogin(); // 回登入頁
+  // }
 }

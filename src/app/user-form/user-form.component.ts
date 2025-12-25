@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { HttpService } from '../@service/http.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+import { AuthService } from '../@service/auth.service';
 // import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
@@ -19,6 +20,19 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
+  user:
+    | import('c:/Users/user/Desktop/Angular/Questionnaire-Form/src/app/@service/auth.service').UserProfile
+    | null;
+  constructor(
+    private route: ActivatedRoute, // 讀網址上的 :id
+    private router: Router, // 返回/導頁
+    public auth: AuthService,
+    private http: HttpService // API // private overlay: Overlay,
+  ) {
+    // 一進來就從 AuthService 拿目前登入的使用者資料
+    const state = this.auth.getState(); // 一次拿到現在狀態
+    this.user = state.user;
+  }
   // dialog注入
   readonly dialog = inject(MatDialog);
 
@@ -54,16 +68,16 @@ export class UserFormComponent implements OnInit {
   // 最終要送後端的「重組後」請求陣列
   FillinReq: any[] = [];
 
-  constructor(
-    private route: ActivatedRoute, // 讀網址上的 :id
-    private router: Router, // 返回/導頁
-    // private example: ExampleService,                               // 從服務抓資料
-    private http: HttpService // API // private overlay: Overlay,
-  ) {}
-
   ngOnInit(): void {
-    // // 進入時回到最上方
-    // window.scrollTo(0, 0);
+    if (!this.user) {
+      // 未登入的處理
+      return;
+    }
+
+    this.name = this.user.name;
+    this.phone = this.user.phone;
+    this.email = this.user.email;
+    this.age = this.user.age;
 
     // 從路由參數拿 id（字串）→ 轉數字
     const id = +(this.route.snapshot.paramMap.get('id') || 0);
@@ -244,6 +258,16 @@ export class UserFormComponent implements OnInit {
   send() {
     // 進入時回到最上方
     window.scrollTo(0, 0);
+    if (!this.name || !this.email || !this.phone || !this.age) {
+      this.dialog.open(DialogComponent, {
+        enterAnimationDuration: '160ms',
+        exitAnimationDuration: '120ms',
+        data: {
+          title: '您有尚未填寫的基本資料',
+        },
+      });
+      return;
+    }
 
     // 把輸入的用戶資料寫回 FillinReq
     if (this.FillinReq.length > 0) {
@@ -261,7 +285,8 @@ export class UserFormComponent implements OnInit {
       if (q.required) {
         if (q.type === 'text') {
           const text = ans as string;
-          if (!text || text.trim() === '') {
+          const s = (text ?? '').toString().trim();
+          if (!s || s.trim() === '') {
             this.dialog.open(DialogComponent, {
               enterAnimationDuration: '160ms',
               exitAnimationDuration: '120ms',
@@ -308,26 +333,28 @@ export class UserFormComponent implements OnInit {
   finalSubmit() {
     console.log('送出最終資料：' + JSON.stringify(this.FillinReq[0], null, 2));
 
-    this.http.postApi('http://localhost:8080/quiz/fillin', this.FillinReq[0])
-    .subscribe({
-      next: (res) => {
-        console.log(res);
-        this.dialog.open(DialogComponent, {
-          enterAnimationDuration: '160ms',
-          exitAnimationDuration: '120ms',
-          data: { title: '表單送出成功' },
-        });
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error(err);
-        this.dialog.open(DialogComponent, {
-          enterAnimationDuration: '160ms',
-          exitAnimationDuration: '120ms',
-          data: { title: '表單送出失敗' },
-        });
-        return;
-    }});
+    this.http
+      .postApi('http://localhost:8080/quiz/fillin', this.FillinReq[0])
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.dialog.open(DialogComponent, {
+            enterAnimationDuration: '160ms',
+            exitAnimationDuration: '120ms',
+            data: { title: '表單送出成功' },
+          });
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.dialog.open(DialogComponent, {
+            enterAnimationDuration: '160ms',
+            exitAnimationDuration: '120ms',
+            data: { title: '表單送出失敗' },
+          });
+          return;
+        },
+      });
   }
 }
 
