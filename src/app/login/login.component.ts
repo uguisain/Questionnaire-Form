@@ -138,24 +138,6 @@ export class LoginComponent {
       });
       return;
     }
-    if (this.regPhone.length < 10) {
-      // 手機號碼檢查
-      this.dialog.open(DialogComponent, {
-        enterAnimationDuration: '160ms',
-        exitAnimationDuration: '120ms',
-        data: { title: '電話號碼至少需要10碼' },
-      });
-      return;
-    }
-    if (this.regPassword.length < 8) {
-      // 密碼檢查
-      this.dialog.open(DialogComponent, {
-        enterAnimationDuration: '160ms',
-        exitAnimationDuration: '120ms',
-        data: { title: '密碼至少需要8碼' },
-      });
-      return;
-    }
     if (this.regEmail.length < 10) {
       // 信箱檢查
       this.dialog.open(DialogComponent, {
@@ -165,12 +147,39 @@ export class LoginComponent {
       });
       return;
     }
+    if (this.regPhone.length < 10) {
+      // 手機號碼檢查
+      this.dialog.open(DialogComponent, {
+        enterAnimationDuration: '160ms',
+        exitAnimationDuration: '120ms',
+        data: { title: '電話號碼至少需要10碼' },
+      });
+      return;
+    }
     if (this.regAge < 18) {
       // 年齡檢查
       this.dialog.open(DialogComponent, {
         enterAnimationDuration: '160ms',
         exitAnimationDuration: '120ms',
         data: { title: '年齡需要大於18歲' },
+      });
+      return;
+    }
+    if (this.regAge > 120) {
+      // 年齡檢查
+      this.dialog.open(DialogComponent, {
+        enterAnimationDuration: '160ms',
+        exitAnimationDuration: '120ms',
+        data: { title: '請輸入正確年齡' },
+      });
+      return;
+    }
+    if (this.regPassword.length < 8) {
+      // 密碼檢查
+      this.dialog.open(DialogComponent, {
+        enterAnimationDuration: '160ms',
+        exitAnimationDuration: '120ms',
+        data: { title: '密碼至少需要8碼' },
       });
       return;
     }
